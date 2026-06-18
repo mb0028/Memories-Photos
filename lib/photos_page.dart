@@ -28,28 +28,41 @@ class _PhotosPageState extends State<PhotosPage> {
         physics: BouncingScrollPhysics(),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: (screenWidth / 120) .toInt()),
         itemCount: PhotoIndexer.ca.length,
-        itemBuilder: (context, i) => GestureDetector(
-          onTap: () => Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => PhotoViewerPage(path: PhotoIndexer.ca[i]),
-            )
-          ),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: .all(.circular(15)),
-            ),
-            child: Hero(
-              tag: PhotoIndexer.ca[i],
-              child: Image.file(
-                File(PhotoIndexer.ca[i]),
-                // cacheHeight: 256,
-                // cacheWidth: 256,
-                fit: .cover,
-              ),
-            ),
+        itemBuilder: (context, i) => _PhotoCard(i: i),
+      )
+    );
+  }
+}
+
+class _PhotoCard extends StatelessWidget {
+  final int i;
+  const _PhotoCard({required this.i});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => PhotoViewerPage(path: PhotoIndexer.ca[i]),
+        )
+      ),
+      child: Container(
+        clipBehavior: .antiAlias,
+        margin: .all(2),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surfaceContainer,
+          borderRadius: .all(.circular(25)),
+        ),
+        child: Hero(
+          tag: PhotoIndexer.ca[i],
+          child: Image.file(
+            File(PhotoIndexer.ca[i]),
+            // cacheHeight: 256,
+            // cacheWidth: 256,
+            fit: .cover,
           ),
         ),
-      )
+      ),
     );
   }
 }

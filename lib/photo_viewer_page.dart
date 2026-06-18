@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:blur/blur.dart';
 import 'package:flutter/material.dart';
 
 class PhotoViewerPage extends StatelessWidget {
@@ -13,6 +14,8 @@ class PhotoViewerPage extends StatelessWidget {
         children: [
           Flexible(
             child: Hero(
+              curve: Curves.elasticOut,
+              reverseCurve: Curves.elasticIn,
               tag: path,
               child: Image.file(
                 File(path),
@@ -44,14 +47,27 @@ class _Header extends StatelessWidget {
       margin: .all(15),
       child: Row(
         mainAxisAlignment: .spaceBetween,
+        spacing: 15,
         children: [
           IconButton.filled(
             icon: Icon(Icons.arrow_back_rounded),
+            padding: .all(15),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          Text(path.substring(path.lastIndexOf(Platform.pathSeparator) + 1)),
+          Flexible(
+            child: Text(
+              path.substring(path.lastIndexOf(Platform.pathSeparator) + 1),
+              textAlign: .center,
+              maxLines: 3,
+            ).frosted(
+              padding: .all(15),
+              borderRadius: .circular(35),
+              frostColor: Theme.of(context).colorScheme.tertiaryContainer
+            ),
+          ),
           IconButton.filledTonal(
             icon: Icon(Icons.more_vert_rounded),
+            padding: .all(15),
             onPressed: () {
             },
           ),
@@ -67,11 +83,6 @@ class _Footer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: .all(15),
-      padding: .all(10),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainer.withAlpha(220),
-        borderRadius: .all(.circular(30))
-      ),
       child: Row(
         mainAxisAlignment: .spaceEvenly,
         children: [
@@ -101,6 +112,10 @@ class _Footer extends StatelessWidget {
             },
           ),
         ],
+      ).frosted(
+        borderRadius: .circular(30),
+        padding: .all(10),
+        frostColor: Theme.of(context).colorScheme.secondaryContainer
       ),
     );
   }

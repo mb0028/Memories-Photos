@@ -4,6 +4,7 @@ class PhotoIndexer {
   static List<String> ca = [];
 
   static void startCa() {
+    ca = [];
     List<String> temp = [];
     var pics = Directory("C:/Users/mb28/Pictures").listSync(recursive: true);
 
