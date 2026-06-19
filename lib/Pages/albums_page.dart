@@ -1,21 +1,16 @@
 import 'package:flutter/material.dart';
-// import 'package:ftp_server/file_operations/physical_file_operations.dart';
-// import 'package:ftp_server/ftp_server.dart';
-// import 'package:ftp_server/server_type.dart';
+import 'package:memories_photos/Popups/new_album_popup.dart';
 import 'package:memories_photos/Popups/new_ftp_album_popup.dart';
+import 'package:memories_photos/Widgets/album_card.dart';
 import 'package:memories_photos/Widgets/title_text.dart';
+import 'package:memories_photos/photo_indexer.dart';
 
-class AlbumsPage extends StatefulWidget {
+class AlbumsPage extends StatelessWidget {
   const AlbumsPage({super.key});
 
   @override
-  State<AlbumsPage> createState() => _AlbumsPageState();
-}
-
-class _AlbumsPageState extends State<AlbumsPage> {
-  
-  @override
   Widget build(BuildContext context) {
+    var screenWidth = MediaQuery.widthOf(context);
     return Column(
       crossAxisAlignment: .stretch,
       spacing: 15,
@@ -28,19 +23,29 @@ class _AlbumsPageState extends State<AlbumsPage> {
             children: [
               Expanded(
                 child: FilledButton(
-                  onPressed: () {},
+                  onPressed: () async => await showNewAlbumDialog(context),
                   child: Text("New Album"),
                 ),
               ),
               Expanded(
                 child: FilledButton.tonal(
-                  onPressed: () async => await showNewFtpAlbumeDialog(context),
+                  onPressed: () async => await showNewFtpAlbumDialog(context),
                   child: Text("New FTP Album"),
                 ),
               ),
             ],
           ),
         ),
+        Expanded(
+          child: Padding(
+            padding: .symmetric(horizontal: 15),
+            child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: (screenWidth / 170).toInt()),
+              itemCount: PhotoIndexer.albums.length,
+              itemBuilder: (context, i) => AlbumCard(path: PhotoIndexer.albums[i]),
+            ),
+          ),
+        )
       ],
     );
   }

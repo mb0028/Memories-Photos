@@ -15,7 +15,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "mb28.MemoP"
+        applicationId = "mb28.MonoP"
         minSdk = 30
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode

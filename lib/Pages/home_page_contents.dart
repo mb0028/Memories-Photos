@@ -18,7 +18,7 @@ class HomePageContents extends StatelessWidget {
           SizedBox(
             height: 220,
             child: Image.file(
-              File(PhotoIndexer.ca[Random.secure().nextInt(PhotoIndexer.ca.length)].path),
+              File(PhotoIndexer.photos[Random.secure().nextInt(PhotoIndexer.photos.length)].path),
               fit: .cover,
             ),
           ),
@@ -36,7 +36,7 @@ class HomePageContents extends StatelessWidget {
             height: 200,
             child: Row(
               children: [
-                HomePagePhotoCard(photo: PhotoIndexer.ca[Random.secure().nextInt(PhotoIndexer.ca.length)],)
+                HomePagePhotoCard(photo: PhotoIndexer.photos[Random.secure().nextInt(PhotoIndexer.photos.length)],)
               ],
             ),
           )
