@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:memories_photos/photo_indexer.dart';
-import 'package:memories_photos/photo_viewer_page.dart';
+import 'package:memories_photos/Pages/photo_viewer_page.dart';
 
 class PhotosPage extends StatefulWidget {
   const PhotosPage({
@@ -23,27 +23,25 @@ class _PhotosPageState extends State<PhotosPage> {
   @override
   Widget build(BuildContext context) {
     var screenWidth = MediaQuery.widthOf(context);
-    return Scaffold(
-      body: GridView.builder(
-        physics: BouncingScrollPhysics(),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: (screenWidth / 120) .toInt()),
-        itemCount: PhotoIndexer.ca.length,
-        itemBuilder: (context, i) => _PhotoCard(i: i),
-      )
+    return GridView.builder(
+      physics: BouncingScrollPhysics(),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: (screenWidth / 120) .toInt()),
+      itemCount: PhotoIndexer.ca.length,
+      itemBuilder: (context, i) => _PhotosPagePhotoCard(i: i),
     );
   }
 }
 
-class _PhotoCard extends StatelessWidget {
+class _PhotosPagePhotoCard extends StatelessWidget {
   final int i;
-  const _PhotoCard({required this.i});
+  const _PhotosPagePhotoCard({required this.i});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => PhotoViewerPage(path: PhotoIndexer.ca[i]),
+          builder: (context) => PhotoViewerPage(photo: PhotoIndexer.ca[i]),
         )
       ),
       child: Container(
@@ -56,7 +54,7 @@ class _PhotoCard extends StatelessWidget {
         child: Hero(
           tag: PhotoIndexer.ca[i],
           child: Image.file(
-            File(PhotoIndexer.ca[i]),
+            File(PhotoIndexer.ca[i].path),
             // cacheHeight: 256,
             // cacheWidth: 256,
             fit: .cover,

@@ -1,16 +1,21 @@
 import 'dart:io';
+import 'package:memories_photos/Structs/photo.dart';
 
 class PhotoIndexer {
-  static List<String> ca = [];
+  static List<String> commonPhotoDirs = Platform.isAndroid
+    ? ["/sdcard"] // Temporary TODO
+    : ["C:/Users/mb28/Pictures"]; // Temporary TODO
+
+  static List<Photo> ca = [];
 
   static void startCa() {
     ca = [];
-    List<String> temp = [];
-    var pics = Directory("C:/Users/mb28/Pictures").listSync(recursive: true);
+    List<Photo> temp = [];
 
-    for (var file in pics) 
-      if (file.path.contains(".png") || file.path.contains(".jpg") || file.path.contains(".jpeg"))
-        temp.add(file.path);
+    for (var dir in commonPhotoDirs)
+      for (var file in Directory(dir).listSync(recursive: true))
+        if (file.path.contains(".png") || file.path.contains(".jpg") || file.path.contains(".jpeg"))
+          temp.add(Photo(path: file.path));
 
     ca = temp;
   }

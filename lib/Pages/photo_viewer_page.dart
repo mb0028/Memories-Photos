@@ -1,10 +1,11 @@
 import 'dart:io';
 import 'package:blur/blur.dart';
 import 'package:flutter/material.dart';
+import 'package:memories_photos/Structs/photo.dart';
 
 class PhotoViewerPage extends StatelessWidget {
-  final String path;
-  const PhotoViewerPage({super.key, required this.path});
+  final Photo photo;
+  const PhotoViewerPage({super.key, required this.photo});
 
   @override
   Widget build(BuildContext context) {
@@ -14,18 +15,18 @@ class PhotoViewerPage extends StatelessWidget {
         children: [
           Flexible(
             child: Hero(
-              curve: Curves.elasticOut,
-              reverseCurve: Curves.elasticIn,
-              tag: path,
+              curve: Curves.easeOutCirc,
+              reverseCurve: Curves.easeInCirc,
+              tag: photo.path,
               child: Image.file(
-                File(path),
+                File(photo.path),
               ),
             ),
           ),
           Column(
             mainAxisAlignment: .spaceBetween,
             children: [
-              _Header(path: path,),
+              _Header(photo: photo,),
               _Footer(),
             ],
           )
@@ -38,8 +39,8 @@ class PhotoViewerPage extends StatelessWidget {
 //////////////////////////////////////////////////////////////////
 
 class _Header extends StatelessWidget {
-  final String path;
-  const _Header({required this.path});
+  final Photo photo;
+  const _Header({required this.photo});
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +57,7 @@ class _Header extends StatelessWidget {
           ),
           Flexible(
             child: Text(
-              path.substring(path.lastIndexOf(Platform.pathSeparator) + 1),
+              photo.name,
               textAlign: .center,
               maxLines: 3,
             ).frosted(
@@ -68,8 +69,7 @@ class _Header extends StatelessWidget {
           IconButton.filledTonal(
             icon: Icon(Icons.more_vert_rounded),
             padding: .all(15),
-            onPressed: () {
-            },
+            onPressed: () => photo.showMoreActionsPopup(),
           ),
         ],
       ),

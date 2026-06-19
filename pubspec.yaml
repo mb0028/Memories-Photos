@@ -13,6 +13,10 @@ dependencies:
   system_theme: ^3.3.0
   blur: ^4.0.2
 
+  ftp_server: ^2.3.2
+  ftpconnect: ^2.0.10
+  ip_go: ^1.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

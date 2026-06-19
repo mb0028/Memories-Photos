@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:memories_photos/photos_page.dart';
+import 'package:memories_photos/Pages/home_page.dart';
 import 'package:system_theme/system_theme.dart';
 
 void main() {
@@ -21,7 +21,7 @@ class MainApp extends StatelessWidget {
           brightness: MediaQuery.platformBrightnessOf(context)
         ),
       ),
-      home: PhotosPage(),
+      home: MonoPHomePage(),
     );
   }
 }
