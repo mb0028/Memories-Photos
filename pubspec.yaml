@@ -10,7 +10,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-  system_theme: ^3.3.0
   blur: ^4.0.2
 
   ftp_server: ^2.3.2

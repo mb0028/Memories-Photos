@@ -38,7 +38,7 @@ class HomePagePhotoCard extends StatelessWidget {
           ),
         ),
         GestureDetector(
-          onTap: () => photo.showMoreActionsPopup(evenMoreActions: true),
+          onTap: () => photo.showMoreActionsPopup(context ,evenMoreActions: true),
           child: Container(
             margin: .symmetric(vertical: 5),
             child: Text(

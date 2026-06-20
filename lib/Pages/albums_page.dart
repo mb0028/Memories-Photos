@@ -40,6 +40,7 @@ class AlbumsPage extends StatelessWidget {
           child: Padding(
             padding: .symmetric(horizontal: 15),
             child: GridView.builder(
+              physics: BouncingScrollPhysics(),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: (screenWidth / 170).toInt()),
               itemCount: PhotoIndexer.albums.length,
               itemBuilder: (context, i) => AlbumCard(path: PhotoIndexer.albums[i]),

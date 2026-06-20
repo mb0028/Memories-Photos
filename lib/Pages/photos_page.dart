@@ -51,7 +51,6 @@ class _PhotosPageState extends State<PhotosPage> {
   }
 }
 
-
 class _PhotosPagePhotoCard extends StatelessWidget {
   final int i;
   final List<Photo> photos;
@@ -76,8 +75,8 @@ class _PhotosPagePhotoCard extends StatelessWidget {
           tag: photos[i].path,
           child: Image.file(
             File(photos[i].path),
-            // cacheHeight: 256,
-            // cacheWidth: 256,
+            cacheHeight: 180,
+            cacheWidth: 180,
             fit: .cover,
           ),
         ),

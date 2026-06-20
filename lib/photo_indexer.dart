@@ -5,7 +5,7 @@ class PhotoIndexer {
   static var slash = Platform.pathSeparator;
 
   static List<String> commonPhotoDirs = Platform.isAndroid
-    ? ["${slash}sdcard"] // Temporary TODO
+    ? ["${slash}sdcard${slash}DCIM"] // Temporary TODO
     : ["C:${slash}Users${slash}mb28${slash}Pictures"]; // Temporary TODO
 
   static List<Photo> photos = [];

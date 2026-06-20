@@ -32,7 +32,7 @@ class MonoPHomePageState extends State<MonoPHomePage> {
       },
       extendBody: true,
       bottomNavigationBar: Container(
-        margin: .all(10),
+        margin: .all(15),
         child: Container(
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.surfaceContainer.withAlpha(80),
@@ -45,6 +45,7 @@ class MonoPHomePageState extends State<MonoPHomePage> {
           child: NavigationBar(
             backgroundColor: Colors.transparent,
             selectedIndex: currentPage,
+            height: 65,
             onDestinationSelected: (value) {
               setState(() {
                 currentPage = value;
