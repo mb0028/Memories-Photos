@@ -1,3 +1,5 @@
-# memories_photos
+# Memories Photos
 
-A new Flutter project.
+A cross-platform gallery app that exists to replacing apps like google photos
+
+(App is still in development progress)
