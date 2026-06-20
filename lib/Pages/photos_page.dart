@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:memories_photos/Structs/photo.dart';
 import 'package:memories_photos/photo_indexer.dart';
 import 'package:memories_photos/Pages/photo_viewer_page.dart';
+import 'package:memories_photos/settings.dart';
 
 class PhotosPage extends StatefulWidget {
   final String? folder;
@@ -43,18 +44,20 @@ class _PhotosPageState extends State<PhotosPage> {
       ),
       body: GridView.builder(
         physics: BouncingScrollPhysics(),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: (screenWidth / 120) .toInt()),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: (screenWidth / Settings.gridScale).toInt()),
         itemCount: photos.length,
-        itemBuilder: (context, i) => _PhotosPagePhotoCard(i: i, photos: photos),
+        itemBuilder: (context, i) => PhotoCard(i: i, photos: photos),
       ),
     );
   }
 }
 
-class _PhotosPagePhotoCard extends StatelessWidget {
+
+
+class PhotoCard extends StatelessWidget {
   final int i;
   final List<Photo> photos;
-  const _PhotosPagePhotoCard({required this.i, required this.photos});
+  const PhotoCard({required this.i, required this.photos});
 
   @override
   Widget build(BuildContext context) {

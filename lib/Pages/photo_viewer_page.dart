@@ -73,6 +73,7 @@ class _HeaderState extends State<_Header> {
           IconButton.filled(
             icon: Icon(Icons.arrow_back_rounded),
             padding: .all(15),
+            tooltip: "Back",
             onPressed: () => Navigator.of(context).pop(),
           ),
           Flexible(
@@ -89,6 +90,7 @@ class _HeaderState extends State<_Header> {
           IconButton.filledTonal(
             icon: Icon(Icons.more_vert_rounded),
             padding: .all(15),
+            tooltip: "More",
             onPressed: () => widget.photo.showMoreActionsPopup(context),
           ),
         ],
@@ -135,26 +137,31 @@ class _FooterState extends State<_Footer> {
             children: [
               IconButton(
                 icon: Icon(Icons.share_rounded),
+                tooltip: "Share",
                 onPressed: () {
                 },
               ),
               IconButton(
                 icon: Icon(Icons.delete_outline),
+                tooltip: "Delete",
                 onPressed: () {
                 },
               ),
               IconButton(
                 icon: Icon(Icons.add_circle_outline),
+                tooltip: "Add to/Create",
                 onPressed: () {
                 },
               ),
               IconButton(
                 icon: Icon(Icons.favorite_border),
+                tooltip: "Add/Remove favorite",
                 onPressed: () {
                 },
               ),
               IconButton(
-                icon: Icon(Icons.edit_rounded),
+                icon: Icon(Icons.draw_rounded),
+                tooltip: "Edit Comment",
                 onPressed: () {
                 },
               ),

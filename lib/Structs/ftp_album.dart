@@ -9,14 +9,16 @@ class FtpAlbum {
   String name;
   String password;
   int port;
+  bool client;
 
   Future<String?> get ip async => await IpGo.privateIp;
 
   static const String _nameT = "[NAME]";
   static const String _passwordT = "[PASSWORD]";
   static const String _portT = "[PORT]";
+  static const String _clientT = "[CLIENT]";
 
-  FtpAlbum({required this.folderPath, required this.name, required this.port, required this.password});
+  FtpAlbum({required this.folderPath, required this.name, required this.port, required this.password, required this.client});
 
   Future load() async {
     var file = File("$folderPath${Platform.pathSeparator}.monoP FTP album info.txt");
@@ -33,6 +35,8 @@ class FtpAlbum {
           password = lines[i].split(_passwordT)[1];
         if (lines[i].startsWith(_portT))
           port = int.parse(lines[i].split(_portT)[1]);
+        if (lines[i].startsWith(_clientT))
+          client = bool.parse(lines[i].split(_clientT)[1]);
       }
     }
   }
@@ -44,7 +48,8 @@ class FtpAlbum {
 
     result += "$_nameT$name\n";
     result += "$_passwordT$password\n";
-    result += "$_portT$port";
+    result += "$_portT$port\n";
+    result += "$_clientT$client";
     
     await file.writeAsString(result);
   }

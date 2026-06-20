@@ -1,16 +1,17 @@
 import 'dart:io';
+import 'package:memories_photos/Structs/ftp_album.dart';
 import 'package:memories_photos/Structs/photo.dart';
 
 class PhotoIndexer {
   static var slash = Platform.pathSeparator;
 
   static List<String> commonPhotoDirs = Platform.isAndroid
-    ? ["${slash}sdcard${slash}DCIM"] // Temporary TODO
+    ? ["${slash}sdcard${slash}DCIM", "${slash}sdcard${slash}Download"] // Temporary TODO
     : ["C:${slash}Users${slash}mb28${slash}Pictures"]; // Temporary TODO
 
   static List<Photo> photos = [];
   static List<String> albums = [];
-  static List<String> ftpAlbums = [];
+  static List<FtpAlbum> ftpAlbums = [];
 
   static void startCa() {
     photos = [];
@@ -28,7 +29,10 @@ class PhotoIndexer {
             albums.add(folder);
         }
         else if (path.contains(".monoP FTP album info.txt")) {
-          ftpAlbums.add(path.substring(0, path.lastIndexOf(Platform.pathSeparator)));
+          var albuu = FtpAlbum(folderPath: path.substring(0, path.lastIndexOf(Platform.pathSeparator)),
+            name: '', port: 0, password: '', client: false);
+          albuu.load();
+          ftpAlbums.add(albuu);
         }
       }
 

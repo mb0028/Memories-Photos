@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:memories_photos/Structs/ftp_album.dart';
 import 'package:memories_photos/Widgets/monop_text_field.dart';
 
-Future<FtpAlbum?> showNewFtpAlbumDialog(BuildContext context) async {
+Future<FtpAlbum?> addNewFtpAlbumDialog(BuildContext context) async {
   var albumPath = TextEditingController();
   var albumName = TextEditingController();
   var albumPort = TextEditingController();
   var albumPass = TextEditingController();
   bool canceled = true;
+
+  albumPath.text = Platform.isAndroid ? "/sdcard/DCIM/Memories Photos" : "";
 
   await showDialog(
     context: context,
@@ -21,16 +23,16 @@ Future<FtpAlbum?> showNewFtpAlbumDialog(BuildContext context) async {
           physics: BouncingScrollPhysics(),
           children: [
             Text(
-              "Create New FTP Album",
+              "Add FTP Album",
               textAlign: .center,
               style: TextStyle(
                 fontSize: 20,
               ),
             ),
             SizedBox(height: 10),
-            Text("Album Name:\n(Also uses for ftp server username)"),
+            Text("Album/Host name:"),
             MonoPTextField(controller: albumName),
-            Text("Full album path:"),
+            Text("Create in:"),
             Row(
               spacing: 5,
               children: [
@@ -50,11 +52,11 @@ Future<FtpAlbum?> showNewFtpAlbumDialog(BuildContext context) async {
             MonoPTextField(controller: albumPass),
             SizedBox(height: 10),
             FilledButton(
-              child: Text("Create"),
+              child: Text("Add"),
               onPressed: () {
                 try {
                   int.parse(albumPort.text);
-                  Directory(albumPath.text).createSync(recursive: true);
+                  Directory(albumPath.text + Platform.pathSeparator + albumName.text).createSync(recursive: true);
                   canceled = false;
                   Navigator.of(context).pop();
                 } catch (e) {
@@ -71,11 +73,11 @@ Future<FtpAlbum?> showNewFtpAlbumDialog(BuildContext context) async {
     return null;
 
   var a = FtpAlbum(
-    folderPath: albumPath.text,
+    folderPath: albumPath.text + Platform.pathSeparator + albumName.text,
     name: albumName.text,
     port: int.parse(albumPort.text),
     password: albumPass.text,
-    client: false
+    client: true
   );
   a.save();
   return a;

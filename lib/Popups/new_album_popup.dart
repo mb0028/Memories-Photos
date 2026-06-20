@@ -33,7 +33,7 @@ Future<String?> showNewAlbumDialog(BuildContext context) async {
             Row(
               spacing: 5,
               children: [
-                Expanded(flex: 5, child: MonoPTextField(controller: albumPath),),
+                Expanded(flex: 4, child: MonoPTextField(controller: albumPath),),
                 Expanded(
                   child: IconButton.outlined(
                     padding: .all(15),
