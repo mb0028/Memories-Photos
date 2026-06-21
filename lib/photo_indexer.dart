@@ -35,7 +35,11 @@ class PhotoIndexer {
           ftpAlbums.add(albuu);
         }
       }
-
+    
+    for (var dirPathF in ftpAlbums)
+      if (albums.contains(dirPathF.folderPath))
+        albums.remove(dirPathF.folderPath);
+    
     photos = temp;
   }
 

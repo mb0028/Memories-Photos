@@ -61,7 +61,7 @@ class AlbumCard extends StatelessWidget {
             ),
             Text(
               "${PhotoIndexer.getFolderPhotosCount(path)} Photos"
-                + (isFtp ? " (FTP${ftpInfo!.client ? " Client" : " Host"})" : ""),
+                + (isFtp ? " (FTP: ${ftpInfo!.client ? " Client" : " Host"})" : ""),
               textAlign: .center,
               style: TextStyle(
                 fontWeight: .w500,

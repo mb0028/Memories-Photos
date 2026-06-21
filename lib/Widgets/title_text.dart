@@ -10,7 +10,7 @@ class TitleText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: .symmetric(vertical: 80),
+      padding: .symmetric(vertical: 40),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surfaceContainer,
         borderRadius: .only(bottomLeft: .circular(25), bottomRight: .circular(25))

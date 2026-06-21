@@ -6,6 +6,7 @@ import 'package:memories_photos/Structs/ftp_album.dart';
 import 'package:memories_photos/Widgets/album_card.dart';
 import 'package:memories_photos/Widgets/title_text.dart';
 import 'package:memories_photos/photo_indexer.dart';
+import 'package:memories_photos/settings.dart';
 
 class AlbumsPage extends StatelessWidget {
   const AlbumsPage({super.key});
@@ -61,7 +62,7 @@ class AlbumsPage extends StatelessWidget {
             padding: .symmetric(horizontal: 15),
             child: GridView.builder(
               physics: BouncingScrollPhysics(),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: (screenWidth / 170).toInt()),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: (screenWidth / Settings.gridScale / 1.5).toInt()),
               itemCount: PhotoIndexer.albums.length,
               itemBuilder: (context, i) => albums[i] is String
                 ? AlbumCard(path: albums[i] as String, isFtp: false)

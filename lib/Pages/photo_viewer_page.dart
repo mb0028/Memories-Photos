@@ -13,14 +13,12 @@ class PhotoViewerPage extends StatelessWidget {
       body: Stack(
         alignment: .center,
         children: [
-          Flexible(
-            child: Hero(
-              curve: Curves.easeOutCirc,
-              reverseCurve: Curves.easeInCirc,
-              tag: photo.path,
-              child: Image.file(
-                File(photo.path),
-              ),
+          Hero(
+            curve: Curves.easeOutCirc,
+            reverseCurve: Curves.easeInCirc,
+            tag: photo.path,
+            child: Image.file(
+              File(photo.path),
             ),
           ),
           Column(
