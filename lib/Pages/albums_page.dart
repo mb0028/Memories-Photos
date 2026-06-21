@@ -28,26 +28,26 @@ class AlbumsPage extends StatelessWidget {
       children: [
         TitleText(text: "Albums", color: Theme.of(context).colorScheme.secondary,),
         
-        Padding(
-          padding: .symmetric(horizontal: 15),
-          child: Row(
-            spacing: 15,
-            children: [
-              Expanded(
-                child: FilledButton.tonal(
-                  onPressed: () async => await addNewFtpAlbumDialog(context),
-                  child: Text("Add FTP album"),
-                ),
-              ),
-              Expanded(
-                child: FilledButton(
-                  onPressed: () async => await showNewFtpAlbumDialog(context),
-                  child: Text("New FTP album"),
-                ),
-              ),
-            ],
-          ),
-        ),
+        // Padding(
+        //   padding: .symmetric(horizontal: 15),
+        //   child: Row(
+        //     spacing: 15,
+        //     children: [
+        //       Expanded(
+        //         child: FilledButton.tonal(
+        //           onPressed: () async => await addNewFtpAlbumDialog(context),
+        //           child: Text("Add FTP album"),
+        //         ),
+        //       ),
+        //       Expanded(
+        //         child: FilledButton(
+        //           onPressed: () async => await showNewFtpAlbumDialog(context),
+        //           child: Text("New FTP album"),
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // ),
         
         Padding(
           padding: .symmetric(horizontal: 15),

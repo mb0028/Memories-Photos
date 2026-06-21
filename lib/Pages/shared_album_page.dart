@@ -23,7 +23,6 @@ class SharedAlbumPage extends StatefulWidget {
 }
 
 class _SharedAlbumPageState extends State<SharedAlbumPage> {
-  List<Photo> photos = [];
   bool isServerRunning = false;
   bool isClientRunning = false;
   String ip = "";
@@ -50,8 +49,6 @@ class _SharedAlbumPageState extends State<SharedAlbumPage> {
     if (widget.albumInfo.client)
       initClientIP();
 
-    photos = PhotoIndexer.getPhotosIn(widget.albumInfo.folderPath);
-
     super.initState();
   }
 
@@ -68,26 +65,31 @@ class _SharedAlbumPageState extends State<SharedAlbumPage> {
         },
         child: RefreshIndicator(
           onRefresh: () async {
-            widget.albumInfo.client ? await syncPhotos() : setState(() {
-              photos = PhotoIndexer.getPhotosIn(widget.albumInfo.folderPath);
+            widget.albumInfo.client ? await refreshPhotos() : setState(() {
             });
           },
           child: GridView.builder(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: (screenWidth / Settings.gridScale).toInt()),
-            itemCount: photos.length,
-            itemBuilder: (context, index) => PhotoCard(i: index, photos: photos),
+            itemCount: widget.albumInfo.photos.length,
+            itemBuilder: (context, index) => Image.network(""),
           ),
         ),
       ),
       primary: true,
       bottomSheet: Container(
-        height: widget.albumInfo.client ? 150 : 108,
+        height: (widget.albumInfo.client ? 150 : 108) + 45,
         margin: .all(10).add(.only(bottom: 40)), // TODO: adaptive nav bar padding
         padding: .symmetric(horizontal: 12, vertical: 5),
         child: Column(
           crossAxisAlignment: .stretch,
           spacing: 5,
           children: [
+            OutlinedButton(
+              child: Text("Add to album"),
+              onPressed: () {
+                
+              },
+            ),
             Expanded(child: widget.albumInfo.client ? clientUI() : serverUI()),
             Text(widget.albumInfo.client
               ? isClientRunning ? "🌲 Connected: ftp://$ip:${widget.albumInfo.port}" : (connecting ? connectingText : "❌ Not connected")
@@ -192,7 +194,7 @@ class _SharedAlbumPageState extends State<SharedAlbumPage> {
       if (!run)
         showStyledToast("Failed to connect", context, duration: 3);
 
-      await syncPhotos();
+      await refreshPhotos();
         
       setState(() => isClientRunning = true);
     } on Exception catch (e) {
@@ -233,56 +235,27 @@ class _SharedAlbumPageState extends State<SharedAlbumPage> {
     }
   }
 
-  Future<void> syncPhotos() async {
+  Future<void> refreshPhotos() async {
     try {
       if (client == null) return;
 
-      List<FTPEntry> rFiles = await client!.listDirectoryContent();
-      List<String> alreadySyncedFiles = [];
-      List<String> serverFiles = [];
+      // List<FTPEntry> rFiles = await client!.listDirectoryContent();
+      // List<String> alreadySyncedFiles = [];
+      // List<String> serverFiles = [];
       
       // Pass 0 : Get client and server file paths
-      for (var file0 in Directory(widget.albumInfo.folderPath).listSync()) {
-        String path = file0.path;
-        if (path.contains(".png") || path.contains(".jpg") || path.contains(".jpeg"))
-          alreadySyncedFiles.add(path);
-      }
-      for (var file00 in rFiles) {
-        String path = file00.name;
-        if (path.contains(".png") || path.contains(".jpg") || path.contains(".jpeg"))
-          serverFiles.add(path);
-      }
-      
-      // Pass 1 : Download unsycned photos from server
-      for (var file in rFiles)
-        if (!alreadySyncedFiles.contains(widget.albumInfo.folderPath + Platform.pathSeparator + file.name))
-          if (file.name.contains(".png") || file.name.contains(".jpg") || file.name.contains(".jpeg"))
-            await client!.downloadFile(
-              file.name,
-              File(widget.albumInfo.folderPath + Platform.pathSeparator + file.name),
-              onProgress: (progressInPercent, totalReceived, fileSize) {
-                setState(() {
-                  connectingText = "⚙️ Connected! Syncing... ($totalReceived/$fileSize)";
-                  downloadProgress = progressInPercent / 100;
-                });
-              },
-            );
-      
-      setState(() => photos = PhotoIndexer.getPhotosIn(widget.albumInfo.folderPath));
-      
-      // Pass 2 : Upload unsycned photos to server
-      for (var file in alreadySyncedFiles) 
-        if (!serverFiles.contains(file.substring(file.lastIndexOf(Platform.pathSeparator) + 1))
-          && (file.contains(".png") || file.contains(".jpg") || file.contains(".jpeg")))
-          await client!.uploadFile(
-            File(file),
-            onProgress: (progressInPercent, totalReceived, fileSize) {
-              setState(() {
-                connectingText = "🏮 Connected! Uploading... ($totalReceived/$fileSize)";
-                downloadProgress = progressInPercent / 100;
-              });
-            },
-          );
+      // for (var file0 in Directory(widget.albumInfo.folderPath).listSync()) {
+      //   String path = file0.path;
+      //   if (path.contains(".png") || path.contains(".jpg") || path.contains(".jpeg"))
+      //     alreadySyncedFiles.add(path);
+      // }
+      // for (var file00 in rFiles) {
+      //   String path = file00.name;
+      //   if (path.contains(".png") || path.contains(".jpg") || path.contains(".jpeg"))
+      //     serverFiles.add(path);
+      // }
+    
+      setState(() {});
     } on Exception catch (e) {
       showStyledToast(e.toString(), context);
     }
