@@ -10,10 +10,11 @@ class PhotoIndexer {
     : ["C:${slash}Users${slash}mb28${slash}Pictures"]; // Temporary TODO
 
   static List<Photo> photos = [];
+  // static Map<Photo, DateTime> photosT = <Photo, DateTime>{};
   static List<String> albums = [];
   static List<FtpAlbum> ftpAlbums = [];
 
-  static void startCa() {
+  static void startCa() async {
     photos = [];
     albums = [];
     List<Photo> temp = [];
@@ -39,6 +40,12 @@ class PhotoIndexer {
     for (var dirPathF in ftpAlbums)
       if (albums.contains(dirPathF.folderPath))
         albums.remove(dirPathF.folderPath);
+      
+    List<DateTime> times = [];
+    for (var p in photos)
+      times.add(await p.dateTakenOrFileTime);
+
+    temp.sort((a, b) => File(b.path).lastModifiedSync().compareTo(File(a.path).lastModifiedSync()));
     
     photos = temp;
   }
@@ -48,6 +55,7 @@ class PhotoIndexer {
     for (var file in Directory(path).listSync())
       if (file.path.contains(".png") || file.path.contains(".jpg") || file.path.contains(".jpeg"))
         temp.add(Photo(path: file.path));
+    temp.sort((a, b) => File(b.path).lastModifiedSync().compareTo(File(a.path).lastModifiedSync()));
     return temp;
   }
 

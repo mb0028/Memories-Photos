@@ -1,17 +1,12 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:ftp_server/file_operations/physical_file_operations.dart';
 import 'package:ftp_server/ftp_server.dart';
 import 'package:ftpconnect/ftpconnect.dart';
-import 'package:memories_photos/Pages/photos_page.dart';
 import 'package:memories_photos/Popups/toast.dart';
 import 'package:memories_photos/Structs/ftp_album.dart';
-import 'package:memories_photos/Structs/photo.dart';
 import 'package:memories_photos/Widgets/monop_text_field.dart';
-import 'package:memories_photos/photo_indexer.dart';
 import 'package:memories_photos/settings.dart';
 
 class SharedAlbumPage extends StatefulWidget {

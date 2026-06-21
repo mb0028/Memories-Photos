@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:memories_photos/Popups/add_ftp_album_popup.dart';
 import 'package:memories_photos/Popups/new_album_popup.dart';
-import 'package:memories_photos/Popups/new_ftp_album_popup.dart';
 import 'package:memories_photos/Structs/ftp_album.dart';
 import 'package:memories_photos/Widgets/album_card.dart';
 import 'package:memories_photos/Widgets/title_text.dart';
@@ -27,27 +25,6 @@ class AlbumsPage extends StatelessWidget {
       spacing: 5,
       children: [
         TitleText(text: "Albums", color: Theme.of(context).colorScheme.secondary,),
-        
-        // Padding(
-        //   padding: .symmetric(horizontal: 15),
-        //   child: Row(
-        //     spacing: 15,
-        //     children: [
-        //       Expanded(
-        //         child: FilledButton.tonal(
-        //           onPressed: () async => await addNewFtpAlbumDialog(context),
-        //           child: Text("Add FTP album"),
-        //         ),
-        //       ),
-        //       Expanded(
-        //         child: FilledButton(
-        //           onPressed: () async => await showNewFtpAlbumDialog(context),
-        //           child: Text("New FTP album"),
-        //         ),
-        //       ),
-        //     ],
-        //   ),
-        // ),
         
         Padding(
           padding: .symmetric(horizontal: 15),

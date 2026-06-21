@@ -7,7 +7,6 @@ import 'package:memories_photos/Structs/photo.dart';
 class HomePagePhotoCard extends StatelessWidget {
   final Photo photo;
   const HomePagePhotoCard({super.key, required this.photo});
-  final double size = 180;
 
   @override
   Widget build(BuildContext context) {
@@ -21,8 +20,6 @@ class HomePagePhotoCard extends StatelessWidget {
             )
           ),
           child: Container(
-            width: size,
-            height: size,
             clipBehavior: .antiAlias,
             decoration: BoxDecoration(
               borderRadius: .circular(20),
@@ -33,6 +30,8 @@ class HomePagePhotoCard extends StatelessWidget {
               child: Image.file(
                 File(photo.path),
                 fit: .cover,
+                width: 190,
+                height: 190,
               ),
             ),
           ),
@@ -43,8 +42,9 @@ class HomePagePhotoCard extends StatelessWidget {
             margin: .symmetric(vertical: 5),
             child: Text(
               photo.name,
-              maxLines: 1,
+              maxLines: 2,
               textAlign: .center,
+              overflow: .fade,
               style: TextStyle(
                 fontSize: 11,
                 color: Theme.of(context).colorScheme.onSecondary
@@ -52,7 +52,6 @@ class HomePagePhotoCard extends StatelessWidget {
             ).frosted(
               borderRadius: .circular(15),
               padding: .all(6),
-              width: size - 10,
               frostColor: Theme.of(context).colorScheme.secondary
             ),
           ),

@@ -20,12 +20,42 @@ class Photo {
 
   Future<String> get dateTaken async => await ExifInterface.getAttribute(path, ExifTag.TAG_DATETIME_ORIGINAL);
 
+  Future<DateTime> get dateTakenOrFileTime async {
+    String ds = await dateTaken;
+    if (ds.isNotEmpty) {
+      DateTime? d = DateTime.tryParse(ds.replaceAll(":", "").replaceAll(" ", "T"));
+      if (d != null) return d;
+    }
+    return await File(path).lastModified();
+  }
+
   /// Returns: true if 5..9 AM
-  bool get isTakenAtMorning => false; //TODO: Implement
+  Future<bool> get isTakenAtMorning async {
+    String ds = await dateTaken;
+    if (ds.isEmpty) return false;
+    DateTime? d = DateTime.tryParse(ds.replaceAll(":", "").replaceAll(" ", "T"));
+    if (d != null && d.hour > 5 && d.hour < 10)
+      return true;
+    return false;
+  }
   /// Returns: true if 7..10 PM
-  bool get isTakenAtEvening => false; //TODO: Implement
+  Future<bool> get isTakenAtEvening async {
+    String ds = await dateTaken;
+    if (ds.isEmpty) return false;
+    DateTime? d = DateTime.tryParse(ds.replaceAll(":", "").replaceAll(" ", "T"));
+    if (d != null && d.hour > 19 && d.hour < 23)
+      return true;
+    return false;
+  }
   /// Returns: true if 6AM..8PM . false = isTakenAtNight
-  bool get isTakenAtDay => false; //TODO: Implement
+  Future<bool> get isTakenAtDay async {
+    String ds = await dateTaken;
+    if (ds.isEmpty) return false;
+    DateTime? d = DateTime.tryParse(ds.replaceAll(":", "").replaceAll(" ", "T"));
+    if (d != null && d.hour > 6 && d.hour < 21)
+      return true;
+    return false;
+  }
 
   Future<Map<String, String>?> get exif async => await ExifInterface.getUsefulExif(path);
 
