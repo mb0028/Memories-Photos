@@ -22,20 +22,13 @@ class MainActivity : FlutterActivity() {
     private val CHANNEL = "mb28.monoP.exif/exif_channel"
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            if (!Environment.isExternalStorageManager()) {
-                val intent =
-                    Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
-                intent.setData(Uri.fromParts("package", packageName, null))
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity(intent)
-                Toast.makeText(applicationContext, "All files access is rejected", Toast.LENGTH_SHORT).show()
-            }
-        } else {
-            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                val permissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                requestPermissions(permissions, 28)
-            }
+        if (!Environment.isExternalStorageManager()) {
+            val intent =
+                Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
+            intent.setData(Uri.fromParts("package", packageName, null))
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+            Toast.makeText(applicationContext, "All files access is rejected", Toast.LENGTH_SHORT).show()
         }
         super.onCreate(savedInstanceState)
     }
@@ -62,10 +55,6 @@ class MainActivity : FlutterActivity() {
                     if (!sett)
                         result.error("0", "Failed to set exif tag.", sett)
                     result.success(sett)
-                }
-                "getUsefulExif" -> {
-                    val exifDart = ExifDart()
-                    result.success(exifDart.getUsefulExif(call.argument<String>("path")!!))
                 }
                 else -> {
                     result.notImplemented()

@@ -16,7 +16,7 @@ android {
 
     defaultConfig {
         applicationId = "mb28.MonoP"
-        minSdk = 28
+        minSdk = 33
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName

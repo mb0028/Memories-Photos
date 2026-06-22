@@ -75,15 +75,25 @@ class _HeaderState extends State<_Header> {
             onPressed: () => Navigator.of(context).pop(),
           ),
           Flexible(
-            child: Text(
-              name,
-              textAlign: .center,
-              maxLines: 3,
-            ).frosted(
+            child: Container(
               padding: .all(15),
-              borderRadius: .circular(35),
-              frostColor: Theme.of(context).colorScheme.tertiaryContainer
-            ),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.tertiaryContainer.withAlpha(220),
+                borderRadius: .circular(50),
+                // border: .all(
+                //   width: 1,
+                //   color: Theme.of(context).colorScheme.tertiary
+                // )
+              ),
+              child: Text(
+                name,
+                textAlign: .center,
+                maxLines: 3,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onTertiaryContainer
+                ),
+              ),
+            )
           ),
           IconButton.filledTonal(
             icon: Icon(Icons.more_vert_rounded),
@@ -143,12 +153,14 @@ class _FooterState extends State<_Footer> {
                 icon: Icon(Icons.delete_outline),
                 tooltip: "Delete",
                 onPressed: () {
+                  widget.photo.showDeletePopup(context, () => setState(() {}));
                 },
               ),
               IconButton(
-                icon: Icon(Icons.add_circle_outline),
-                tooltip: "Add to/Create",
+                icon: Icon(Icons.info_outline),
+                tooltip: "Info",
                 onPressed: () {
+                  widget.photo.showDetailsPopup(context);
                 },
               ),
               IconButton(
@@ -159,8 +171,9 @@ class _FooterState extends State<_Footer> {
               ),
               IconButton(
                 icon: Icon(Icons.draw_rounded),
-                tooltip: "Edit Comment",
+                tooltip: "Change Comment",
                 onPressed: () {
+                  widget.photo.showEditCommentPopup(context, () => setState(() {}));
                 },
               ),
             ],

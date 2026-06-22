@@ -15,7 +15,7 @@ class ExifInterface {
 
   static Future<String> setAttribute(String path, String tag, String value) async {
     try {
-      final result = await channel.invokeMethod<int>("setAttribute",
+      final result = await channel.invokeMethod<bool>("setAttribute",
         {"path": path, "tag": tag, "value": value});
       return 'Battery level at $result % .';
     } on PlatformException catch (e) {
@@ -23,13 +23,13 @@ class ExifInterface {
     }
   }
 
-  static Future<Map<String, String>?> getUsefulExif(String path) async {
+  static Future<Map<String?, String?>> getUsefulExif(String path) async {
     try {
-      final result = await channel.invokeMethod<Map<String, String>>("getUsefulExif",
-        {"path": path});
-      return result!;
+      Map<String?, String?> result = await channel.invokeMethod<Map<String?, String?>>("getUsefulExif",
+        {"path": path}) as Map<String?, String?>;
+      return result;
     } on PlatformException {
-      return null;
+      return <String?, String?> {};
     }
   }
 

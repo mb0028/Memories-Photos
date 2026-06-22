@@ -14,8 +14,8 @@ class MainApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: .fromSeed(
-          seedColor: Colors.greenAccent,
-          dynamicSchemeVariant: .rainbow,
+          seedColor: const Color.fromARGB(255, 164, 255, 196),
+          dynamicSchemeVariant: .tonalSpot,
           brightness: MediaQuery.platformBrightnessOf(context)
         ),
       ),

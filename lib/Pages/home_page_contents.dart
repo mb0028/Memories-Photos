@@ -25,7 +25,7 @@ class _HomePageContentsState extends State<HomePageContents> {
     int sunriseCount = 0; int nightCount = 0;
 
     for (var i = 0; i < Settings.recentsCount; i++)
-      recents.add(PhotoIndexer.photos[(PhotoIndexer.photos.length - 1) - i]);
+      recents.add(PhotoIndexer.photos[i.clamp(0, PhotoIndexer.photos.length - 1)]);
     
     for (var p in PhotoIndexer.photos) {
       if (sunriseCount >= Settings.specialSectionsCount && nightCount >= Settings.specialSectionsCount)
@@ -119,14 +119,12 @@ class _Section extends StatelessWidget {
     return Container(
       margin: .only(top: 8, bottom: 20).add(.symmetric(horizontal: 15)),
       height: 180,
-      child: Expanded(
-        child: CarouselView.weightedBuilder(
-          itemCount: photos.length,
-          flexWeights: flexWeights,
-          itemSnapping: true,
-          infinite: photos.length > 1,
-          itemBuilder: (context, i) => HomePagePhotoCard(photo: photos[i]),
-        ),
+      child: CarouselView.weightedBuilder(
+        itemCount: photos.length,
+        flexWeights: flexWeights,
+        itemSnapping: true,
+        infinite: photos.length > 1,
+        itemBuilder: (context, i) => HomePagePhotoCard(photo: photos[i]),
       )
     );
   }

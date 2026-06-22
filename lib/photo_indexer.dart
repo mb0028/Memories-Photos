@@ -43,7 +43,7 @@ class PhotoIndexer {
       
     List<DateTime> times = [];
     for (var p in photos)
-      times.add(await p.dateTakenOrFileTime);
+      times.add(await p.dateTakenOrFileTime); //TODO: Add exif datetime tag
 
     temp.sort((a, b) => File(b.path).lastModifiedSync().compareTo(File(a.path).lastModifiedSync()));
     
