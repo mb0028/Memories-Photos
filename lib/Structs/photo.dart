@@ -8,19 +8,22 @@ import 'package:memories_photos/Widgets/monop_text_field.dart';
 /// Holds path to the photo and helpful methods. <br/>
 /// F**k dart with this lowercase naming rule
 class Photo {
-  Photo({required this.path}) {
-    Future.sync(() async {
-      String ds = await ExifInterface.getAttribute(path, ExifTag.TAG_DATETIME_ORIGINAL);
-      if (ds.isNotEmpty) {
-        DateTime? d = DateTime.tryParse(ds.replaceAll(":", "").replaceAll(" ", "T"));
-        if (d != null) dateTaken = d;
-      } else dateTaken = await File(path).lastModified();
-    });
+  Photo({required this.path});
+
+  static Future<Photo> fromPath(String path) async {
+    var p = Photo(path: path);
+    String ds = await ExifInterface.getAttribute(path, ExifTag.TAG_DATETIME_ORIGINAL);
+    if (ds.isNotEmpty) {
+      DateTime? d = DateTime.tryParse(ds.replaceAll(":", "").replaceAll(" ", "T"));
+      if (d != null) p.dateTaken = d;
+    }
+    else p.dateTaken = await File(path).lastModified();
+    return p;
   }
 
   // Fields
   final String path;
-  DateTime dateTaken = DateTime(0); // Its used a lot so better storing it on memeory
+  DateTime dateTaken = DateTime(0); // Its used a lot so better storing it in memeory
   
   String get name => path.substring(path.lastIndexOf(Platform.pathSeparator) + 1);
   

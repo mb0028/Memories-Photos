@@ -39,7 +39,7 @@ class MonoPHomePageState extends State<MonoPHomePage> {
         margin: .all(15),
         child: Container(
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surfaceContainer.withAlpha(40),
+            color: Theme.of(context).colorScheme.primaryContainer.withAlpha(60),
             borderRadius: .circular(80),
             border: .all(
               color: Theme.of(context).colorScheme.secondaryContainer,
@@ -74,8 +74,8 @@ class MonoPHomePageState extends State<MonoPHomePage> {
             ]
           ),
         ).frosted(
-          blur: 10,
-          borderRadius: .circular(50)
+          blur: 3.5,
+          borderRadius: .circular(80)
         ),
       ),
     );

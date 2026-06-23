@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:memories_photos/Popups/new_album_popup.dart';
+import 'package:memories_photos/image_helper.dart';
 
 Future<bool> showHomeCreateNewPopup(BuildContext context) async {
   bool returnTrue = false;
   await showModalBottomSheet(
     context: context,
     showDragHandle: true,
+    backgroundColor: Theme.of(context).colorScheme.secondaryContainer.withAlpha(240),
     builder: (context) => Container(
       margin: .symmetric(horizontal: 15),
       width: 360,
@@ -17,7 +19,7 @@ Future<bool> showHomeCreateNewPopup(BuildContext context) async {
             mainAxisAlignment: .spaceEvenly,
             spacing: 15,
             children: [
-              FilledButton.tonalIcon(
+              OutlinedButton.icon(
                 label: Text("Record Video"),
                 icon: Icon(Icons.video_camera_front_outlined),
                 onPressed: () {
@@ -29,8 +31,8 @@ Future<bool> showHomeCreateNewPopup(BuildContext context) async {
               FilledButton.icon(
                 label: Text("Capture Photo"),
                 icon: Icon(Icons.add_a_photo_rounded),
-                onPressed: () {
-                  //TODO: take picture with add comment prompt
+                onPressed: () async {
+                  await ImageHelper.takePicture();
                   returnTrue = true;
                   Navigator.of(context).pop();
                 },

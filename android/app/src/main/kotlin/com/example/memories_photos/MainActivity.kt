@@ -1,14 +1,7 @@
 package com.example.memories_photos
 
-import android.Manifest
-import android.content.Context
-import android.content.ContextWrapper
 import android.content.Intent
-import android.content.IntentFilter
-import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.BatteryManager
-import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.Settings
@@ -19,7 +12,8 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 
 class MainActivity : FlutterActivity() {
-    private val CHANNEL = "mb28.monoP.exif/exif_channel"
+    private val CHANNEL_EXIF = "mb28.monoP.exif/exif_channel"
+    private val CHANNEL_CAMERA = "mb28.monoP.camera/camera_channel"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         if (!Environment.isExternalStorageManager()) {
@@ -36,15 +30,21 @@ class MainActivity : FlutterActivity() {
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
 
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler {
-            call, result ->
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            CHANNEL_EXIF
+        ).setMethodCallHandler { call, result ->
             when (call.method) {
                 "getAttribute" -> {
                     val exifDart = ExifDart()
                     val theAtt =
-                        exifDart.getAttribute(call.argument<String>("path")!!, call.argument<String>("tag")!!)
+                        exifDart.getAttribute(
+                            call.argument<String>("path")!!,
+                            call.argument<String>("tag")!!
+                        )
                     result.success(theAtt)
                 }
+
                 "setAttribute" -> {
                     val exifDart = ExifDart()
                     val sett = exifDart.setAttribute(
@@ -56,11 +56,41 @@ class MainActivity : FlutterActivity() {
                         result.error("0", "Failed to set exif tag.", sett)
                     result.success(sett)
                 }
+
                 else -> {
                     result.notImplemented()
                 }
             }
         }
     }
+
+//        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL_CAMERA).setMethodCallHandler {
+//            call, result ->
+//            when (call.method) {
+//                "takePictureAndroid" -> {
+//                    val i = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+//                        i.putExtra(
+//                            MediaStore.EXTRA_OUTPUT,
+//                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+//                        )
+//                    startActivityForResult(i, 28001)
+//                    result.success("")
+//                }
+//                else -> {
+//                    result.notImplemented()
+//                }
+//            }
+//        }
+//    }
+//
+//    override fun onActivityResult(
+//        requestCode: Int,
+//        resultCode: Int,
+//        data: Intent?,
+//        caller: ComponentCaller
+//    ) {
+//
+//        super.onActivityResult(requestCode, resultCode, data, caller)
+//    }
 
 }

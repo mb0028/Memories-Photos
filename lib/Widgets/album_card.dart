@@ -3,27 +3,23 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:memories_photos/Pages/photos_page.dart';
-import 'package:memories_photos/Pages/shared_album_page.dart';
-import 'package:memories_photos/Structs/ftp_album.dart';
 import 'package:memories_photos/photo_indexer.dart';
 
 class AlbumCard extends StatelessWidget {
   final String path;
-  final bool isFtp;
-  final FtpAlbum? ftpInfo;
   
   const AlbumCard({
-    super.key, required this.path, required this.isFtp, this.ftpInfo,
+    super.key, required this.path,
   });
 
   @override
   Widget build(BuildContext context) {
-    var thumbnail = PhotoIndexer.getFolderThumb(path);
+    String? thumbnail = PhotoIndexer.albums[path]?.thumbnail;
 
     return GestureDetector(
       onTap: () => Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => isFtp ? SharedAlbumPage(albumInfo: ftpInfo!) : PhotosPage(folder: path),
+          builder: (context) => PhotosPage(folder: path),
         )
       ),
       child: Container(
@@ -60,8 +56,7 @@ class AlbumCard extends StatelessWidget {
               ),
             ),
             Text(
-              "${PhotoIndexer.getFolderPhotosCount(path)} Photos"
-                + (isFtp ? " (FTP: ${ftpInfo!.client ? " Client" : " Host"})" : ""),
+              "${PhotoIndexer.albums[path]?.itemsInIt} Photos",
               textAlign: .center,
               style: TextStyle(
                 fontWeight: .w500,

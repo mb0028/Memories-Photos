@@ -1,6 +1,6 @@
 import 'dart:io';
-import 'package:memories_photos/Structs/ftp_album.dart';
 import 'package:memories_photos/Structs/photo.dart';
+import 'package:memories_photos/Structs/album_info.dart';
 
 class PhotoIndexer {
   static var slash = Platform.pathSeparator;
@@ -10,12 +10,11 @@ class PhotoIndexer {
     : ["C:${slash}Users${slash}mb28${slash}Pictures"]; // Temporary TODO
 
   static List<Photo> photos = [];
-  static List<String> albums = [];
-  static List<FtpAlbum> ftpAlbums = [];
+  static Map<String, AlbumInfo> albums = <String, AlbumInfo>{};
 
-  static Future startCa() async {
+  static Future startCache() async {
     photos = [];
-    albums = [];
+    albums = <String, AlbumInfo>{};
     List<Photo> temp = [];
 
     for (var dir in commonPhotoDirs)
@@ -23,49 +22,29 @@ class PhotoIndexer {
         String path = file.path;
         if (path.contains(".png") || path.contains(".jpg") || path.contains(".jpeg"))
         {
-          temp.add(Photo(path: path));
+          temp.add(await Photo.fromPath(path));
           String folder = path.substring(0, path.lastIndexOf(Platform.pathSeparator));
-          if (!albums.contains(folder))
-            albums.add(folder);
-        }
-        else if (path.contains(".monoP FTP album info.txt")) {
-          var albuu = FtpAlbum(folderPath: path.substring(0, path.lastIndexOf(Platform.pathSeparator)),
-            name: '', port: 0, password: '', client: false);
-          albuu.load();
-          ftpAlbums.add(albuu);
+          if (!albums.containsKey(folder))
+            albums[folder] = AlbumInfo(thumbnail: path, itemsInIt: _getFolderPhotosCount(folder));
         }
       }
-    
-    for (var dirPathF in ftpAlbums)
-      if (albums.contains(dirPathF.folderPath))
-        albums.remove(dirPathF.folderPath);
-      
-    List<DateTime> times = [];
-    for (var p in photos)
-      times.add(p.dateTaken);
 
-    temp.sort((a, b) => a.dateTaken.compareTo(b.dateTaken));
-    
+    temp.sort((a, b) => b.dateTaken.compareTo(a.dateTaken));
     photos = temp;
   }
 
-  static List<Photo> getPhotosIn(String path) {
+
+
+  static Future<List<Photo>> getFolderPhotos(String path) async {
     List<Photo> temp = [];
     for (var file in Directory(path).listSync())
       if (file.path.contains(".png") || file.path.contains(".jpg") || file.path.contains(".jpeg"))
-        temp.add(Photo(path: file.path));
-    temp.sort((a, b) => File(b.path).lastModifiedSync().compareTo(File(a.path).lastModifiedSync()));
+        temp.add(await Photo.fromPath(file.path));
+    temp.sort((a, b) => b.dateTaken.compareTo(a.dateTaken));
     return temp;
   }
 
-  static String? getFolderThumb(String path) {
-    for (var file in Directory(path).listSync())
-      if (file.path.contains(".png") || file.path.contains(".jpg") || file.path.contains(".jpeg"))
-        return file.path;
-    return null;
-  }
-
-  static int getFolderPhotosCount(String path) {
+  static int _getFolderPhotosCount(String path) { //TODO Impprove performance
     int result = 0;
     for (var file in Directory(path).listSync())
       if (file.path.contains(".png") || file.path.contains(".jpg") || file.path.contains(".jpeg"))

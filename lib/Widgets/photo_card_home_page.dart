@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:memories_photos/Pages/photo_viewer_page.dart';
 import 'package:memories_photos/Structs/photo.dart';
 
-class HomePagePhotoCard extends StatelessWidget {
-  final Photo photo;
-  const HomePagePhotoCard({super.key, required this.photo});
+class PhotoCardHomePage extends StatelessWidget {
+  final List<Photo> query;
+  final int i;
+  const PhotoCardHomePage({super.key, required this.query, required this.i});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +17,7 @@ class HomePagePhotoCard extends StatelessWidget {
         GestureDetector(
           onTap: () => Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => PhotoViewerPage(photo: photo),
+              builder: (context) => PhotoViewerPage(query: query, i: i,),
             )
           ),
           child: Container(
@@ -26,9 +27,9 @@ class HomePagePhotoCard extends StatelessWidget {
               color: Theme.of(context).colorScheme.secondaryContainer
             ),
             child: Hero(
-              tag: photo.path,
+              tag: query[i].path,
               child: Image.file(
-                File(photo.path),
+                File(query[i].path),
                 fit: .cover,
                 width: 190,
                 height: 190,
@@ -37,24 +38,24 @@ class HomePagePhotoCard extends StatelessWidget {
           ),
         ),
         GestureDetector(
-          onTap: () => photo.showMoreActionsPopup(context ,evenMoreActions: true),
+          onTap: () => query[i].showMoreActionsPopup(context, evenMoreActions: true),
           child: Container(
             margin: .symmetric(vertical: 5),
             child: Text(
-              photo.name,
+              query[i].name,
               maxLines: 2,
               textAlign: .center,
               overflow: .fade,
               style: TextStyle(
-                fontSize: 11,
-                color: Theme.of(context).colorScheme.onPrimary
+                fontSize: 12,
+                color: Theme.of(context).colorScheme.onSurface
               ),
             ).frosted(
               blur: 4,
               borderRadius: .circular(15),
               padding: .all(6),
               width: 180,
-              frostColor: Theme.of(context).colorScheme.primaryContainer
+              frostColor: Theme.of(context).colorScheme.surface
             ),
           ),
         )

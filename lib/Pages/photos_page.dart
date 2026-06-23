@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:memories_photos/Structs/photo.dart';
+import 'package:memories_photos/Widgets/photo_card.dart';
 import 'package:memories_photos/photo_indexer.dart';
-import 'package:memories_photos/Pages/photo_viewer_page.dart';
 import 'package:memories_photos/settings.dart';
 
 class PhotosPage extends StatefulWidget {
@@ -16,18 +16,19 @@ class PhotosPage extends StatefulWidget {
 }
 
 class _PhotosPageState extends State<PhotosPage> {
-  late List<Photo> photos;
+  List<Photo>? photos;
+
+  void load() async {
+    if (widget.folder != null)
+      photos = await PhotoIndexer.getFolderPhotos(widget.folder!);
+    else
+      photos = PhotoIndexer.photos;
+    setState(() {});
+  }
 
   @override
   void initState() {
-    //PhotoIndexer.startCa();
-
-    if(widget.folder != null) {
-      photos = PhotoIndexer.getPhotosIn(widget.folder!);
-    } else {
-      photos = PhotoIndexer.photos;
-    }
-
+    load();
     super.initState();
   }
 
@@ -35,55 +36,22 @@ class _PhotosPageState extends State<PhotosPage> {
   Widget build(BuildContext context) {
     var screenWidth = MediaQuery.widthOf(context);
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
+        centerTitle: true,
+        backgroundColor: Theme.of(context).colorScheme.surface.withAlpha(220),
         title: Text(
           widget.folder != null
           ? widget.folder!.substring(widget.folder!.lastIndexOf(Platform.pathSeparator) + 1)
           : "All Photos"
         ),
       ),
-      body: GridView.builder(
+      body: photos != null ? GridView.builder(
         physics: BouncingScrollPhysics(),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: (screenWidth / Settings.gridScale).toInt()),
-        itemCount: photos.length,
-        itemBuilder: (context, i) => PhotoCard(i: i, photos: photos),
-      ),
-    );
-  }
-}
-
-
-
-class PhotoCard extends StatelessWidget {
-  final int i;
-  final List<Photo> photos;
-  const PhotoCard({required this.i, required this.photos});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => PhotoViewerPage(photo: photos[i]),
-        )
-      ),
-      child: Container(
-        clipBehavior: .antiAlias,
-        margin: .all(2),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceContainer,
-          borderRadius: .all(.circular(25)),
-        ),
-        child: Hero(
-          tag: photos[i].path,
-          child: Image.file(
-            File(photos[i].path),
-            cacheHeight: 180,
-            cacheWidth: 180,
-            fit: .cover,
-          ),
-        ),
-      ),
+        itemCount: photos!.length,
+        itemBuilder: (context, i) => PhotoCard(i: i, query: photos!),
+      ) : Center(child: CircularProgressIndicator()),
     );
   }
 }

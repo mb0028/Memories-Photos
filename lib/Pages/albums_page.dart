@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:memories_photos/Structs/ftp_album.dart';
 import 'package:memories_photos/Widgets/album_card.dart';
 import 'package:memories_photos/Widgets/title_text.dart';
 import 'package:memories_photos/photo_indexer.dart';
@@ -11,13 +10,6 @@ class AlbumsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var screenWidth = MediaQuery.widthOf(context);
-    List<Object> albums = [];
-
-    for (var f in PhotoIndexer.ftpAlbums)
-      albums.add(f as Object);
-    for (var f in PhotoIndexer.albums)
-      albums.add(f as Object);
-    
 
     return Column(
       crossAxisAlignment: .stretch,
@@ -32,9 +24,7 @@ class AlbumsPage extends StatelessWidget {
               physics: BouncingScrollPhysics(),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: (screenWidth / Settings.gridScale / 1.5).toInt()),
               itemCount: PhotoIndexer.albums.length,
-              itemBuilder: (context, i) => albums[i] is String
-                ? AlbumCard(path: albums[i] as String, isFtp: false)
-                : AlbumCard(path: (albums[i] as FtpAlbum).folderPath, isFtp: true, ftpInfo: albums[i] as FtpAlbum,),
+              itemBuilder: (context, i) => AlbumCard(path: PhotoIndexer.albums.keys.elementAt(i))
             ),
           ),
         )

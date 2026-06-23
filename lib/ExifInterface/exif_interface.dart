@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/services.dart';
 
 class ExifInterface {
   static const channel = MethodChannel("mb28.monoP.exif/exif_channel");
 
   static Future<String> getAttribute(String path, String tag) async {
+    if (Platform.isWindows) return ""; // TODO: Implement ExifInterface for windows
     try {
       final result = await channel.invokeMethod<String>("getAttribute",
         {"path": path, "tag": tag});
@@ -14,6 +17,7 @@ class ExifInterface {
   }
 
   static Future<String> setAttribute(String path, String tag, String value) async {
+    if (Platform.isWindows) return ""; // TODO: Implement ExifInterface for windows
     try {
       final result = await channel.invokeMethod<bool>("setAttribute",
         {"path": path, "tag": tag, "value": value});
@@ -23,14 +27,14 @@ class ExifInterface {
     }
   }
 
-  static Future<Map<String?, String?>> getUsefulExif(String path) async {
-    try {
-      Map<String?, String?> result = await channel.invokeMethod<Map<String?, String?>>("getUsefulExif",
-        {"path": path}) as Map<String?, String?>;
-      return result;
-    } on PlatformException {
-      return <String?, String?> {};
-    }
-  }
+  // static Future<Map<String?, String?>> getUsefulExif(String path) async {
+  //   try {
+  //     Map<String?, String?> result = await channel.invokeMethod<Map<String?, String?>>("getUsefulExif",
+  //       {"path": path}) as Map<String?, String?>;
+  //     return result;
+  //   } on PlatformException {
+  //     return <String?, String?> {};
+  //   }
+  // }
 
 }

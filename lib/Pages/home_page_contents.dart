@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:memories_photos/Structs/photo.dart';
-import 'package:memories_photos/Widgets/home_page_photo_card.dart';
+import 'package:memories_photos/Widgets/photo_card_home_page.dart';
 import 'package:memories_photos/photo_indexer.dart';
 import 'package:memories_photos/settings.dart';
 
@@ -24,7 +24,7 @@ class _HomePageContentsState extends State<HomePageContents> {
   Future<void> refresh() async {
     recents = []; sunrise = []; night = [];
     int sunriseCount = 0; int nightCount = 0;
-    await PhotoIndexer.startCa();
+    await PhotoIndexer.startCache();
     header = PhotoIndexer.photos[Random.secure().nextInt(PhotoIndexer.photos.length)];
 
     for (var i = 0; i < Settings.recentsCount; i++)
@@ -126,8 +126,7 @@ class _Section extends StatelessWidget {
         itemCount: photos.length,
         flexWeights: flexWeights,
         itemSnapping: true,
-        infinite: photos.length > 1,
-        itemBuilder: (context, i) => HomePagePhotoCard(photo: photos[i]),
+        itemBuilder: (context, i) => PhotoCardHomePage(query: photos, i: i),
       )
     );
   }

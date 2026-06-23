@@ -3,32 +3,61 @@ import 'package:blur/blur.dart';
 import 'package:flutter/material.dart';
 import 'package:memories_photos/Structs/photo.dart';
 
-class PhotoViewerPage extends StatelessWidget {
-  final Photo photo;
-  const PhotoViewerPage({super.key, required this.photo});
+class PhotoViewerPage extends StatefulWidget {
+  final List<Photo> query;
+  final int i; 
+  const PhotoViewerPage({super.key, required this.query, required this.i});
+
+  @override
+  State<PhotoViewerPage> createState() => _PhotoViewerPageState();
+}
+
+class _PhotoViewerPageState extends State<PhotoViewerPage> {
+  int i = 0;
+
+  @override
+  void initState() {
+    i = widget.i;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        alignment: .center,
-        children: [
-          Hero(
-            curve: Curves.easeOutCirc,
-            reverseCurve: Curves.easeInCirc,
-            tag: photo.path,
-            child: Image.file(
-              File(photo.path),
+    return GestureDetector(
+      onHorizontalDragEnd: (details) {
+        // print(details);
+        if (details.velocity.pixelsPerSecond.dx < 400)
+          setState(() {
+            i++;
+            i = i.clamp(0, widget.query.length - 1);
+          });
+        else if (details.velocity.pixelsPerSecond.dx > -400)
+          setState(() {
+            i--;
+            i = i.clamp(0, widget.query.length - 1);
+          });
+      },
+      child: Scaffold(
+        body: Stack(
+          alignment: .center,
+          children: [
+            Hero(
+              curve: Curves.easeOutCirc,
+              reverseCurve: Curves.easeInCirc,
+              tag: widget.query[i].path,
+              child: Image.file(
+                File(widget.query[i].path),
+              ),
             ),
-          ),
-          Column(
-            mainAxisAlignment: .spaceBetween,
-            children: [
-              _Header(photo: photo,),
-              _Footer(photo: photo,),
-            ],
-          )
-        ] 
+            Column(
+              mainAxisAlignment: .spaceBetween,
+              children: [
+                _Header(photo: widget.query[i]),
+                _Footer(photo: widget.query[i]),
+              ],
+            )
+          ] 
+        ),
       ),
     );
   }
@@ -125,38 +154,43 @@ class _FooterState extends State<_Footer> {
       child: Column(
         spacing: 5,
         children: [
-          Text(widget.photo.dateTaken.toString()),
+          Text(widget.photo.dateTaken.toString()).frosted(
+            blur: 10,
+            padding: .symmetric(horizontal: 15, vertical: 8),
+            borderRadius: .circular(20),
+            frostColor: Theme.of(context).colorScheme.tertiaryContainer
+          ),
           Row(
             mainAxisAlignment: .spaceEvenly,
             children: [
               IconButton(
-                icon: Icon(Icons.share_rounded),
+                icon: Icon(Icons.share_rounded, size: 24),
                 tooltip: "Share",
                 onPressed: () {
                 },
               ),
               IconButton(
-                icon: Icon(Icons.delete_outline),
+                icon: Icon(Icons.delete_outline, size: 28),
                 tooltip: "Delete",
                 onPressed: () {
                   widget.photo.showDeletePopup(context, () => setState(() {}));
                 },
               ),
               IconButton(
-                icon: Icon(Icons.info_outline),
+                icon: Icon(Icons.info_outline, size: 32),
                 tooltip: "Info",
                 onPressed: () {
                   widget.photo.showDetailsPopup(context);
                 },
               ),
               IconButton(
-                icon: Icon(Icons.favorite_border),
+                icon: Icon(Icons.favorite_border, size: 28),
                 tooltip: "Add/Remove favorite",
                 onPressed: () {
                 },
               ),
               IconButton(
-                icon: Icon(Icons.draw_rounded),
+                icon: Icon(Icons.draw_rounded, size: 24),
                 tooltip: "Change Comment",
                 onPressed: () {
                   widget.photo.showEditCommentPopup(context, () => setState(() {}));
@@ -164,7 +198,8 @@ class _FooterState extends State<_Footer> {
               ),
             ],
           ).frosted(
-            borderRadius: .circular(30),
+            blur: 10,
+            borderRadius: .circular(50),
             padding: .all(10),
             frostColor: Theme.of(context).colorScheme.secondaryContainer
           ),
