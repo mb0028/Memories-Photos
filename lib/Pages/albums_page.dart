@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:memories_photos/Popups/new_album_popup.dart';
 import 'package:memories_photos/Structs/ftp_album.dart';
 import 'package:memories_photos/Widgets/album_card.dart';
 import 'package:memories_photos/Widgets/title_text.dart';
@@ -25,14 +24,6 @@ class AlbumsPage extends StatelessWidget {
       spacing: 5,
       children: [
         TitleText(text: "Albums", color: Theme.of(context).colorScheme.secondary,),
-        
-        Padding(
-          padding: .symmetric(horizontal: 15),
-          child: FilledButton.tonal(
-            onPressed: () async => await showNewAlbumDialog(context),
-            child: Text("New album"),
-          ),
-        ),
         
         Expanded(
           child: Padding(

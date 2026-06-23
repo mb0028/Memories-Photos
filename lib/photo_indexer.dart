@@ -10,11 +10,10 @@ class PhotoIndexer {
     : ["C:${slash}Users${slash}mb28${slash}Pictures"]; // Temporary TODO
 
   static List<Photo> photos = [];
-  // static Map<Photo, DateTime> photosT = <Photo, DateTime>{};
   static List<String> albums = [];
   static List<FtpAlbum> ftpAlbums = [];
 
-  static void startCa() async {
+  static Future startCa() async {
     photos = [];
     albums = [];
     List<Photo> temp = [];
@@ -43,9 +42,9 @@ class PhotoIndexer {
       
     List<DateTime> times = [];
     for (var p in photos)
-      times.add(await p.dateTakenOrFileTime); //TODO: Add exif datetime tag
+      times.add(p.dateTaken);
 
-    temp.sort((a, b) => File(b.path).lastModifiedSync().compareTo(File(a.path).lastModifiedSync()));
+    temp.sort((a, b) => a.dateTaken.compareTo(b.dateTaken));
     
     photos = temp;
   }

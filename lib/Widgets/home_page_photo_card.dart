@@ -47,12 +47,14 @@ class HomePagePhotoCard extends StatelessWidget {
               overflow: .fade,
               style: TextStyle(
                 fontSize: 11,
-                color: Theme.of(context).colorScheme.onSecondary
+                color: Theme.of(context).colorScheme.onPrimary
               ),
             ).frosted(
+              blur: 4,
               borderRadius: .circular(15),
               padding: .all(6),
-              frostColor: Theme.of(context).colorScheme.secondary
+              width: 180,
+              frostColor: Theme.of(context).colorScheme.primaryContainer
             ),
           ),
         )

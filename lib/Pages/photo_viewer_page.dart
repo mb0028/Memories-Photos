@@ -117,20 +117,6 @@ class _Footer extends StatefulWidget {
 }
 
 class _FooterState extends State<_Footer> {
-  String dateTaken = "";
-
-  void getDateTaken() async {
-    var temp = await widget.photo.dateTaken;
-    setState(() {
-      dateTaken = temp;
-    });
-  }
-
-  @override
-  void initState() {
-    getDateTaken();
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -139,7 +125,7 @@ class _FooterState extends State<_Footer> {
       child: Column(
         spacing: 5,
         children: [
-          Text(dateTaken),
+          Text(widget.photo.dateTaken.toString()),
           Row(
             mainAxisAlignment: .spaceEvenly,
             children: [

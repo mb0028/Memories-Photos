@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:memories_photos/Pages/albums_page.dart';
 import 'package:memories_photos/Pages/home_page_contents.dart';
 import 'package:memories_photos/Pages/photos_page.dart';
-import 'package:memories_photos/photo_indexer.dart';
+import 'package:memories_photos/Popups/home_create_new_popup.dart';
 
 class MonoPHomePage extends StatefulWidget {
   const MonoPHomePage({super.key});
@@ -16,12 +16,6 @@ class MonoPHomePageState extends State<MonoPHomePage> {
   int currentPage = 0;
 
   @override
-  void initState() {
-    PhotoIndexer.startCa();
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: switch (currentPage) {
@@ -31,15 +25,25 @@ class MonoPHomePageState extends State<MonoPHomePage> {
         int() => throw UnimplementedError(),
       },
       extendBody: true,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          if (await showHomeCreateNewPopup(context))
+            setState(() {});
+        },
+        tooltip: "Create",
+        elevation: 1,
+        backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
+        child: Icon(Icons.add_a_photo_outlined, color: Theme.of(context).colorScheme.onTertiaryContainer,),
+      ),
       bottomNavigationBar: Container(
         margin: .all(15),
         child: Container(
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surfaceContainer.withAlpha(80),
-            borderRadius: .circular(50),
+            color: Theme.of(context).colorScheme.surfaceContainer.withAlpha(40),
+            borderRadius: .circular(80),
             border: .all(
               color: Theme.of(context).colorScheme.secondaryContainer,
-              width: 2
+              width: 3
             )
           ),
           child: NavigationBar(
@@ -70,7 +74,7 @@ class MonoPHomePageState extends State<MonoPHomePage> {
             ]
           ),
         ).frosted(
-          blur: 4,
+          blur: 10,
           borderRadius: .circular(50)
         ),
       ),

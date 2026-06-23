@@ -19,10 +19,13 @@ class _HomePageContentsState extends State<HomePageContents> {
   List<Photo> recents = [];
   List<Photo> sunrise = [];
   List<Photo> night = [];
+  Photo? header;
 
   Future<void> refresh() async {
     recents = []; sunrise = []; night = [];
     int sunriseCount = 0; int nightCount = 0;
+    await PhotoIndexer.startCa();
+    header = PhotoIndexer.photos[Random.secure().nextInt(PhotoIndexer.photos.length)];
 
     for (var i = 0; i < Settings.recentsCount; i++)
       recents.add(PhotoIndexer.photos[i.clamp(0, PhotoIndexer.photos.length - 1)]);
@@ -31,10 +34,10 @@ class _HomePageContentsState extends State<HomePageContents> {
       if (sunriseCount >= Settings.specialSectionsCount && nightCount >= Settings.specialSectionsCount)
         break;
 
-      if(await p.isTakenAtMorning && sunriseCount < Settings.specialSectionsCount) {
+      if(p.isTakenAtMorning && sunriseCount < Settings.specialSectionsCount) {
         sunrise.add(p);
         sunriseCount++;
-      } else if(!await p.isTakenAtDay && nightCount < Settings.specialSectionsCount) {
+      } else if(!p.isTakenAtDay && nightCount < Settings.specialSectionsCount) {
         night.add(p);
         nightCount++;
       }
@@ -58,10 +61,10 @@ class _HomePageContentsState extends State<HomePageContents> {
         children: [
           SizedBox(
             height: 220,
-            child: Image.file(
-              File(PhotoIndexer.photos[Random.secure().nextInt(PhotoIndexer.photos.length)].path),
+            child: header != null ? Image.file(
+              File(header!.path),
               fit: .cover,
-            ),
+            ) : SizedBox(),
           ),
           Text(
             "Memories Photos",

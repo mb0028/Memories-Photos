@@ -8,8 +8,19 @@ import 'package:memories_photos/Widgets/monop_text_field.dart';
 /// Holds path to the photo and helpful methods. <br/>
 /// F**k dart with this lowercase naming rule
 class Photo {
+  Photo({required this.path}) {
+    Future.sync(() async {
+      String ds = await ExifInterface.getAttribute(path, ExifTag.TAG_DATETIME_ORIGINAL);
+      if (ds.isNotEmpty) {
+        DateTime? d = DateTime.tryParse(ds.replaceAll(":", "").replaceAll(" ", "T"));
+        if (d != null) dateTaken = d;
+      } else dateTaken = await File(path).lastModified();
+    });
+  }
+
+  // Fields
   final String path;
-  Photo({required this.path});
+  DateTime dateTaken = DateTime(0); // Its used a lot so better storing it on memeory
   
   String get name => path.substring(path.lastIndexOf(Platform.pathSeparator) + 1);
   
@@ -20,46 +31,12 @@ class Photo {
     return name;
   }
 
-  Future<String> get dateTaken async => await ExifInterface.getAttribute(path, ExifTag.TAG_DATETIME_ORIGINAL);
-
-  Future<DateTime> get dateTakenOrFileTime async {
-    String ds = await dateTaken;
-    if (ds.isNotEmpty) {
-      DateTime? d = DateTime.tryParse(ds.replaceAll(":", "").replaceAll(" ", "T"));
-      if (d != null) return d;
-    }
-    return await File(path).lastModified();
-  }
-
   /// Returns: true if 5..9 AM
-  Future<bool> get isTakenAtMorning async {
-    String ds = await dateTaken;
-    if (ds.isEmpty) return false;
-    DateTime? d = DateTime.tryParse(ds.replaceAll(":", "").replaceAll(" ", "T"));
-    if (d != null && d.hour > 5 && d.hour < 10)
-      return true;
-    return false;
-  }
+  bool get isTakenAtMorning => dateTaken.hour > 5 && dateTaken.hour < 10;
   /// Returns: true if 7..10 PM
-  Future<bool> get isTakenAtEvening async {
-    String ds = await dateTaken;
-    if (ds.isEmpty) return false;
-    DateTime? d = DateTime.tryParse(ds.replaceAll(":", "").replaceAll(" ", "T"));
-    if (d != null && d.hour > 19 && d.hour < 23)
-      return true;
-    return false;
-  }
+  bool get isTakenAtEvening => dateTaken.hour > 19 && dateTaken.hour < 23;
   /// Returns: true if 6AM..8PM . false = isTakenAtNight
-  Future<bool> get isTakenAtDay async {
-    String ds = await dateTaken;
-    if (ds.isEmpty) return false;
-    DateTime? d = DateTime.tryParse(ds.replaceAll(":", "").replaceAll(" ", "T"));
-    if (d != null && d.hour > 6 && d.hour < 21)
-      return true;
-    return false;
-  }
-  // Throws ↓↓
-  // Future<Map<String?, String?>?> get getExif async => await ExifInterface.getUsefulExif(path);
+  bool get isTakenAtDay => dateTaken.hour > 6 && dateTaken.hour < 21;
 
 
   void showMoreActionsPopup(BuildContext context, {bool evenMoreActions = false}) {
@@ -67,7 +44,6 @@ class Photo {
   }
 
   void showDetailsPopup(BuildContext context) async {
-    var date = await dateTaken;
     var x = await ExifInterface.getAttribute(path, ExifTag.TAG_PIXEL_X_DIMENSION);
     var y = await ExifInterface.getAttribute(path, ExifTag.TAG_PIXEL_Y_DIMENSION);
 
@@ -133,7 +109,7 @@ class Photo {
           spacing: 8,
           children: [
             Text(
-              date,
+              dateTaken.toString(),
               style: TextStyle(
                 fontSize: 26,
                 fontWeight: .bold

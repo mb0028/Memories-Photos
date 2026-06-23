@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:memories_photos/Pages/home_page.dart';
 
 void main() {
+  // WidgetsFlutterBinding.ensureInitialized();
+  // await PhotoIndexer.startCa();
   runApp(const MainApp());
 }
 
