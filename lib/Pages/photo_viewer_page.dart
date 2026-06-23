@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:blur/blur.dart';
 import 'package:flutter/material.dart';
 import 'package:memories_photos/Structs/photo.dart';
+import 'package:memories_photos/settings.dart';
 
 class PhotoViewerPage extends StatefulWidget {
   final List<Photo> query;
@@ -14,10 +15,19 @@ class PhotoViewerPage extends StatefulWidget {
 
 class _PhotoViewerPageState extends State<PhotoViewerPage> {
   int i = 0;
+  String name = "";
+
+  void getName() async {
+    var temp = await widget.query[i].commentOrName;
+    setState(() {
+      name = temp;
+    });
+  }
 
   @override
   void initState() {
     i = widget.i;
+    getName();
     super.initState();
   }
 
@@ -36,6 +46,7 @@ class _PhotoViewerPageState extends State<PhotoViewerPage> {
             i--;
             i = i.clamp(0, widget.query.length - 1);
           });
+        getName();
       },
       child: Scaffold(
         body: Stack(
@@ -52,7 +63,7 @@ class _PhotoViewerPageState extends State<PhotoViewerPage> {
             Column(
               mainAxisAlignment: .spaceBetween,
               children: [
-                _Header(photo: widget.query[i]),
+                _Header(photo: widget.query[i], name: name),
                 _Footer(photo: widget.query[i]),
               ],
             )
@@ -65,29 +76,10 @@ class _PhotoViewerPageState extends State<PhotoViewerPage> {
 
 //////////////////////////////////////////////////////////////////
 
-class _Header extends StatefulWidget {
+class _Header extends StatelessWidget {
   final Photo photo;
-  const _Header({required this.photo});
-
-  @override
-  State<_Header> createState() => _HeaderState();
-}
-
-class _HeaderState extends State<_Header> {
-  String name = "";
-
-  void getName() async {
-    var temp = await widget.photo.commentOrName;
-    setState(() {
-      name = temp;
-    });
-  }
-
-  @override
-  void initState() {
-    getName();
-    super.initState();
-  }
+  final String name;
+  const _Header({required this.photo, required this.name});
 
   @override
   Widget build(BuildContext context) {
@@ -119,7 +111,8 @@ class _HeaderState extends State<_Header> {
                 textAlign: .center,
                 maxLines: 3,
                 style: TextStyle(
-                  color: Theme.of(context).colorScheme.onTertiaryContainer
+                  color: Theme.of(context).colorScheme.onTertiaryContainer,
+                  fontFamily: Settings.ElmsSans
                 ),
               ),
             )
@@ -128,14 +121,13 @@ class _HeaderState extends State<_Header> {
             icon: Icon(Icons.more_vert_rounded),
             padding: .all(15),
             tooltip: "More",
-            onPressed: () => widget.photo.showMoreActionsPopup(context),
+            onPressed: () => photo.showMoreActionsPopup(context),
           ),
         ],
       ),
     );
   }
 }
-
 
 class _Footer extends StatefulWidget {
   final Photo photo;

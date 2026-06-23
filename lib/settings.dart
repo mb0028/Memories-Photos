@@ -1,7 +1,13 @@
+// ignore_for_file: constant_identifier_names
+
 import 'dart:convert';
 import 'dart:io';
 
 class Settings {
+  static const String LexendDeca = "LexendDeca";
+  static const String ElmsSans = "ElmsSans";
+  static const String CherryBombOne = "CherryBombOne";
+
   static String appPath = Platform.isAndroid
     ? "/sdcard/DCIM/Memories Photos"
     : "E:${Platform.pathSeparator}"; // Temporary. TODO

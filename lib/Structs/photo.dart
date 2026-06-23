@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:memories_photos/ExifInterface/exif_interface.dart';
 import 'package:memories_photos/ExifInterface/tags.dart';
 import 'package:memories_photos/Widgets/monop_text_field.dart';
+import 'package:memories_photos/settings.dart';
 
 /// Holds path to the photo and helpful methods. <br/>
 /// F**k dart with this lowercase naming rule
@@ -114,8 +115,9 @@ class Photo {
             Text(
               dateTaken.toString(),
               style: TextStyle(
-                fontSize: 26,
-                fontWeight: .bold
+                fontSize: 22,
+                color: Theme.of(context).colorScheme.secondary,
+                fontFamily: Settings.CherryBombOne,
               ),
             ),
             Text(path),
@@ -125,9 +127,10 @@ class Photo {
                 physics: BouncingScrollPhysics(),
                 children: [
                   _DetailsTile(
-                    text: "Comment: $comment",
+                    text: comment,
                     icon: Icon(Icons.mode_comment_outlined, size: 42, color: Theme.of(context).colorScheme.primary.withAlpha(200)),
                     fontSize: 15,
+                    font: Settings.ElmsSans,
                   ),
 
                   _DetailsTile( //TODO: Add Size + megapixels
@@ -288,13 +291,15 @@ class Photo {
 
 }
 
+// ignore: must_be_immutable
 class _DetailsTile extends StatelessWidget {
-  const _DetailsTile({
-    required this.text, required this.icon, required this.fontSize,
+  _DetailsTile({
+    required this.text, required this.icon, required this.fontSize, this.font
   });
   final Widget icon;
   final String text;
   final double fontSize;
+  String? font = Settings.LexendDeca;
 
   @override
   Widget build(BuildContext context) {
@@ -307,7 +312,7 @@ class _DetailsTile extends StatelessWidget {
           Flexible(
             child: Text(
               text,
-              style: TextStyle(fontSize: fontSize),
+              style: TextStyle(fontSize: fontSize, fontFamily: font),
               maxLines: 3,
               overflow: .ellipsis,
             ),

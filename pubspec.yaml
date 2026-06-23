@@ -29,3 +29,18 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  fonts:
+    - family: LexendDeca
+      fonts:
+        - asset: Assets/LexendDeca-Thin.ttf
+          weight: 700
+        - asset: Assets/LexendDeca-Regular.ttf
+        - asset: Assets/LexendDeca-Thin.ttf
+          weight: 200
+    - family: ElmsSans
+      fonts:
+        - asset: Assets/ElmsSans-VariableFont_wght.ttf
+    - family: CherryBombOne
+      fonts:
+        - asset: Assets/CherryBombOne-Regular.ttf

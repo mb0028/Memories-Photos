@@ -15,10 +15,11 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        fontFamily: "LexendDeca",
         colorScheme: .fromSeed(
           seedColor: const Color.fromARGB(255, 164, 255, 196),
           dynamicSchemeVariant: .tonalSpot,
-          brightness: MediaQuery.platformBrightnessOf(context)
+          brightness: MediaQuery.platformBrightnessOf(context),
         ),
       ),
       home: MonoPHomePage(),

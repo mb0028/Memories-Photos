@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:memories_photos/Popups/new_album_popup.dart';
 import 'package:memories_photos/image_helper.dart';
+import 'package:memories_photos/settings.dart';
 
 Future<bool> showHomeCreateNewPopup(BuildContext context) async {
   bool returnTrue = false;
@@ -20,7 +21,12 @@ Future<bool> showHomeCreateNewPopup(BuildContext context) async {
             spacing: 15,
             children: [
               OutlinedButton.icon(
-                label: Text("Record Video"),
+                label: Text(
+                  "Record Video",
+                  style: TextStyle(
+                    fontFamily: Settings.ElmsSans
+                  ),
+                ),
                 icon: Icon(Icons.video_camera_front_outlined),
                 onPressed: () {
                   // TODO: recording video
@@ -29,7 +35,12 @@ Future<bool> showHomeCreateNewPopup(BuildContext context) async {
                 },
               ),
               FilledButton.icon(
-                label: Text("Capture Photo"),
+                label: Text(
+                  "Capture Photo",
+                  style: TextStyle(
+                    fontFamily: Settings.ElmsSans
+                  ),
+                ),
                 icon: Icon(Icons.add_a_photo_rounded),
                 onPressed: () async {
                   await ImageHelper.takePicture();
@@ -44,8 +55,8 @@ Future<bool> showHomeCreateNewPopup(BuildContext context) async {
             "🌲 Create New ✨",
             textAlign: .center,
             style: TextStyle(
-              fontSize: 22,
-              fontWeight: .bold
+              fontSize: 24,
+              fontFamily: Settings.CherryBombOne
             ),
           ),
           ListTile(

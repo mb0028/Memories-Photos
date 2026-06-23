@@ -70,9 +70,9 @@ class _HomePageContentsState extends State<HomePageContents> {
             "Memories Photos",
             textAlign: .center,
             style: TextStyle(
-              color: Theme.of(context).colorScheme.primary,
-              fontSize: 28,
-              fontWeight: .bold
+              color: Theme.of(context).colorScheme.secondary,
+              fontSize: 32,
+              fontFamily: Settings.CherryBombOne
             ),
           ),
           SizedBox(height: 30),
