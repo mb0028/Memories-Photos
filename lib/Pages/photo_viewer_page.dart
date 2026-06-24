@@ -52,7 +52,6 @@ class _PhotoViewerPageState extends State<PhotoViewerPage> {
         getName();
       },
       onPanUpdate: (details) {
-        print(details);
         setState(() => scale = (details.globalPosition.dy - 230) / 150);
       },
       onPanEnd: (details) => setState(() => scale = 1),
