@@ -16,6 +16,8 @@ class PhotoViewerPage extends StatefulWidget {
 class _PhotoViewerPageState extends State<PhotoViewerPage> {
   int i = 0;
   String name = "";
+  double t = 0;
+  double scale = 1;
 
   void getName() async {
     var temp = await widget.query[i].commentOrName;
@@ -34,30 +36,42 @@ class _PhotoViewerPageState extends State<PhotoViewerPage> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onHorizontalDragUpdate: (details) {
+        setState(() => t = details.localPosition.dx - 200);
+      },
       onHorizontalDragEnd: (details) {
-        // print(details);
-        if (details.velocity.pixelsPerSecond.dx < 400)
-          setState(() {
-            i++;
-            i = i.clamp(0, widget.query.length - 1);
-          });
-        else if (details.velocity.pixelsPerSecond.dx > -400)
-          setState(() {
-            i--;
-            i = i.clamp(0, widget.query.length - 1);
-          });
+        if (t > 90) {
+          i--;
+          setState(() => i = i.clamp(0, widget.query.length - 1));
+        }
+        else if (t < -90) {
+          i++;
+          setState(() => i = i.clamp(0, widget.query.length - 1));
+        }
+        t = 0;
         getName();
       },
+      onPanUpdate: (details) {
+        print(details);
+        setState(() => scale = (details.globalPosition.dy - 230) / 150);
+      },
+      onPanEnd: (details) => setState(() => scale = 1),
       child: Scaffold(
         body: Stack(
           alignment: .center,
           children: [
-            Hero(
-              curve: Curves.easeOutCirc,
-              reverseCurve: Curves.easeInCirc,
-              tag: widget.query[i].path,
-              child: Image.file(
-                File(widget.query[i].path),
+            Transform.scale(
+              scale: scale,
+              child: Transform.translate(
+                offset: Offset(t, 0),
+                child: Hero(
+                  curve: Curves.easeOutCirc,
+                  reverseCurve: Curves.easeInCirc,
+                  tag: widget.query[i].path,
+                  child: Image.file(
+                    File(widget.query[i].path),
+                  ),
+                ),
               ),
             ),
             Column(
@@ -147,7 +161,7 @@ class _FooterState extends State<_Footer> {
         spacing: 5,
         children: [
           Text(widget.photo.dateTaken.toString()).frosted(
-            blur: 10,
+            blur: 8,
             padding: .symmetric(horizontal: 15, vertical: 8),
             borderRadius: .circular(20),
             frostColor: Theme.of(context).colorScheme.tertiaryContainer
@@ -190,7 +204,7 @@ class _FooterState extends State<_Footer> {
               ),
             ],
           ).frosted(
-            blur: 10,
+            blur: 4,
             borderRadius: .circular(50),
             padding: .all(10),
             frostColor: Theme.of(context).colorScheme.secondaryContainer
