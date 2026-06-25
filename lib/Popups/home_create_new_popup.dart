@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memories_photos/Editor/collage_maker_page.dart';
 import 'package:memories_photos/Popups/new_album_popup.dart';
 import 'package:memories_photos/image_helper.dart';
 import 'package:memories_photos/settings.dart';
@@ -72,9 +73,9 @@ Future<bool> showHomeCreateNewPopup(BuildContext context) async {
             title: Text("Collage"),
             leading: Icon(Icons.collections_outlined),
             onTap: () {
-              // TODO: create Collage using png comparer 28
               returnTrue = true;
               Navigator.of(context).pop();
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => CollageMakerPage(),));
             },
           ),
           ListTile(

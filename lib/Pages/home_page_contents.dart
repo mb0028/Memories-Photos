@@ -80,10 +80,10 @@ class _HomePageContentsState extends State<HomePageContents> {
           _SectionHeader(text: "Recent Photos"),
           _Section(photos: recents, flexWeights: [1, 3, 1]),
       
-          _SectionHeader(text: "Sunrise Takes"),
+          _SectionHeader(text: "Sunrise Captures"), // TODO: better naming + random section names
           _Section(photos: sunrise, flexWeights: [2, 4, 1]),
       
-          _SectionHeader(text: "Night Takes"),
+          _SectionHeader(text: "Night Captures"), // TODO: better naming + random section names
           _Section(photos: night, flexWeights: [1, 4, 2])
         ],
       ),

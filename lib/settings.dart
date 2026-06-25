@@ -8,14 +8,28 @@ class Settings {
   static const String ElmsSans = "ElmsSans";
   static const String CherryBombOne = "CherryBombOne";
 
-  static String appPath = Platform.isAndroid
-    ? "/sdcard/DCIM/Memories Photos"
-    : "E:${Platform.pathSeparator}"; // Temporary. TODO
+  static String get appPath {
+    var path = Platform.isAndroid
+      ? "/sdcard/DCIM/Memories Photos"
+      : "E:${Platform.pathSeparator}"; // Temporary. TODO
+    Directory(path).createSync(recursive: true);
+    return path;
+  } 
+
+  static String get appCache {
+    var path = Platform.isAndroid
+      ? "/sdcard/DCIM/Memories Photos/.temp"
+      : "E:${Platform.pathSeparator}.temp${Platform.pathSeparator}"; // Temporary. TODO
+    Directory(path).createSync(recursive: true);
+    return path;
+  } 
+
   static File settingsFile = File("$appPath/_Settings.txt");
 
   static int gridScale = 120;
   static int recentsCount = 20;
   static int specialSectionsCount = 15;
+  static int maxUndoCount = 10;
   static bool showHidden = true;
   static bool trashInstead = true;
 

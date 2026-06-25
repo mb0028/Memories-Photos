@@ -10,7 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # image: ^4.9.1 package is fu..ed up
+  image: ^4.9.1
   # image_picker: ^1.2.2 package is fu..ed up
   # camera: ^0.12.0+1 package is fu..ed up
 

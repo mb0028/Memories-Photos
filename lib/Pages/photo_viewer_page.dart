@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:blur/blur.dart';
 import 'package:flutter/material.dart';
+import 'package:memories_photos/Editor/editor_page.dart';
 import 'package:memories_photos/Structs/photo.dart';
 import 'package:memories_photos/settings.dart';
 
@@ -40,11 +41,11 @@ class _PhotoViewerPageState extends State<PhotoViewerPage> {
         setState(() => t = details.localPosition.dx - 200);
       },
       onHorizontalDragEnd: (details) {
-        if (t > 90) {
+        if (t > 70) {
           i--;
           setState(() => i = i.clamp(0, widget.query.length - 1));
         }
-        else if (t < -90) {
+        else if (t < -70) {
           i++;
           setState(() => i = i.clamp(0, widget.query.length - 1));
         }
@@ -192,6 +193,15 @@ class _FooterState extends State<_Footer> {
                 icon: Icon(Icons.favorite_border, size: 28),
                 tooltip: "Add/Remove favorite",
                 onPressed: () {
+                },
+              ),
+              IconButton(
+                icon: Icon(Icons.edit_outlined, size: 28),
+                tooltip: "Edit",
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => EditorPage(
+                    photo: widget.photo,
+                  )));
                 },
               ),
               IconButton(
