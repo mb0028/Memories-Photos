@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memories_photos/Popups/add_path_popup.dart';
 import 'package:memories_photos/settings.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -16,6 +17,9 @@ class _SettingsPageState extends State<SettingsPage> {
       appBar: AppBar(
         centerTitle: true,
         title: Text("Settings"),
+        surfaceTintColor: Colors.transparent,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
       body: Container(
         margin: .all(15),
@@ -96,11 +100,69 @@ class _SettingsPageState extends State<SettingsPage> {
                 },
               ),
             ),
+            SizedBox(height: 15,),
+            Text("Library include folders:"),
+            ElevatedButton(
+              onPressed: () async {
+                var t = await showAddPathDialog(context);
+                if (t != null && !Settings.libInclude.contains(t))
+                  setState(() => Settings.libInclude.add(t));
+              },
+              child: Text("Add")
+            ),
+            SizedBox(
+              height: 160,
+              child: ListView.builder(
+                itemCount: Settings.libInclude.length,
+                itemBuilder: (context, i) => ListTile(
+                  title: Text(Settings.libInclude[i]),
+                  leading: Settings.libInclude.length > 1 ? IconButton(
+                    onPressed: () {
+                      setState(() => Settings.libInclude.remove(Settings.libInclude[i]));
+                      Settings.save();
+                    },
+                    icon: Icon(Icons.remove_circle_outline),
+                    color: Theme.of(context).colorScheme.error,
+                    highlightColor: Theme.of(context).colorScheme.errorContainer,
+                  ) : null,
+                ),
+              ),
+            ),
+            SizedBox(height: 15,),
+            Text("Library exclude folders:"),
+            ElevatedButton(
+              onPressed: () async {
+                var t = await showAddPathDialog(context);
+                if (t != null && !Settings.libExclude.contains(t))
+                  setState(() => Settings.libExclude.add(t));
+              },
+              child: Text("Add")
+            ),
+            SizedBox(
+              height: 160,
+              child: ListView.builder(
+                itemCount: Settings.libExclude.length,
+                itemBuilder: (context, i) => ListTile(
+                  title: Text(Settings.libExclude[i]),
+                  leading: Settings.libExclude.length > 1 ? IconButton(
+                    onPressed: () {
+                      setState(() => Settings.libExclude.remove(Settings.libExclude[i]));
+                      Settings.save();
+                    },
+                    icon: Icon(Icons.remove_circle_outline),
+                    color: Theme.of(context).colorScheme.error,
+                    highlightColor: Theme.of(context).colorScheme.errorContainer,
+                  ) : null,
+                ),
+              ),
+            ),
             FilledButton(
               onPressed: () {},
               child: Text("Edit Settings.txt"),
             ),
-            Text("Location: ${Settings.settingsFile.path}")
+            SizedBox(height: 8,),
+            Text("Location: ${Settings.settingsFile.path}"),
+            SizedBox(height: 250,)
           ],
         ),
       ),
