@@ -56,7 +56,10 @@ class _EditorPageState extends State<EditorPage> {
         actionsPadding: .only(right: 6),
         actions: [
           IconButton(
-            icon: Icon(Icons.undo_rounded),
+            icon: Badge.count(
+                count: undoHistory.length - 1,
+                child: Icon(Icons.undo_rounded),
+            ),
             tooltip: "Undo",
             onPressed: () => undo(),
           )
@@ -101,7 +104,7 @@ class _EditorPageState extends State<EditorPage> {
         ),
       ),
       body: widget.photo == null ? pickupBtn() : Center(
-        child: Flexible(
+        child: Expanded(
           child: Image.memory(
             File(tempP.path).readAsBytesSync()
           ),
