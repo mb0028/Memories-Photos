@@ -1,6 +1,6 @@
 # Memories Photos
 
-A cross-platform gallery app that exists to replacing apps like google photos
+A gallery app for android & windows that exists to replacing apps like google photos
 
 (App is still in development progress)
 
