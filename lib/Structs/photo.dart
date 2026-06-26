@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:memories_photos/ExifInterface/exif_interface.dart';
 import 'package:memories_photos/ExifInterface/tags.dart';
+import 'package:memories_photos/Popups/toast.dart';
 import 'package:memories_photos/Widgets/monop_text_field.dart';
 import 'package:memories_photos/settings.dart';
 
@@ -42,6 +43,19 @@ class Photo {
   /// Returns: true if 6AM..8PM . false = isTakenAtNight
   bool get isTakenAtDay => dateTaken.hour > 6 && dateTaken.hour < 21;
 
+  bool get isInFavorites => Settings.favorites.contains(path);
+
+  void addToFavorites(BuildContext context) {
+    if (Settings.favorites.contains(path)) {
+      Settings.favorites.remove(path);
+      showStyledToast("💔 Removed from favorites", context);
+    }
+    else {
+      Settings.favorites.add(path);
+      showStyledToast("❤️ Added to favorites", context);
+    }
+    Settings.save();
+  }
 
   void showMoreActionsPopup(BuildContext context, {bool evenMoreActions = false}) {
     //TODO: Implement
@@ -51,7 +65,7 @@ class Photo {
     var x = await ExifInterface.getAttribute(path, ExifTag.TAG_PIXEL_X_DIMENSION);
     var y = await ExifInterface.getAttribute(path, ExifTag.TAG_PIXEL_Y_DIMENSION);
 
-    var iso = await ExifInterface.getAttribute(path, ExifTag.TAG_PHOTOGRAPHIC_SENSITIVITY);
+    var photoGSens = await ExifInterface.getAttribute(path, ExifTag.TAG_PHOTOGRAPHIC_SENSITIVITY);
     var ev = await ExifInterface.getAttribute(path, ExifTag.TAG_EXPOSURE_BIAS_VALUE);
     var ss = await ExifInterface.getAttribute(path, ExifTag.TAG_SHUTTER_SPEED_VALUE);
     var f = await ExifInterface.getAttribute(path, ExifTag.TAG_F_NUMBER);
@@ -104,7 +118,7 @@ class Photo {
     showModalBottomSheet(
       context: context,
       showDragHandle: true,
-      backgroundColor: Theme.of(context).colorScheme.surface.withAlpha(230),
+      backgroundColor: Theme.of(context).colorScheme.secondaryContainer.withAlpha(230),
       
       builder: (context) => Container(
         margin: .symmetric(horizontal: 10),
@@ -116,7 +130,7 @@ class Photo {
               dateTaken.toString(),
               style: TextStyle(
                 fontSize: 22,
-                color: Theme.of(context).colorScheme.secondary,
+                color: Theme.of(context).colorScheme.onSecondaryContainer,
                 fontFamily: Settings.CherryBombOne,
               ),
             ),
@@ -126,46 +140,52 @@ class Photo {
               child: ListView(
                 physics: BouncingScrollPhysics(),
                 children: [
-                  _DetailsTile(
+                  comment.isNotEmpty ? _DetailsTile(
                     text: comment,
-                    icon: Icon(Icons.mode_comment_outlined, size: 42, color: Theme.of(context).colorScheme.primary.withAlpha(200)),
+                    icon: Icon(Icons.mode_comment_outlined, size: 42, color: Theme.of(context).colorScheme.onSecondaryContainer),
                     fontSize: 15,
                     font: Settings.ElmsSans,
-                  ),
+                  ) : SizedBox(),
 
                   _DetailsTile( //TODO: Add Size + megapixels
-                    text: "00.0 mb  •  ${x}x$y\nISO $iso  •  ${mm}mm  •  $ev ev\n${f}f  •  $ss s$flashText", 
-                    icon: Icon(Icons.camera_outlined, size: 42, color: Theme.of(context).colorScheme.primary),
-                    fontSize: 18,
+                    text: "00.0 mb  •  ${x}x$y  •  0 MP", 
+                    icon: Icon(Icons.photo_size_select_large, size: 42, color: Theme.of(context).colorScheme.onSecondaryContainer),
+                    fontSize: 16.5,
                   ),
 
-                  lat.isNotEmpty ?  _DetailsTile(
+                  photoGSens.isNotEmpty || mm.isNotEmpty || ev.isNotEmpty || f.isNotEmpty || ss.isNotEmpty ? _DetailsTile(
+                    text: "$photoGSens ISO  •  ${mm}mm  •  $ev ev\n${f}f  •  $ss s$flashText", 
+                    icon: Icon(Icons.camera_outlined, size: 42, color: Theme.of(context).colorScheme.onSecondaryContainer),
+                    fontSize: 16.5,
+                  ) : SizedBox(),
+
+                  lat.isNotEmpty ? _DetailsTile(
                     text: "Lat:$lat ($latRef)\nLong:$long ($longRef)\nAlt:$alt", 
                     icon: IconButton.filledTonal(
-                      icon: Icon(Icons.location_searching_outlined, size: 28, color: Theme.of(context).colorScheme.primary),
+                      icon: Icon(Icons.location_searching_outlined, size: 28, color: Theme.of(context).colorScheme.onSecondaryContainer),
                       onPressed: () {},
                       tooltip: "Open in google maps",
                     ),
                     fontSize: 15,
                   ) : SizedBox(),
 
-                  _DetailsTile(
+                  make.isNotEmpty || model.isNotEmpty || softwere.isNotEmpty ? _DetailsTile(
                     text: "$make  •  $model\n$softwere", 
-                    icon: Icon(Icons.camera_alt_outlined, size: 42, color: Theme.of(context).colorScheme.secondary),
+                    icon: Icon(Icons.camera_alt_outlined, size: 42, color: Theme.of(context).colorScheme.onSecondaryContainer),
                     fontSize: 15,
-                  ),
+                  ) : SizedBox(),
 
-                  _DetailsTile(
+                  zoom.isNotEmpty || aper.isNotEmpty ? _DetailsTile(
                     text: "Digital zoom ratio: $zoom\nAperture: $aper  •  Max $maxAper", 
-                    icon: Icon(Icons.photo_camera_front, size: 42, color: Theme.of(context).colorScheme.tertiary),
+                    icon: Icon(Icons.photo_camera_front, size: 42, color: Theme.of(context).colorScheme.onSecondaryContainer),
                     fontSize: 15,
-                  ),
+                  ) : SizedBox(),
 
-                  _DetailsTile(
+                 uniID.isNotEmpty || sceneText.isNotEmpty ? _DetailsTile(
                     text: "Scene capture type: $sceneText\nMetering mode: $meterinText\nImage Unique ID: $uniID",
-                    icon: Icon(Icons.landscape_outlined, size: 42, color: Theme.of(context).colorScheme.tertiary),
+                    icon: Icon(Icons.landscape_outlined, size: 42, color: Theme.of(context).colorScheme.onSecondaryContainer),
                     fontSize: 15,
-                  ),
+                  ) : SizedBox(),
 
                   SizedBox(height: 50)
                 ],
@@ -205,6 +225,8 @@ class Photo {
                       child: Text("Delete"),
                       onPressed: () async {
                         await File(path).delete();
+                        if (isInFavorites)
+                          Settings.favorites.remove(path);
                         deleted = true;
                         Navigator.of(context).pop();
                       },
@@ -312,7 +334,11 @@ class _DetailsTile extends StatelessWidget {
           Flexible(
             child: Text(
               text,
-              style: TextStyle(fontSize: fontSize, fontFamily: font),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSecondaryContainer,
+                fontSize: fontSize,
+                fontFamily: font
+              ),
               maxLines: 3,
               overflow: .ellipsis,
             ),

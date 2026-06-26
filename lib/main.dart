@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:memories_photos/Pages/home_page.dart';
+import 'package:memories_photos/settings.dart';
 
-void main() {
-  // WidgetsFlutterBinding.ensureInitialized();
-  // await PhotoIndexer.startCa();
+void main() async {
+  await Settings.load();
   runApp(const MainApp());
 }
 

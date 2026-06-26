@@ -190,9 +190,10 @@ class _FooterState extends State<_Footer> {
                 },
               ),
               IconButton(
-                icon: Icon(Icons.favorite_border, size: 28),
+                icon: Icon(widget.photo.isInFavorites ? Icons.favorite_rounded : Icons.favorite_border, size: 28),
                 tooltip: "Add/Remove favorite",
                 onPressed: () {
+                  setState(() => widget.photo.addToFavorites(context));
                 },
               ),
               IconButton(
@@ -213,7 +214,7 @@ class _FooterState extends State<_Footer> {
               ),
             ],
           ).frosted(
-            blur: 4,
+            blur: 8,
             borderRadius: .circular(50),
             padding: .all(10),
             frostColor: Theme.of(context).colorScheme.secondaryContainer

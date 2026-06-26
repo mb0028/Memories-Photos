@@ -57,7 +57,7 @@ class _EditorPageState extends State<EditorPage> {
         actions: [
           IconButton(
             icon: Badge.count(
-                count: undoHistory.length - 1,
+                count: (undoHistory.length - 1).clamp(0, 999),
                 child: Icon(Icons.undo_rounded),
             ),
             tooltip: "Undo",
@@ -65,7 +65,7 @@ class _EditorPageState extends State<EditorPage> {
           )
         ],
       ),
-      bottomSheet: Container(
+      bottomSheet: widget.photo != null ? Container(
         margin: .all(15).add(.only(bottom: 30)), //TODO: adaptive nav bar padding
         height: 80,
         child: Column(
@@ -102,7 +102,7 @@ class _EditorPageState extends State<EditorPage> {
             ),
           ],
         ),
-      ),
+      ) : null,
       body: widget.photo == null ? pickupBtn() : Center(
         child: Expanded(
           child: Image.memory(

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:memories_photos/Editor/collage_maker_page.dart';
+import 'package:memories_photos/Editor/editor_page.dart';
+import 'package:memories_photos/Pages/photos_page.dart';
+import 'package:memories_photos/Pages/settings_page.dart';
 import 'package:memories_photos/Popups/new_album_popup.dart';
 import 'package:memories_photos/image_helper.dart';
 import 'package:memories_photos/settings.dart';
@@ -12,7 +15,7 @@ Future<bool> showHomeCreateNewPopup(BuildContext context) async {
     backgroundColor: Theme.of(context).colorScheme.secondaryContainer.withAlpha(240),
     builder: (context) => Container(
       margin: .symmetric(horizontal: 15),
-      width: 360,
+      width: 420,
       height: 360,
       child: ListView(
         physics: BouncingScrollPhysics(),
@@ -21,33 +24,66 @@ Future<bool> showHomeCreateNewPopup(BuildContext context) async {
             mainAxisAlignment: .spaceEvenly,
             spacing: 15,
             children: [
-              OutlinedButton.icon(
-                label: Text(
-                  "Record Video",
-                  style: TextStyle(
-                    fontFamily: Settings.ElmsSans
-                  ),
+              Expanded(
+                child: OutlinedButton.icon(
+                  label: Text("Settings"),
+                  icon: Icon(Icons.settings_rounded),
+                  onPressed: () {
+                    returnTrue = true;
+                    Navigator.of(context).pop();
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => SettingsPage(),));
+                  },
                 ),
-                icon: Icon(Icons.video_camera_front_outlined),
-                onPressed: () {
-                  // TODO: recording video
-                  returnTrue = true;
-                  Navigator.of(context).pop();
-                },
               ),
-              FilledButton.icon(
-                label: Text(
-                  "Capture Photo",
-                  style: TextStyle(
-                    fontFamily: Settings.ElmsSans
-                  ),
+              Expanded(
+                child: OutlinedButton.icon(
+                  label: Text("Favorites"),
+                  icon: Icon(Icons.favorite_rounded),
+                  onPressed: () async {
+                    returnTrue = true;
+                    Navigator.of(context).pop();
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => PhotosPage(folder: "[FAV]",)));
+                  },
                 ),
-                icon: Icon(Icons.add_a_photo_rounded),
-                onPressed: () async {
-                  await ImageHelper.takePicture();
-                  returnTrue = true;
-                  Navigator.of(context).pop();
-                },
+              ),
+            ],
+          ),
+          SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: .spaceEvenly,
+            spacing: 15,
+            children: [
+              Expanded(
+                child: OutlinedButton.icon(
+                  label: Text(
+                    "Record Video",
+                    style: TextStyle(
+                      fontFamily: Settings.ElmsSans
+                    ),
+                  ),
+                  icon: Icon(Icons.video_camera_front_outlined),
+                  onPressed: () {
+                    // TODO: recording video
+                    returnTrue = true;
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ),
+              Expanded(
+                child: FilledButton.icon(
+                  label: Text(
+                    "Capture Photo",
+                    style: TextStyle(
+                      fontFamily: Settings.ElmsSans
+                    ),
+                  ),
+                  icon: Icon(Icons.add_a_photo_rounded),
+                  onPressed: () async {
+                    await ImageHelper.takePicture();
+                    returnTrue = true;
+                    Navigator.of(context).pop();
+                  },
+                ),
               ),
             ],
           ),
@@ -79,12 +115,12 @@ Future<bool> showHomeCreateNewPopup(BuildContext context) async {
             },
           ),
           ListTile(
-            title: Text("Png"),
+            title: Text("Edit then save as"),
             leading: Icon(Icons.image_outlined),
             onTap: () {
-              // TODO: create png using png comparer 28
               returnTrue = true;
               Navigator.of(context).pop();
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => EditorPage(),));
             },
           ),
           ListTile(
