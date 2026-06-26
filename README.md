@@ -1,6 +1,6 @@
 # Memories Photos
 
-A gallery app for android & windows that exists to replacing apps like google photos
+A gallery app for android & windows
 
 (App is still in development progress)
 
