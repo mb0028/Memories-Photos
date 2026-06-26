@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:memories_photos/Popups/add_path_popup.dart';
 import 'package:memories_photos/settings.dart';
+import 'package:open_filex/open_filex.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -157,7 +158,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
             FilledButton(
-              onPressed: () {},
+              onPressed: () => OpenFilex.open(Settings.settingsFile.path),
               child: Text("Edit Settings.txt"),
             ),
             SizedBox(height: 8,),
