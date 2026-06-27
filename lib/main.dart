@@ -1,9 +1,14 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:memories_photos/Pages/home_page.dart';
 import 'package:memories_photos/settings.dart';
 
+late FragmentProgram colorfulBackgroundProgram;
+
 void main() async {
   await Settings.load();
+  colorfulBackgroundProgram = await FragmentProgram.fromAsset("Assets/Shaders/bg.frag");
   runApp(const MainApp());
 }
 
@@ -18,7 +23,7 @@ class MainApp extends StatelessWidget {
         fontFamily: "LexendDeca",
         colorScheme: .fromSeed(
           seedColor: const Color.fromARGB(255, 164, 255, 196),
-          dynamicSchemeVariant: .tonalSpot,
+          dynamicSchemeVariant: .rainbow,
           brightness: MediaQuery.platformBrightnessOf(context),
         ),
       ),

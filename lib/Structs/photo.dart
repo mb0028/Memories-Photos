@@ -160,7 +160,7 @@ class Photo {
                   ) : SizedBox(),
 
                   lat.isNotEmpty ? _DetailsTile(
-                    text: "Lat:$lat ($latRef)\nLong:$long ($longRef)\nAlt:$alt", 
+                    text: "Lat: $lat ($latRef)\nLong: $long ($longRef)\nAlt: $alt", 
                     icon: IconButton.filledTonal(
                       icon: Icon(Icons.location_searching_outlined, size: 28, color: Theme.of(context).colorScheme.onSecondaryContainer),
                       onPressed: () {},
@@ -261,7 +261,7 @@ class Photo {
     await showDialog(
       context: context,
       builder: (context) => Dialog(
-        backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+        backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
         child: Container(
           height: 250,
           padding: .all(15),
@@ -294,7 +294,7 @@ class Photo {
                     ),
                   ),
                   Expanded(
-                    child: FilledButton.tonal(
+                    child: OutlinedButton(
                       child: Text("Cancel"),
                       onPressed: () => Navigator.of(context).pop(),
                     ),

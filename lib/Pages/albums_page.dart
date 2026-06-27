@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:memories_photos/Widgets/album_card.dart';
-import 'package:memories_photos/Widgets/title_text.dart';
 import 'package:memories_photos/photo_indexer.dart';
 import 'package:memories_photos/settings.dart';
 
@@ -15,8 +14,19 @@ class AlbumsPage extends StatelessWidget {
       crossAxisAlignment: .stretch,
       spacing: 5,
       children: [
-        TitleText(text: "Albums", color: Theme.of(context).colorScheme.secondary,),
-        
+        SizedBox(
+          height: 135,
+          child: Center(
+            child: Text(
+              "Albums",
+              style: TextStyle(
+                fontFamily: Settings.CherryBombOne,
+                fontSize: 36,
+                color: Theme.of(context).colorScheme.onSurfaceVariant
+              ),
+            ),
+          ),
+        ),
         Expanded(
           child: Padding(
             padding: .symmetric(horizontal: 15),

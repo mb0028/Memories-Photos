@@ -37,51 +37,87 @@ class _PhotoViewerPageState extends State<PhotoViewerPage> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onHorizontalDragUpdate: (details) {
-        setState(() => t = details.localPosition.dx - 200);
-      },
-      onHorizontalDragEnd: (details) {
-        if (t > 70) {
-          i--;
-          setState(() => i = i.clamp(0, widget.query.length - 1));
-        }
-        else if (t < -70) {
-          i++;
-          setState(() => i = i.clamp(0, widget.query.length - 1));
-        }
-        t = 0;
-        getName();
-      },
+      // onHorizontalDragUpdate: (details) {
+      //   setState(() => t = details.localPosition.dx - 200);
+      // },
+      // onHorizontalDragEnd: (details) {
+      //   if (t > 70) {
+      //     i--;
+      //     setState(() => i = i.clamp(0, widget.query.length - 1));
+      //   }
+      //   else if (t < -70) {
+      //     i++;
+      //     setState(() => i = i.clamp(0, widget.query.length - 1));
+      //   }
+      //   t = 0;
+      //   getName();
+      // },
       onPanUpdate: (details) {
         setState(() => scale = (details.globalPosition.dy - 230) / 150);
       },
       onPanEnd: (details) => setState(() => scale = 1),
       child: Scaffold(
-        body: Stack(
-          alignment: .center,
-          children: [
-            Transform.scale(
-              scale: scale,
-              child: Transform.translate(
-                offset: Offset(t, 0),
-                child: Hero(
-                  curve: Curves.easeOutCirc,
-                  reverseCurve: Curves.easeInCirc,
-                  tag: widget.query[i].path,
-                  child: Image.file(
-                    File(widget.query[i].path),
+        extendBody: true,
+        extendBodyBehindAppBar: true,
+        
+        body: Center(
+          child: Stack(
+            alignment: .center,
+            children: [
+              Transform.scale(
+                scale: scale,
+                child: Transform.translate(
+                  offset: Offset(t, 0),
+                  child: Hero(
+                    curve: Curves.easeOutCirc,
+                    reverseCurve: Curves.easeInCirc,
+                    tag: widget.query[i].path,
+                    child: Image.file(
+                      File(widget.query[i].path),
+                    ),
                   ),
                 ),
               ),
+              Row(
+                mainAxisAlignment: .spaceBetween,
+                children: [
+                  IconButton.filledTonal(
+                    icon: Icon(Icons.arrow_back),
+                    tooltip: "Previous",
+                    onPressed: () => setState(() => i = (i - 1).clamp(0, widget.query.length - 1)),
+                  ),
+                  IconButton.filledTonal(
+                    icon: Icon(Icons.arrow_forward),
+                    tooltip: "Next",
+                    onPressed: () => setState(() => i = (i + 1).clamp(0, widget.query.length - 1)),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        
+        bottomNavigationBar: _Footer(photo: widget.query[i]),
+        
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          centerTitle: true,
+          automaticallyImplyLeading: false,
+          title: Text(
+            name,
+            textAlign: .center,
+            maxLines: 2,
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onTertiaryContainer,
+              fontFamily: Settings.ElmsSans,
+              fontSize: 16
             ),
-            Column(
-              mainAxisAlignment: .spaceBetween,
-              children: [
-                _Header(photo: widget.query[i], name: name),
-                _Footer(photo: widget.query[i]),
-              ],
-            )
-          ] 
+          ).frosted(
+            blur: 8,
+            borderRadius: .circular(50),
+            padding: .all(10),
+            frostColor: Theme.of(context).colorScheme.tertiaryContainer
+          ),
         ),
       ),
     );
@@ -89,59 +125,6 @@ class _PhotoViewerPageState extends State<PhotoViewerPage> {
 }
 
 //////////////////////////////////////////////////////////////////
-
-class _Header extends StatelessWidget {
-  final Photo photo;
-  final String name;
-  const _Header({required this.photo, required this.name});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: .all(15).add(.only(top: 20)),
-      child: Row(
-        mainAxisAlignment: .spaceBetween,
-        spacing: 15,
-        children: [
-          IconButton.filled(
-            icon: Icon(Icons.arrow_back_rounded),
-            padding: .all(15),
-            tooltip: "Back",
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-          Flexible(
-            child: Container(
-              padding: .all(15),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.tertiaryContainer.withAlpha(220),
-                borderRadius: .circular(50),
-                // border: .all(
-                //   width: 1,
-                //   color: Theme.of(context).colorScheme.tertiary
-                // )
-              ),
-              child: Text(
-                name,
-                textAlign: .center,
-                maxLines: 3,
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.onTertiaryContainer,
-                  fontFamily: Settings.ElmsSans
-                ),
-              ),
-            )
-          ),
-          IconButton.filledTonal(
-            icon: Icon(Icons.more_vert_rounded),
-            padding: .all(15),
-            tooltip: "More",
-            onPressed: () => photo.showMoreActionsPopup(context),
-          ),
-        ],
-      ),
-    );
-  }
-}
 
 class _Footer extends StatefulWidget {
   final Photo photo;
@@ -152,52 +135,41 @@ class _Footer extends StatefulWidget {
 }
 
 class _FooterState extends State<_Footer> {
-
   @override
   Widget build(BuildContext context) {
+    double size = 26;
     return Container(
-      margin: .all(15).add(.only(bottom: 40)), //TODO: adaptive nav bar padding
+      margin: .symmetric(horizontal: 15),
+      height: 115,
       child: Column(
         spacing: 5,
         children: [
-          Text(widget.photo.dateTaken.toString()).frosted(
+          Row(
+            mainAxisAlignment: .spaceBetween,
+            children: [
+              IconButton(
+                icon: Icon(Icons.more_vert_rounded, size: size),
+                tooltip: "More",
+                onPressed: () => widget.photo.showMoreActionsPopup(context),
+              ),
+              Text(widget.photo.dateTaken.toString()),
+              IconButton(
+                icon: Icon(Icons.arrow_back_rounded, size: size),
+                tooltip: "Back",
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
+          ).frosted(
             blur: 8,
-            padding: .symmetric(horizontal: 15, vertical: 8),
-            borderRadius: .circular(20),
-            frostColor: Theme.of(context).colorScheme.tertiaryContainer
+            padding: .symmetric(horizontal: 15, vertical: 4),
+            borderRadius: .circular(50),
+            frostColor: Theme.of(context).colorScheme.secondaryContainer
           ),
           Row(
             mainAxisAlignment: .spaceEvenly,
             children: [
               IconButton(
-                icon: Icon(Icons.share_rounded, size: 24),
-                tooltip: "Share",
-                onPressed: () {
-                },
-              ),
-              IconButton(
-                icon: Icon(Icons.delete_outline, size: 28),
-                tooltip: "Delete",
-                onPressed: () {
-                  widget.photo.showDeletePopup(context, () => setState(() {}));
-                },
-              ),
-              IconButton(
-                icon: Icon(Icons.info_outline, size: 32),
-                tooltip: "Info",
-                onPressed: () {
-                  widget.photo.showDetailsPopup(context);
-                },
-              ),
-              IconButton(
-                icon: Icon(widget.photo.isInFavorites ? Icons.favorite_rounded : Icons.favorite_border, size: 28),
-                tooltip: "Add/Remove favorite",
-                onPressed: () {
-                  setState(() => widget.photo.addToFavorites(context));
-                },
-              ),
-              IconButton(
-                icon: Icon(Icons.edit_outlined, size: 28),
+                icon: Icon(Icons.draw_rounded, size: size),
                 tooltip: "Edit",
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(builder: (context) => EditorPage(
@@ -206,7 +178,34 @@ class _FooterState extends State<_Footer> {
                 },
               ),
               IconButton(
-                icon: Icon(Icons.draw_rounded, size: 24),
+                icon: Icon(Icons.share_rounded, size: size),
+                tooltip: "Share",
+                onPressed: () {
+                },
+              ),
+              IconButton(
+                icon: Icon(Icons.delete_outline, size: size),
+                tooltip: "Delete",
+                onPressed: () {
+                  widget.photo.showDeletePopup(context, () => setState(() {}));
+                },
+              ),
+              IconButton(
+                icon: Icon(Icons.info_outline, size: size),
+                tooltip: "Info",
+                onPressed: () {
+                  widget.photo.showDetailsPopup(context);
+                },
+              ),
+              IconButton(
+                icon: Icon(widget.photo.isInFavorites ? Icons.favorite_rounded : Icons.favorite_border, size: size),
+                tooltip: "Add/Remove favorite",
+                onPressed: () {
+                  setState(() => widget.photo.addToFavorites(context));
+                },
+              ),
+              IconButton(
+                icon: Icon(Icons.insert_comment_outlined, size: size),
                 tooltip: "Change Comment",
                 onPressed: () {
                   widget.photo.showEditCommentPopup(context, () => setState(() {}));
@@ -216,8 +215,8 @@ class _FooterState extends State<_Footer> {
           ).frosted(
             blur: 8,
             borderRadius: .circular(50),
-            padding: .all(10),
-            frostColor: Theme.of(context).colorScheme.secondaryContainer
+            padding: .symmetric(horizontal: 10, vertical: 4),
+            frostColor: Theme.of(context).colorScheme.primaryContainer
           ),
         ],
       ),

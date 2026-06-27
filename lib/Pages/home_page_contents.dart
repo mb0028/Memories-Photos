@@ -60,7 +60,7 @@ class _HomePageContentsState extends State<HomePageContents> {
         padding: .only(bottom: 280),
         children: [
           SizedBox(
-            height: 220,
+            height: 185,
             child: header != null ? Image.file(
               File(header!.path),
               fit: .cover,

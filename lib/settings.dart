@@ -25,9 +25,9 @@ class Settings {
   } 
   static String dcimPath = Platform.isAndroid
     ? "/sdcard/DCIM"
-    : "E:${Platform.pathSeparator}"; // Temporary. TODO
+    : "C:${Platform.pathSeparator}Users${Platform.pathSeparator}mb28${Platform.pathSeparator}Desktop"; // Temporary. TODO
 
-  static File settingsFile = File("$appPath/Settings/Settings.txt");
+  static File settingsFile = File("$appPath${Platform.pathSeparator}Settings${Platform.pathSeparator}Settings.txt");
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

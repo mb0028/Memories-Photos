@@ -37,80 +37,89 @@ class _EditorPageState extends State<EditorPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text("Edit ${widget.photo?.name}"),
-        leading: Row(
-          children: [
-            IconButton(
-              icon: Icon(Icons.insert_drive_file_outlined),
-              tooltip: "File",
-              onPressed: () {
-                
-              },
-            ),
-          ],
-        ),
-        actionsPadding: .only(right: 6),
-        actions: [
-          IconButton(
-            icon: Badge.count(
-                count: (undoHistory.length - 1).clamp(0, 999),
-                child: Icon(Icons.undo_rounded),
-            ),
-            tooltip: "Undo",
-            onPressed: () => undo(),
-          )
-        ],
-      ),
-      bottomSheet: widget.photo != null ? Container(
-        margin: .all(15).add(.only(bottom: 30)), //TODO: adaptive nav bar padding
-        height: 80,
-        child: Column(
-          spacing: 10,
-          children: [
-            LinearProgressIndicator(value: loading, minHeight: 8, borderRadius: .circular(20),),
-            Row(
-              mainAxisAlignment: .spaceEvenly,
-              children: [
-                IconButton(
-                  icon: Icon(Icons.aspect_ratio_outlined, size: 38,),
-                  tooltip: "Resize",
-                  onPressed: () => resize(false),
-                ),
-                OutlinedButton(
-                  child: Text("BW"),
-                  onPressed: () async {
-                    setState(() => loading = null);
-                    await recordHistory();
-                    await Filters.bw(tempP.path);
-                    setState(() => loading = 1);
-                  },
-                ),
-                 OutlinedButton(
-                  child: Text("Grayscale"),
-                  onPressed: () async {
-                    setState(() => loading = null);
-                    await recordHistory();
-                    await Filters.grayscale(tempP.path);
-                    setState(() => loading = 1);
-                  },
-                ),
-              ],
-            ),
-          ],
-        ),
-      ) : null,
+      appBar: appbar(),
+      bottomNavigationBar: bottomBar(),
       body: widget.photo == null ? pickupBtn() : Center(
-        child: Expanded(
-          child: Image.memory(
-            File(tempP.path).readAsBytesSync()
-          ),
+        child: Image.memory(
+          File(tempP.path).readAsBytesSync()
         ),
       ),
     );
+  }
+
+  PreferredSizeWidget appbar() {
+    return AppBar(
+      centerTitle: true,
+      title: Text(
+        "Edit ${widget.photo?.name}",
+        style: TextStyle(
+          fontSize: 16
+        ),
+      ),
+      leading: Row(
+        children: [
+          IconButton(
+            icon: Icon(Icons.insert_drive_file_outlined),
+            tooltip: "File",
+            onPressed: () {
+              
+            },
+          ),
+        ],
+      ),
+      actionsPadding: .only(right: 6),
+      actions: [
+        IconButton(
+          icon: Badge.count(
+              count: (undoHistory.length - 1).clamp(0, 999),
+              child: Icon(Icons.undo_rounded),
+          ),
+          tooltip: "Undo",
+          onPressed: () => undo(),
+        )
+      ],
+    );
+  }
+
+  Widget? bottomBar() {
+    return widget.photo != null ? Container(
+      margin: .all(15),
+      height: 75,
+      child: Column(
+        spacing: 10,
+        children: [
+          LinearProgressIndicator(value: loading, minHeight: 8, borderRadius: .circular(20),),
+          Row(
+            mainAxisAlignment: .spaceEvenly,
+            children: [
+              IconButton(
+                icon: Icon(Icons.aspect_ratio_outlined, size: 38,),
+                tooltip: "Resize",
+                onPressed: () => resize(false),
+              ),
+              OutlinedButton(
+                child: Text("BW"),
+                onPressed: () async {
+                  setState(() => loading = null);
+                  await recordHistory();
+                  await Filters.bw(tempP.path);
+                  setState(() => loading = 1);
+                },
+              ),
+                OutlinedButton(
+                child: Text("Grayscale"),
+                onPressed: () async {
+                  setState(() => loading = null);
+                  await recordHistory();
+                  await Filters.grayscale(tempP.path);
+                  setState(() => loading = 1);
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+    ) : null;
   }
 
   Widget pickupBtn() {

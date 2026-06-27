@@ -31,6 +31,9 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
+  shaders:
+    - Assets/Shaders/bg.frag
+
   fonts:
     - family: LexendDeca
       fonts:
