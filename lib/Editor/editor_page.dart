@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:memories_photos/Editor/editor_page_file.dart';
 import 'package:memories_photos/Editor/filters.dart';
 import 'package:memories_photos/Popups/toast.dart';
 import 'package:memories_photos/Structs/photo.dart';
@@ -58,13 +59,7 @@ class _EditorPageState extends State<EditorPage> {
       ),
       leading: Row(
         children: [
-          IconButton(
-            icon: Icon(Icons.insert_drive_file_outlined),
-            tooltip: "File",
-            onPressed: () {
-              
-            },
-          ),
+          FileMenu(),
         ],
       ),
       actionsPadding: .only(right: 6),
