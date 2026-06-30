@@ -26,13 +26,23 @@ class MainApp extends StatelessWidget {
           brightness: MediaQuery.platformBrightnessOf(context),
         ),
         tooltipTheme: _tooltipTheme(context),
-        sliderTheme: SliderThemeData(
-          trackHeight: 20,
-          thumbColor: Theme.of(context).colorScheme.onPrimary,
-          //inactiveTrackColor: Theme.of(context).colorScheme.secondaryContainer
+        sliderTheme: _sliderTheme(context),
+        bottomSheetTheme: BottomSheetThemeData(
+          backgroundColor: Colors.transparent
         )
       ),
       home: MonoPHomePage(),
+    );
+  }
+
+  SliderThemeData _sliderTheme(BuildContext context) {
+    return SliderThemeData(
+      trackHeight: 18,
+      trackGap: 9,
+      thumbSize: WidgetStatePropertyAll(Size(10, 50)),
+      trackShape: GappedSliderTrackShape(),
+      thumbShape: HandleThumbShape(),
+      inactiveTrackColor: Settings.accent
     );
   }
 

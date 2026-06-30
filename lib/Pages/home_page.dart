@@ -25,7 +25,7 @@ class MonoPHomePageState extends State<MonoPHomePage> {
         int() => throw UnimplementedError(),
       },
       extendBody: true,
-      floatingActionButton: FloatingActionButton.large(
+      floatingActionButton: FloatingActionButton(
         onPressed: () async {
           if (await showHomeCreateNewPopup(context))
             setState(() {});
@@ -35,8 +35,8 @@ class MonoPHomePageState extends State<MonoPHomePage> {
         backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
         child: Icon(Icons.add_a_photo_outlined, color: Theme.of(context).colorScheme.onTertiaryContainer,),
       ),
-      bottomNavigationBar: Container(
-        margin: .all(15),
+      bottomSheet: Container(
+        margin: .all(15).add(.only(bottom: MediaQuery.paddingOf(context).bottom)),
         child: Container(
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.primaryContainer.withAlpha(60),
@@ -74,11 +74,10 @@ class MonoPHomePageState extends State<MonoPHomePage> {
             ]
           ),
         ).frosted(
-          blur: 3.5,
+          blur: 4,
           borderRadius: .circular(80)
         ),
       ),
     );
   }
 }
-

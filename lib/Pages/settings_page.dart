@@ -29,8 +29,9 @@ class _SettingsPageState extends State<SettingsPage> {
       extendBodyBehindAppBar: true,
       body: ColorfulBackground(
         child: Container(
-          padding: .all(15),
+          padding: .symmetric(horizontal: 15),
           child: ListView(
+            physics: BouncingScrollPhysics(),
             children: [
               mainSettings(),
               SizedBox(height: 15),
@@ -42,6 +43,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               SizedBox(height: 8),
               Text("Settings file path: ${Settings.settingsFile.path}"),
+              SizedBox(height: 50),
             ],
           ),
         ),

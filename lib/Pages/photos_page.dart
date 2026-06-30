@@ -46,7 +46,8 @@ class _PhotosPageState extends State<PhotosPage> {
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: Theme.of(context).colorScheme.surface.withAlpha(220),
+        backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
         title: Text(
           widget.folder != null
           ? widget.folder!.substring(widget.folder!.lastIndexOf(Platform.pathSeparator) + 1)
@@ -67,11 +68,26 @@ class _PhotosPageState extends State<PhotosPage> {
           ),
         ],
       ),
-      body: photos != null ? GridView.builder(
-        physics: BouncingScrollPhysics(),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: (screenWidth / Settings.gridScale).toInt()),
-        itemCount: photos!.length,
-        itemBuilder: (context, i) => PhotoCard(i: i, query: photos!),
+      body: photos != null ? Column(
+        crossAxisAlignment: .stretch,
+        children: [
+          widget.folder != null ? SizedBox(
+            height: 100,
+            child: Image.file(
+              File(photos!.first.path),
+              fit: .cover,
+            )
+          ) : SizedBox() ,
+          Expanded(
+            child: GridView.builder(
+              padding: .only(bottom: 200),
+              physics: BouncingScrollPhysics(),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: (screenWidth / Settings.gridScale).toInt()),
+              itemCount: photos!.length,
+              itemBuilder: (context, i) => PhotoCard(i: i, query: photos!),
+            ),
+          ),
+        ],
       ) : Center(child: CircularProgressIndicator()),
     );
   }

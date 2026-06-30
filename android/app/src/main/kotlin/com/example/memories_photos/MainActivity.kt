@@ -3,6 +3,7 @@ package com.example.memories_photos
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -18,6 +19,8 @@ class MainActivity : FlutterActivity() {
     private val CHANNEL_CAMERA = "mb28.monoP.camera/camera_channel"
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        window.navigationBarColor = 0x00000000
+
         if (!Environment.isExternalStorageManager()) {
             val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
             intent.setData(Uri.fromParts("package", packageName, null))
