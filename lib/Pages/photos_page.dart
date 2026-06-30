@@ -60,20 +60,8 @@ class _PhotosPageState extends State<PhotosPage> {
               showModalBottomSheet(
                 context: context,
                 showDragHandle: true,
-                builder: (context) => SizedBox(
-                  height: 140,
-                  child: Slider(
-                    min: 40,
-                    max: 320,
-                    label: "Grid scale",
-                    showValueIndicator: .alwaysVisible,
-                    value: Settings.gridScale.toDouble(),
-                    onChanged: (value) {
-                      setState(() => Settings.gridScale = value.toInt());
-                      Settings.save();
-                    },
-                  ),
-                )
+                backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
+                builder: (context) => _GridScalePopup(onChanged: () => setState(() {}))
               );
             }
           ),
@@ -85,6 +73,35 @@ class _PhotosPageState extends State<PhotosPage> {
         itemCount: photos!.length,
         itemBuilder: (context, i) => PhotoCard(i: i, query: photos!),
       ) : Center(child: CircularProgressIndicator()),
+    );
+  }
+}
+
+class _GridScalePopup extends StatefulWidget {
+  final Function onChanged;
+
+  const _GridScalePopup({required this.onChanged});
+  @override
+  State<_GridScalePopup> createState() => _GridScalePopupState();
+}
+
+class _GridScalePopupState extends State<_GridScalePopup> {
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 140,
+      child: Slider(
+        min: 40,
+        max: 320,
+        label: "Grid scale: ${Settings.gridScale - 20}%",
+        showValueIndicator: .alwaysVisible,
+        value: Settings.gridScale.toDouble(),
+        onChanged: (value) {
+          widget.onChanged();
+          setState(() => Settings.gridScale = value.toInt());
+          Settings.save();
+        },
+      ),
     );
   }
 }

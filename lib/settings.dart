@@ -3,6 +3,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
+
 class Settings {
   static const String LexendDeca = "LexendDeca";
   static const String ElmsSans = "ElmsSans";
@@ -38,6 +40,7 @@ class Settings {
   static bool showHidden = false;
   static bool trashInstead = false;
   static bool onlyShowDCIM = false;
+  static Color accent = Color.fromARGB(255, 164, 255, 196);
 
   static List<String> libInclude = [];
   static List<String> libExclude = [];
@@ -72,6 +75,10 @@ class Settings {
           trashInstead = bool.parse(line.split("[TI]")[1]);
         else if (line.startsWith("[OSDCIM]"))
           onlyShowDCIM = bool.parse(line.split("[OSDCIM]")[1]);
+        else if (line.startsWith("[COLOR]")) {
+          var rgb = line.split("[COLOR]")[1].split("|");
+          accent = Color.fromARGB(255, (double.parse(rgb[0]) * 255).toInt(), (double.parse(rgb[1]) * 255).toInt(), (double.parse(rgb[2]) * 255).toInt());
+        }
       }
     }
     else {
@@ -90,6 +97,7 @@ class Settings {
     data += "[SH]$showHidden\n";
     data += "[TI]$trashInstead\n";
     data += "[OSDCIM]$onlyShowDCIM\n";
+    data += "[COLOR]${accent.r}|${accent.g}|${accent.b}\n";
 
     for (var i in libInclude)
       data += "[LIB_I]$i\n";

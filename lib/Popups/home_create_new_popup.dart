@@ -48,7 +48,7 @@ Future<bool> showHomeCreateNewPopup(BuildContext context) async {
               ),
             ],
           ),
-          SizedBox(height: 10),
+          SizedBox(height: 5),
           Row(
             mainAxisAlignment: .spaceEvenly,
             spacing: 15,
@@ -87,7 +87,7 @@ Future<bool> showHomeCreateNewPopup(BuildContext context) async {
               ),
             ],
           ),
-          SizedBox(height: 15,),
+          SizedBox(height: 5),
           Text(
             "🌲 Create New ✨",
             textAlign: .center,

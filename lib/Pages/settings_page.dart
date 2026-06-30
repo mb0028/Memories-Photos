@@ -1,7 +1,7 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:memories_photos/Popups/add_path_popup.dart';
+import 'package:memories_photos/Popups/change_accent_popup.dart';
+import 'package:memories_photos/Popups/path_picker_popup.dart';
 import 'package:memories_photos/Widgets/colorful_bg.dart';
 import 'package:memories_photos/settings.dart';
 import 'package:open_filex/open_filex.dart';
@@ -12,7 +12,6 @@ class SettingsPage extends StatefulWidget {
   @override
   State<SettingsPage> createState() => _SettingsPageState();
 }
-
 
 class _SettingsPageState extends State<SettingsPage> {
   int a = 120;
@@ -59,6 +58,28 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       child: Column(
         children: [
+          ListTile(
+            title: Text("Accent Color"),
+            subtitle: OutlinedButton(
+              child: Text("Change"),
+              onPressed: () async {
+                var col = await showChangeAccentColorPopup(context);
+                if (col.$2) {
+                  setState(() => Settings.accent = col.$1);
+                  Settings.save();
+                } 
+              },
+            ),
+            leading: Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                color: Settings.accent,
+                border: .all(width: 2),
+                borderRadius: .circular(15)
+              ),
+            ),
+          ),
           ListTile(
             title: Text("Show hidden photos"),
             subtitle: Text("Not works as excepted. don't turn it on until next updates", style: TextStyle(fontSize: 12),),
@@ -149,9 +170,10 @@ class _SettingsPageState extends State<SettingsPage> {
           Text("Library include folders:"),
           ElevatedButton(
             onPressed: () async {
-              var t = await showAddPathDialog(context);
+              var t = await showPathPickerDialog(context);
               if (t != null && !Settings.libInclude.contains(t))
                 setState(() => Settings.libInclude.add(t));
+              Settings.save();
             },
             child: Text("Add")
           ),
@@ -177,9 +199,10 @@ class _SettingsPageState extends State<SettingsPage> {
           Text("Library exclude folders:"),
           ElevatedButton(
             onPressed: () async {
-              var t = await showAddPathDialog(context);
+              var t = await showPathPickerDialog(context);
               if (t != null && !Settings.libExclude.contains(t))
                 setState(() => Settings.libExclude.add(t));
+              Settings.save();
             },
             child: Text("Add")
           ),
@@ -189,7 +212,7 @@ class _SettingsPageState extends State<SettingsPage> {
               itemCount: Settings.libExclude.length,
               itemBuilder: (context, i) => ListTile(
                 title: Text(Settings.libExclude[i]),
-                leading: Settings.libExclude.length > 1 ? IconButton(
+                leading: IconButton(
                   onPressed: () {
                     setState(() => Settings.libExclude.remove(Settings.libExclude[i]));
                     Settings.save();
@@ -197,7 +220,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   icon: Icon(Icons.remove_circle_outline),
                   color: Theme.of(context).colorScheme.error,
                   highlightColor: Theme.of(context).colorScheme.errorContainer,
-                ) : null,
+                ),
               ),
             ),
           ),

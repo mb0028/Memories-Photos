@@ -139,7 +139,7 @@ class _FooterState extends State<_Footer> {
   Widget build(BuildContext context) {
     double size = 26;
     return Container(
-      margin: .symmetric(horizontal: 15),
+      margin: .symmetric(horizontal: 15).add(.only(bottom: MediaQuery.paddingOf(context).bottom)),
       height: 115,
       child: Column(
         spacing: 5,

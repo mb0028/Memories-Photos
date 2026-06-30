@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:memories_photos/Popups/toast.dart';
 import 'package:memories_photos/Widgets/monop_text_field.dart';
 
 Future<String?> showNewAlbumDialog(BuildContext context) async {
@@ -12,6 +13,7 @@ Future<String?> showNewAlbumDialog(BuildContext context) async {
   await showDialog(
     context: context,
     builder: (context) => Dialog(
+      backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
       child: Container(
         padding: .all(25),
         width: 500,
@@ -37,8 +39,11 @@ Future<String?> showNewAlbumDialog(BuildContext context) async {
                 Expanded(
                   child: IconButton.outlined(
                     padding: .all(15),
-                    icon: Icon(Icons.folder_shared_outlined),
-                    onPressed: () { },
+                    tooltip: "Pickup",
+                    icon: Icon(Icons.open_in_new_rounded),
+                    onPressed: () {
+                      
+                    }, //TODO
                   ),
                 ),
               ],
@@ -52,7 +57,7 @@ Future<String?> showNewAlbumDialog(BuildContext context) async {
                   canceled = false;
                   Navigator.of(context).pop();
                 } catch (e) {
-                  print(e.toString()); //TODO: Show error to user
+                  showStyledToast(e.toString(), context, duration: 5);
                 }
               },
             ),

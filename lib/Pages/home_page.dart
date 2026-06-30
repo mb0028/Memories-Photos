@@ -25,7 +25,7 @@ class MonoPHomePageState extends State<MonoPHomePage> {
         int() => throw UnimplementedError(),
       },
       extendBody: true,
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.large(
         onPressed: () async {
           if (await showHomeCreateNewPopup(context))
             setState(() {});
