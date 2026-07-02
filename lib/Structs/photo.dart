@@ -61,7 +61,7 @@ class Photo {
     //TODO: Implement
   }
 
-  void showDetailsPopup(BuildContext context) async {
+  Future<Widget> getDetailsWidget(BuildContext context) async {
     var x = await ExifInterface.getAttribute(path, ExifTag.TAG_PIXEL_X_DIMENSION);
     var y = await ExifInterface.getAttribute(path, ExifTag.TAG_PIXEL_Y_DIMENSION);
 
@@ -115,85 +115,79 @@ class Photo {
       _ =>  ""
     };
 
-    showModalBottomSheet(
-      context: context,
-      showDragHandle: true,
-      backgroundColor: Theme.of(context).colorScheme.secondaryContainer.withAlpha(230),
-      
-      builder: (context) => Container(
-        margin: .symmetric(horizontal: 10),
-        height: 480,
-        child: Column(
-          spacing: 8,
-          children: [
-            Text(
-              dateTaken.toString(),
-              style: TextStyle(
-                fontSize: 22,
-                color: Theme.of(context).colorScheme.onSecondaryContainer,
-                fontFamily: Settings.CherryBombOne,
-              ),
+    return Container(
+      margin: .all(15),
+      padding: .only(top: 60),
+      child: Column(
+        spacing: 8,
+        children: [
+          Text(
+            dateTaken.toString(),
+            style: TextStyle(
+              fontSize: 20,
+              color: Theme.of(context).colorScheme.onSecondaryContainer,
+              fontFamily: Settings.CherryBombOne,
             ),
-            Text(path),
-            Divider(),
-            Expanded(
-              child: ListView(
-                physics: BouncingScrollPhysics(),
-                children: [
-                  comment.isNotEmpty ? _DetailsTile(
-                    text: comment,
-                    icon: Icon(Icons.mode_comment_outlined, size: 42, color: Theme.of(context).colorScheme.onSecondaryContainer),
-                    fontSize: 15,
-                    font: Settings.ElmsSans,
-                  ) : SizedBox(),
+          ),
+          Text(path),
+          Divider(),
+          Expanded(
+            child: ListView(
+              physics: BouncingScrollPhysics(),
+              children: [
+                comment.isNotEmpty ? _DetailsTile(
+                  text: comment,
+                  icon: Icon(Icons.mode_comment_outlined, size: 42, color: Theme.of(context).colorScheme.onSecondaryContainer),
+                  fontSize: 15,
+                  font: Settings.ElmsSans,
+                ) : SizedBox(),
 
-                  _DetailsTile( //TODO: Add Size + megapixels
-                    text: "00.0 mb  •  ${x}x$y  •  0 MP", 
-                    icon: Icon(Icons.photo_size_select_large, size: 42, color: Theme.of(context).colorScheme.onSecondaryContainer),
-                    fontSize: 16.5,
+                _DetailsTile( //TODO: Add Size + megapixels
+                  text: "00.0 mb  •  ${x}x$y  •  0 MP", 
+                  icon: Icon(Icons.photo_size_select_large, size: 42, color: Theme.of(context).colorScheme.onSecondaryContainer),
+                  fontSize: 16.5,
+                ),
+
+                photoGSens.isNotEmpty || mm.isNotEmpty || ev.isNotEmpty || f.isNotEmpty || ss.isNotEmpty ? _DetailsTile(
+                  text: "$photoGSens ISO  •  ${mm}mm  •  $ev ev\n${f}f  •  $ss s$flashText", 
+                  icon: Icon(Icons.camera_outlined, size: 42, color: Theme.of(context).colorScheme.onSecondaryContainer),
+                  fontSize: 16.5,
+                ) : SizedBox(),
+
+                lat.isNotEmpty ? _DetailsTile(
+                  text: "Lat: $lat ($latRef)\nLong: $long ($longRef)\nAlt: $alt", 
+                  icon: IconButton.filledTonal(
+                    icon: Icon(Icons.location_searching_outlined, size: 28, color: Theme.of(context).colorScheme.onSecondaryContainer),
+                    onPressed: () {},
+                    tooltip: "Open in google maps",
                   ),
+                  fontSize: 15,
+                ) : SizedBox(),
 
-                  photoGSens.isNotEmpty || mm.isNotEmpty || ev.isNotEmpty || f.isNotEmpty || ss.isNotEmpty ? _DetailsTile(
-                    text: "$photoGSens ISO  •  ${mm}mm  •  $ev ev\n${f}f  •  $ss s$flashText", 
-                    icon: Icon(Icons.camera_outlined, size: 42, color: Theme.of(context).colorScheme.onSecondaryContainer),
-                    fontSize: 16.5,
-                  ) : SizedBox(),
+                make.isNotEmpty || model.isNotEmpty || softwere.isNotEmpty ? _DetailsTile(
+                  text: "$make  •  $model\n$softwere", 
+                  icon: Icon(Icons.camera_alt_outlined, size: 42, color: Theme.of(context).colorScheme.onSecondaryContainer),
+                  fontSize: 15,
+                ) : SizedBox(),
 
-                  lat.isNotEmpty ? _DetailsTile(
-                    text: "Lat: $lat ($latRef)\nLong: $long ($longRef)\nAlt: $alt", 
-                    icon: IconButton.filledTonal(
-                      icon: Icon(Icons.location_searching_outlined, size: 28, color: Theme.of(context).colorScheme.onSecondaryContainer),
-                      onPressed: () {},
-                      tooltip: "Open in google maps",
-                    ),
-                    fontSize: 15,
-                  ) : SizedBox(),
+                zoom.isNotEmpty || aper.isNotEmpty ? _DetailsTile(
+                  text: "Digital zoom ratio: $zoom\nAperture: $aper  •  Max $maxAper", 
+                  icon: Icon(Icons.photo_camera_front, size: 42, color: Theme.of(context).colorScheme.onSecondaryContainer),
+                  fontSize: 15,
+                ) : SizedBox(),
 
-                  make.isNotEmpty || model.isNotEmpty || softwere.isNotEmpty ? _DetailsTile(
-                    text: "$make  •  $model\n$softwere", 
-                    icon: Icon(Icons.camera_alt_outlined, size: 42, color: Theme.of(context).colorScheme.onSecondaryContainer),
-                    fontSize: 15,
-                  ) : SizedBox(),
+                uniID.isNotEmpty || sceneText.isNotEmpty ? _DetailsTile(
+                  text: "Scene capture type: $sceneText\nMetering mode: $meterinText\nImage Unique ID: $uniID",
+                  icon: Icon(Icons.landscape_outlined, size: 42, color: Theme.of(context).colorScheme.onSecondaryContainer),
+                  fontSize: 15,
+                ) : SizedBox(),
 
-                  zoom.isNotEmpty || aper.isNotEmpty ? _DetailsTile(
-                    text: "Digital zoom ratio: $zoom\nAperture: $aper  •  Max $maxAper", 
-                    icon: Icon(Icons.photo_camera_front, size: 42, color: Theme.of(context).colorScheme.onSecondaryContainer),
-                    fontSize: 15,
-                  ) : SizedBox(),
-
-                 uniID.isNotEmpty || sceneText.isNotEmpty ? _DetailsTile(
-                    text: "Scene capture type: $sceneText\nMetering mode: $meterinText\nImage Unique ID: $uniID",
-                    icon: Icon(Icons.landscape_outlined, size: 42, color: Theme.of(context).colorScheme.onSecondaryContainer),
-                    fontSize: 15,
-                  ) : SizedBox(),
-
-                  SizedBox(height: 50)
-                ],
-              ),
+                SizedBox(height: 50)
+              ],
             ),
-          ],
-        ),
-      )
+          ),
+        ],
+      ),
     );
   }
 

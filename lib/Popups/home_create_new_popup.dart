@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memories_photos/Editor/collage_maker_page.dart';
 import 'package:memories_photos/Editor/editor_page.dart';
-import 'package:memories_photos/Pages/photos_page.dart';
-import 'package:memories_photos/Pages/settings_page.dart';
 import 'package:memories_photos/Popups/new_album_popup.dart';
 import 'package:memories_photos/image_helper.dart';
 import 'package:memories_photos/settings.dart';
@@ -20,35 +18,6 @@ Future<bool> showHomeCreateNewPopup(BuildContext context) async {
       child: ListView(
         physics: BouncingScrollPhysics(),
         children: [
-          Row(
-            mainAxisAlignment: .spaceEvenly,
-            spacing: 15,
-            children: [
-              Expanded(
-                child: OutlinedButton.icon(
-                  label: Text("Settings"),
-                  icon: Icon(Icons.settings_rounded),
-                  onPressed: () {
-                    returnTrue = true;
-                    Navigator.of(context).pop();
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => SettingsPage(),));
-                  },
-                ),
-              ),
-              Expanded(
-                child: OutlinedButton.icon(
-                  label: Text("Favorites"),
-                  icon: Icon(Icons.favorite_rounded),
-                  onPressed: () async {
-                    returnTrue = true;
-                    Navigator.of(context).pop();
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => PhotosPage(folder: "[FAV]",)));
-                  },
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 5),
           Row(
             mainAxisAlignment: .spaceEvenly,
             spacing: 15,

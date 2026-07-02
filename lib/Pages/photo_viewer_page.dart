@@ -19,6 +19,7 @@ class _PhotoViewerPageState extends State<PhotoViewerPage> {
   String name = "";
   double t = 0;
   double scale = 1;
+  Widget? details;
 
   void getName() async {
     var temp = await widget.query[i].commentOrName;
@@ -59,6 +60,7 @@ class _PhotoViewerPageState extends State<PhotoViewerPage> {
       child: Scaffold(
         extendBody: true,
         extendBodyBehindAppBar: true,
+        bottomNavigationBar: _Footer(photo: widget.query[i]),
         
         body: Center(
           child: Stack(
@@ -84,20 +86,24 @@ class _PhotoViewerPageState extends State<PhotoViewerPage> {
                   IconButton.filledTonal(
                     icon: Icon(Icons.arrow_back),
                     tooltip: "Previous",
-                    onPressed: () => setState(() => i = (i - 1).clamp(0, widget.query.length - 1)),
+                    onPressed: () {
+                      setState(() => i = (i - 1).clamp(0, widget.query.length - 1));
+                      getName();
+                    },
                   ),
                   IconButton.filledTonal(
                     icon: Icon(Icons.arrow_forward),
                     tooltip: "Next",
-                    onPressed: () => setState(() => i = (i + 1).clamp(0, widget.query.length - 1)),
+                    onPressed: () {
+                      setState(() => i = (i + 1).clamp(0, widget.query.length - 1));
+                      getName();
+                    },
                   ),
                 ],
               ),
             ],
           ),
         ),
-        
-        bottomNavigationBar: _Footer(photo: widget.query[i]),
         
         appBar: AppBar(
           backgroundColor: Colors.transparent,
@@ -119,6 +125,18 @@ class _PhotoViewerPageState extends State<PhotoViewerPage> {
             frostColor: Theme.of(context).colorScheme.tertiaryContainer
           ),
         ),
+
+        drawer: Drawer(
+          backgroundColor: Theme.of(context).colorScheme.surface.withAlpha(220),
+          width: 400,
+          child: details,
+        ),
+        onDrawerChanged: (isOpened) async {
+          if (isOpened) {
+            var v = await widget.query[widget.i].getDetailsWidget(context);
+            setState(() => details = v);
+          }
+        },
       ),
     );
   }
@@ -194,7 +212,7 @@ class _FooterState extends State<_Footer> {
                 icon: Icon(Icons.info_outline, size: size),
                 tooltip: "Info",
                 onPressed: () {
-                  widget.photo.showDetailsPopup(context);
+                  Scaffold.of(context).openDrawer();
                 },
               ),
               IconButton(

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:blur/blur.dart';
 import 'package:flutter/material.dart';
 import 'package:memories_photos/Structs/photo.dart';
 import 'package:memories_photos/Widgets/photo_card.dart';
@@ -51,12 +52,23 @@ class _PhotosPageState extends State<PhotosPage> {
         title: Text(
           widget.folder != null
           ? widget.folder!.substring(widget.folder!.lastIndexOf(Platform.pathSeparator) + 1)
-          : "All Photos"
+          : "All Photos",
+        ).frosted(
+          blur: 5,
+          borderRadius: .circular(50),
+          padding: .symmetric(vertical: 10, horizontal: 20),
+          frostColor: Theme.of(context).colorScheme.surfaceContainer
+        ),
+        leading: IconButton.filledTonal(
+          icon: Icon(Icons.arrow_back_rounded),
+          tooltip: "Back",
+          onPressed: () => Navigator.of(context).pop(),
         ),
         actionsPadding: .only(right: 8),
         actions: [
-          IconButton(
+          IconButton.filledTonal(
             icon: Icon(Icons.grid_view_rounded),
+            tooltip: "Grid Settings",
             onPressed: () {
               showModalBottomSheet(
                 context: context,
@@ -72,7 +84,7 @@ class _PhotosPageState extends State<PhotosPage> {
         crossAxisAlignment: .stretch,
         children: [
           widget.folder != null ? SizedBox(
-            height: 100,
+            height: 90,
             child: Image.file(
               File(photos!.first.path),
               fit: .cover,
@@ -105,7 +117,7 @@ class _GridScalePopupState extends State<_GridScalePopup> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 140,
+      height: 180,
       child: Slider(
         min: 40,
         max: 320,
