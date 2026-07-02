@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:memories_photos/Editor/editor_page.dart';
 import 'package:memories_photos/Structs/photo.dart';
 import 'package:memories_photos/settings.dart';
+import 'package:photo_view/photo_view.dart';
+import 'package:photo_view/photo_view_gallery.dart';
 
 class PhotoViewerPage extends StatefulWidget {
   final List<Photo> query;
@@ -37,107 +39,88 @@ class _PhotoViewerPageState extends State<PhotoViewerPage> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      // onHorizontalDragUpdate: (details) {
-      //   setState(() => t = details.localPosition.dx - 200);
-      // },
-      // onHorizontalDragEnd: (details) {
-      //   if (t > 70) {
-      //     i--;
-      //     setState(() => i = i.clamp(0, widget.query.length - 1));
-      //   }
-      //   else if (t < -70) {
-      //     i++;
-      //     setState(() => i = i.clamp(0, widget.query.length - 1));
-      //   }
-      //   t = 0;
-      //   getName();
-      // },
-      onPanUpdate: (details) {
-        setState(() => scale = (details.globalPosition.dy - 230) / 150);
-      },
-      onPanEnd: (details) => setState(() => scale = 1),
-      child: Scaffold(
-        extendBody: true,
-        extendBodyBehindAppBar: true,
-        bottomNavigationBar: _Footer(photo: widget.query[i]),
-        
-        body: Center(
-          child: Stack(
-            alignment: .center,
-            children: [
-              Transform.scale(
-                scale: scale,
-                child: Transform.translate(
-                  offset: Offset(t, 0),
-                  child: Hero(
-                    curve: Curves.easeOutCirc,
-                    reverseCurve: Curves.easeInCirc,
-                    tag: widget.query[i].path,
-                    child: Image.file(
-                      File(widget.query[i].path),
-                    ),
-                  ),
-                ),
+    return Scaffold(
+      extendBody: true,
+      extendBodyBehindAppBar: true,
+      bottomNavigationBar: _Footer(photo: widget.query[i]),
+      
+      body: Center(
+        child: Stack(
+          alignment: .center,
+          children: [
+            PhotoViewGallery.builder(
+              itemCount: widget.query.length,
+              gaplessPlayback: true,
+              enableRotation: Settings.allowRotateInPView,
+              scrollPhysics: BouncingScrollPhysics(),
+              pageController: PageController(initialPage: i),
+              onPageChanged: (index) => i = index,
+              
+              backgroundDecoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surface
               ),
-              Row(
-                mainAxisAlignment: .spaceBetween,
-                children: [
-                  IconButton.filledTonal(
-                    icon: Icon(Icons.arrow_back),
-                    tooltip: "Previous",
-                    onPressed: () {
-                      setState(() => i = (i - 1).clamp(0, widget.query.length - 1));
-                      getName();
-                    },
-                  ),
-                  IconButton.filledTonal(
-                    icon: Icon(Icons.arrow_forward),
-                    tooltip: "Next",
-                    onPressed: () {
-                      setState(() => i = (i + 1).clamp(0, widget.query.length - 1));
-                      getName();
-                    },
-                  ),
-                ],
+              builder: (context, index) => PhotoViewGalleryPageOptions(
+                imageProvider: FileImage(File(widget.query[index].path)),
+                heroAttributes: PhotoViewHeroAttributes(tag: widget.query[index]),
               ),
-            ],
-          ),
-        ),
-        
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          centerTitle: true,
-          automaticallyImplyLeading: false,
-          title: Text(
-            name,
-            textAlign: .center,
-            maxLines: 2,
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.onTertiaryContainer,
-              fontFamily: Settings.ElmsSans,
-              fontSize: 16
             ),
-          ).frosted(
-            blur: 8,
-            borderRadius: .circular(50),
-            padding: .all(10),
-            frostColor: Theme.of(context).colorScheme.tertiaryContainer
-          ),
+            // Row(
+            //   mainAxisAlignment: .spaceBetween,
+            //   children: [
+            //     IconButton.filledTonal(
+            //       icon: Icon(Icons.arrow_back),
+            //       tooltip: "Previous",
+            //       onPressed: () {
+            //         setState(() => i = (i - 1).clamp(0, widget.query.length - 1));
+            //         getName();
+            //       },
+            //     ),
+            //     IconButton.filledTonal(
+            //       icon: Icon(Icons.arrow_forward),
+            //       tooltip: "Next",
+            //       onPressed: () {
+            //         setState(() => i = (i + 1).clamp(0, widget.query.length - 1));
+            //         getName();
+            //       },
+            //     ),
+            //   ],
+            // ),
+          ],
         ),
-
-        drawer: Drawer(
-          backgroundColor: Theme.of(context).colorScheme.surface.withAlpha(220),
-          width: 400,
-          child: details,
-        ),
-        onDrawerChanged: (isOpened) async {
-          if (isOpened) {
-            var v = await widget.query[widget.i].getDetailsWidget(context);
-            setState(() => details = v);
-          }
-        },
       ),
+      
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        centerTitle: true,
+        automaticallyImplyLeading: false,
+        title: Text(
+          name,
+          textAlign: .center,
+          maxLines: 2,
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onTertiaryContainer,
+            fontFamily: Settings.ElmsSans,
+            fontSize: 16
+          ),
+        ).frosted(
+          blur: 8,
+          borderRadius: .circular(50),
+          padding: .all(10),
+          frostColor: Theme.of(context).colorScheme.tertiaryContainer
+        ),
+      ),
+    
+      drawer: Drawer(
+        backgroundColor: Theme.of(context).colorScheme.surface.withAlpha(220),
+        width: 360,
+        child: details,
+      ),
+      onDrawerChanged: (isOpened) async {
+        if (isOpened) {
+          var v = await widget.query[i].getDetailsWidget(context);
+          setState(() => details = v);
+        }
+      },
     );
   }
 }

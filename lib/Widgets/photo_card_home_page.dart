@@ -27,7 +27,7 @@ class PhotoCardHomePage extends StatelessWidget {
               color: Theme.of(context).colorScheme.secondaryContainer
             ),
             child: Hero(
-              tag: query[i].path,
+              tag: query[i],
               child: Image.file(
                 File(query[i].path),
                 fit: .cover,

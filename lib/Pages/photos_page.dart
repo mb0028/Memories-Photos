@@ -45,6 +45,7 @@ class _PhotosPageState extends State<PhotosPage> {
     var screenWidth = MediaQuery.widthOf(context);
     return Scaffold(
       extendBodyBehindAppBar: true,
+      
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: Colors.transparent,
@@ -80,6 +81,7 @@ class _PhotosPageState extends State<PhotosPage> {
           ),
         ],
       ),
+      
       body: photos != null ? Column(
         crossAxisAlignment: .stretch,
         children: [
@@ -92,7 +94,7 @@ class _PhotosPageState extends State<PhotosPage> {
           ) : SizedBox() ,
           Expanded(
             child: GridView.builder(
-              padding: .only(bottom: 200),
+              padding: .only(bottom: 200, top: widget.folder == null ? 90 : 10),
               physics: BouncingScrollPhysics(),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: (screenWidth / Settings.gridScale).toInt()),
               itemCount: photos!.length,

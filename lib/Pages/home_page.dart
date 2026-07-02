@@ -149,6 +149,7 @@ class _FloatingBtn extends StatelessWidget {
             showHomeCreateNewPopup(context); //TODO: Refresh on pop
           },
           tooltip: "Create",
+          heroTag: "Create",
           elevation: 1,
           backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
           child: Icon(Icons.add_a_photo_outlined, color: Theme.of(context).colorScheme.onTertiaryContainer,),
@@ -156,6 +157,7 @@ class _FloatingBtn extends StatelessWidget {
         FloatingActionButton(
           onPressed: () => Scaffold.of(context).openDrawer(),
           tooltip: "Drawer",
+          heroTag: "Drawer",
           elevation: 1,
           backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
           child: Icon(Icons.more_horiz_rounded, color: Theme.of(context).colorScheme.onSecondaryContainer,),

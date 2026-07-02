@@ -84,7 +84,7 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
           ListTile(
             title: Text("Show hidden photos"),
-            subtitle: Text("Not works as excepted. don't turn it on until next updates", style: TextStyle(fontSize: 12),),
+            subtitle: Text("Not works as excepted. don't turn it on until next updates", style: TextStyle(fontSize: 12)),
             leading: Switch(
               value: Settings.showHidden,
               onChanged: (value) {
@@ -95,7 +95,7 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
           ListTile(
             title: Text("Trash instead of delete"),
-            subtitle: Text("Move photos to trash instead of deleting (Coming soon)", style: TextStyle(fontSize: 12),),
+            subtitle: Text("Move photos to trash instead of deleting (Coming soon)", style: TextStyle(fontSize: 12)),
             leading: Switch(
               value: Settings.trashInstead,
               onChanged: (value) {
@@ -106,11 +106,33 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
           ListTile(
             title: Text("Only show DCIM photos"),
-            subtitle: Text("Or Desktop on windows", style: TextStyle(fontSize: 12),),
+            subtitle: Text("Or Desktop on windows", style: TextStyle(fontSize: 12)),
             leading: Switch(
               value: Settings.onlyShowDCIM,
               onChanged: (value) {
                 setState(() => Settings.onlyShowDCIM = value);
+                Settings.save();
+              },
+            ),
+          ),
+          ListTile(
+            title: Text("Shuffle special sections"),
+            subtitle: Text("Shuffle homepage special sections (like sunrise & night)", style: TextStyle(fontSize: 12)),
+            leading: Switch(
+              value: Settings.specialSectionsShuffle,
+              onChanged: (value) {
+                setState(() => Settings.specialSectionsShuffle = value);
+                Settings.save();
+              },
+            ),
+          ),
+          ListTile(
+            title: Text("Rotatable photos"),
+            subtitle: Text("Allows to rotating photos when viewing it fullscreen", style: TextStyle(fontSize: 12)),
+            leading: Switch(
+              value: Settings.allowRotateInPView,
+              onChanged: (value) {
+                setState(() => Settings.allowRotateInPView = value);
                 Settings.save();
               },
             ),
@@ -129,7 +151,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
           ),
           ListTile(
-            title: Text("Max home other sections items: ${Settings.specialSectionsCount}"),
+            title: Text("Max home special sections items: ${Settings.specialSectionsCount}"),
             subtitle: Slider(
               min: 1,
               max: 100,

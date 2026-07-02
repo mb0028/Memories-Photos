@@ -24,13 +24,19 @@ class _HomePageContentsState extends State<HomePageContents> {
   Future<void> refresh() async {
     recents = []; sunrise = []; night = [];
     int sunriseCount = 0; int nightCount = 0;
+
     await PhotoIndexer.startCache();
-    header = PhotoIndexer.photos[Random.secure().nextInt(PhotoIndexer.photos.length)];
+    var temp = PhotoIndexer.photos.toList();
+
+    header = temp[Random.secure().nextInt(temp.length)];
 
     for (var i = 0; i < Settings.recentsCount; i++)
-      recents.add(PhotoIndexer.photos[i.clamp(0, PhotoIndexer.photos.length - 1)]);
+      recents.add(temp[i.clamp(0, temp.length - 1)]);
     
-    for (var p in PhotoIndexer.photos) {
+    // Shuffle before selecting special sections photos
+    if (Settings.specialSectionsShuffle) temp.shuffle();
+    
+    for (var p in temp) {
       if (sunriseCount >= Settings.specialSectionsCount && nightCount >= Settings.specialSectionsCount)
         break;
 

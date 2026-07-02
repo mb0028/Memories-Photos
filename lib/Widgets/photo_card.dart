@@ -24,7 +24,7 @@ class PhotoCard extends StatelessWidget {
           borderRadius: .all(.circular(25)),
         ),
         child: Hero(
-          tag: query[i].path,
+          tag: query[i],
           child: Image.file(
             File(query[i].path),
             cacheHeight: 180,
