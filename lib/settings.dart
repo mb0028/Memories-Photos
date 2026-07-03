@@ -1,33 +1,13 @@
 // ignore_for_file: constant_identifier_names
-
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 
 class Settings {
   static const String LexendDeca = "LexendDeca";
   static const String ElmsSans = "ElmsSans";
   static const String CherryBombOne = "CherryBombOne";
-
-  static String get appPath {
-    var path = Platform.isAndroid
-      ? "/sdcard/DCIM/Memories Photos"
-      : "E:${Platform.pathSeparator}"; // Temporary. TODO
-    Directory(path).createSync(recursive: true);
-    return path;
-  } 
-
-  static String get appCache {
-    var path = Platform.isAndroid
-      ? "/sdcard/DCIM/Memories Photos/.temp"
-      : "E:${Platform.pathSeparator}.temp${Platform.pathSeparator}"; // Temporary. TODO
-    Directory(path).createSync(recursive: true);
-    return path;
-  } 
-  static String dcimPath = Platform.isAndroid
-    ? "/sdcard/DCIM"
-    : "C:${Platform.pathSeparator}Users${Platform.pathSeparator}mb28${Platform.pathSeparator}Desktop"; // Temporary. TODO
+  static const Color defaultColor = Color.fromARGB(255, 164, 255, 196);
 
   static File settingsFile = File("$appPath${Platform.pathSeparator}Settings${Platform.pathSeparator}Settings.txt");
 
@@ -42,7 +22,8 @@ class Settings {
   static bool onlyShowDCIM = false;
   static bool specialSectionsShuffle = true;
   static bool allowRotateInPView = false;
-  static Color accent = Color.fromARGB(255, 164, 255, 196);
+  static bool adaptiveColors = false;
+  static Color accent = defaultColor;
 
   static List<String> libInclude = [];
   static List<String> libExclude = [];
@@ -81,6 +62,8 @@ class Settings {
           specialSectionsShuffle = bool.parse(line.split("[SSSH]")[1]);
         else if (line.startsWith("[ROTA]"))
           allowRotateInPView = bool.parse(line.split("[ROTA]")[1]);
+        else if (line.startsWith("[ADAPT]"))
+          adaptiveColors = bool.parse(line.split("[ADAPT]")[1]);
         else if (line.startsWith("[COLOR]")) {
           var rgb = line.split("[COLOR]")[1].split("|");
           accent = Color.fromARGB(255, (double.parse(rgb[0]) * 255).toInt(), (double.parse(rgb[1]) * 255).toInt(), (double.parse(rgb[2]) * 255).toInt());
@@ -105,6 +88,7 @@ class Settings {
     data += "[OSDCIM]$onlyShowDCIM\n";
     data += "[SSSH]$specialSectionsShuffle\n";
     data += "[ROTA]$allowRotateInPView\n";
+    data += "[ADAPT]$adaptiveColors\n";
     data += "[COLOR]${accent.r}|${accent.g}|${accent.b}\n";
 
     for (var i in libInclude)
@@ -119,4 +103,24 @@ class Settings {
     await settingsFile.writeAsString(data);
   }
 
+  /////////////////////////////////////////////////////////////////////////////////
+  static String get appPath {
+    var path = Platform.isAndroid
+      ? "/sdcard/DCIM/Memories Photos"
+      : "E:${Platform.pathSeparator}"; // Temporary. TODO
+    Directory(path).createSync(recursive: true);
+    return path;
+  } 
+
+  static String get appCache {
+    var path = Platform.isAndroid
+      ? "/sdcard/DCIM/Memories Photos/.temp"
+      : "E:${Platform.pathSeparator}.temp${Platform.pathSeparator}"; // Temporary. TODO
+    Directory(path).createSync(recursive: true);
+    return path;
+  } 
+  
+  static String dcimPath = Platform.isAndroid
+    ? "/sdcard/DCIM"
+    : "C:${Platform.pathSeparator}Users${Platform.pathSeparator}mb28${Platform.pathSeparator}Desktop"; // Temporary. TODO
 }

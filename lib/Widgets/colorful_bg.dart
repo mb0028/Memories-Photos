@@ -10,7 +10,7 @@ class ColorfulBackground extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomPaint(
       painter: ColorfulBackgroundPainter(
-        color: Theme.of(context).colorScheme.primaryContainer,
+        color: Theme.of(context).colorScheme.surface,
         shader: colorfulBackgroundProgram.fragmentShader(),
       ),
       child: child,

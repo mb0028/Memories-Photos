@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:memories_photos/ExifInterface/exif_interface.dart';
 import 'package:memories_photos/ExifInterface/tags.dart';
+import 'package:memories_photos/Popups/photo_more_actions.dart';
 import 'package:memories_photos/Popups/toast.dart';
 import 'package:memories_photos/Widgets/monop_text_field.dart';
 import 'package:memories_photos/Widgets/photo_details.dart';
@@ -58,9 +59,8 @@ class Photo {
     Settings.save();
   }
 
-  void showMoreActionsPopup(BuildContext context, {bool evenMoreActions = false}) {
-    //TODO: Implement
-  }
+  Future<bool> showMoreActionsPopup(BuildContext context, {bool evenMoreActions = false}) async =>
+    await photosMoreActionPopup(context, this);
 
   Future<Widget> getDetailsWidget(BuildContext context) async =>
     await getPhotoDetailsWidget(this, context);
@@ -70,7 +70,7 @@ class Photo {
     await showDialog(
       context: context,
       builder: (context) => Dialog(
-        backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+        backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
         child: Container(
           height: 200,
           padding: .all(15),
@@ -101,7 +101,7 @@ class Photo {
                     ),
                   ),
                   Expanded(
-                    child: FilledButton.tonal(
+                    child: OutlinedButton(
                       child: Text("Cancel"),
                       onPressed: () => Navigator.of(context).pop(),
                     ),

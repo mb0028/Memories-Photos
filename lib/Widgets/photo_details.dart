@@ -118,28 +118,29 @@ Future<Widget> getPhotoDetailsWidget(Photo photo, BuildContext context) async {
                 fontSize: 14,
               ) : SizedBox(),
 
+              lat.isNotEmpty ? _DetailsTile(
+                text: "Lat: $lat ($latRef)\nLong: $long ($longRef)\nAlt: $alt", 
+                icon: IconButton.filledTonal(
+                  icon: Icon(Icons.location_searching_outlined, size: 28, color: Theme.of(context).colorScheme.onSecondaryContainer),
+                  onPressed: () {},
+                  tooltip: "Open in google maps",
+                ),
+                fontSize: 14,
+              ) : SizedBox(),
+
               SizedBox(height: 50)
             ],
           ),
         ),
 
-        Divider(),
-
-        lat.isNotEmpty ? _DetailsTile(
-          text: "Lat: $lat ($latRef)\nLong: $long ($longRef)\nAlt: $alt", 
-          icon: IconButton.filledTonal(
-            icon: Icon(Icons.location_searching_outlined, size: 28, color: Theme.of(context).colorScheme.onSecondaryContainer),
-            onPressed: () {},
-            tooltip: "Open in google maps",
-          ),
-          fontSize: 14,
-        ) : SizedBox(),
-
-        uniID.isNotEmpty ? Text("Image Unique ID: $uniID") : SizedBox(),
-
+        Divider(),        
         Row(
-          mainAxisAlignment: .end,
+          mainAxisAlignment: .spaceBetween,
           children: [
+            uniID.isNotEmpty ? Text(
+              "Image Unique ID: $uniID", 
+              maxLines: 2,
+            ) : SizedBox(),
             IconButton.filled(
               onPressed: () => Navigator.of(context).pop(),
               icon: Icon(Icons.arrow_back_rounded),

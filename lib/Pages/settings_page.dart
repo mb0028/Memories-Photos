@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:memories_photos/Popups/change_accent_popup.dart';
 import 'package:memories_photos/Popups/path_picker_popup.dart';
 import 'package:memories_photos/Widgets/colorful_bg.dart';
+import 'package:memories_photos/main.dart';
 import 'package:memories_photos/settings.dart';
 import 'package:open_filex/open_filex.dart';
 
@@ -14,7 +15,7 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  int a = 120;
+  int a = 220;
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +34,8 @@ class _SettingsPageState extends State<SettingsPage> {
           child: ListView(
             physics: BouncingScrollPhysics(),
             children: [
+              uiSettings(),
+              SizedBox(height: 15),
               mainSettings(),
               SizedBox(height: 15),
               libSettings(),
@@ -51,7 +54,7 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  Widget mainSettings() {
+  Widget uiSettings() {
     return Container(
       padding: .all(10),
       decoration: BoxDecoration(
@@ -61,6 +64,18 @@ class _SettingsPageState extends State<SettingsPage> {
       child: Column(
         children: [
           ListTile(
+            title: Text("Adaptive coloring"),
+            subtitle: Text("UI by default will uses device accent color. When viewing photos, color adapts to image accent color", style: TextStyle(fontSize: 12)),
+            leading: Switch(
+              value: Settings.adaptiveColors,
+              onChanged: (value) {
+                setState(() => Settings.adaptiveColors = value);
+                Settings.save();
+                MainAppState.instance!.chnageColorSeed();
+              },
+            ),
+          ),
+          !Settings.adaptiveColors ? ListTile(
             title: Text("Accent Color"),
             subtitle: OutlinedButton(
               child: Text("Change"),
@@ -69,7 +84,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 if (col.$2) {
                   setState(() => Settings.accent = col.$1);
                   Settings.save();
-                } 
+                  MainAppState.instance!.chnageColorSeed();
+                }
               },
             ),
             leading: Container(
@@ -81,14 +97,48 @@ class _SettingsPageState extends State<SettingsPage> {
                 borderRadius: .circular(15)
               ),
             ),
+            trailing: IconButton.outlined(
+              icon: Icon(Icons.sync_rounded),
+              tooltip: "Reset",
+              onPressed: () {
+                setState(() => Settings.accent = Settings.defaultColor);
+                  Settings.save();
+                MainAppState.instance!.chnageColorSeed();
+              }, 
+            ),
+          ) : SizedBox(),
+        ]
+      )
+    );
+  }
+
+  Widget mainSettings() {
+    return Container(
+      padding: .all(10),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surfaceContainer.withAlpha(a),
+        borderRadius: .circular(25)
+      ),
+      child: Column(
+        children: [
+          ListTile(
+            title: Text("Rotatable photos"),
+            subtitle: Text("When on: allows to rotate photos when viewing it fullscreen", style: TextStyle(fontSize: 12)),
+            leading: Switch(
+              value: Settings.allowRotateInPView,
+              onChanged: (value) {
+                setState(() => Settings.allowRotateInPView = value);
+                Settings.save();
+              },
+            ),
           ),
           ListTile(
-            title: Text("Show hidden photos"),
-            subtitle: Text("Not works as excepted. don't turn it on until next updates", style: TextStyle(fontSize: 12)),
+            title: Text("Shuffle special sections"),
+            subtitle: Text("Shuffle homepage special sections (like sunrise & night sections)", style: TextStyle(fontSize: 12)),
             leading: Switch(
-              value: Settings.showHidden,
+              value: Settings.specialSectionsShuffle,
               onChanged: (value) {
-                setState(() => Settings.showHidden = value);
+                setState(() => Settings.specialSectionsShuffle = value);
                 Settings.save();
               },
             ),
@@ -105,34 +155,12 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
           ),
           ListTile(
-            title: Text("Only show DCIM photos"),
-            subtitle: Text("Or Desktop on windows", style: TextStyle(fontSize: 12)),
+            title: Text("Show hidden photos"),
+            subtitle: Text("Not works as excepted. don't turn it on until next updates", style: TextStyle(fontSize: 12)),
             leading: Switch(
-              value: Settings.onlyShowDCIM,
+              value: Settings.showHidden,
               onChanged: (value) {
-                setState(() => Settings.onlyShowDCIM = value);
-                Settings.save();
-              },
-            ),
-          ),
-          ListTile(
-            title: Text("Shuffle special sections"),
-            subtitle: Text("Shuffle homepage special sections (like sunrise & night)", style: TextStyle(fontSize: 12)),
-            leading: Switch(
-              value: Settings.specialSectionsShuffle,
-              onChanged: (value) {
-                setState(() => Settings.specialSectionsShuffle = value);
-                Settings.save();
-              },
-            ),
-          ),
-          ListTile(
-            title: Text("Rotatable photos"),
-            subtitle: Text("Allows to rotating photos when viewing it fullscreen", style: TextStyle(fontSize: 12)),
-            leading: Switch(
-              value: Settings.allowRotateInPView,
-              onChanged: (value) {
-                setState(() => Settings.allowRotateInPView = value);
+                setState(() => Settings.showHidden = value);
                 Settings.save();
               },
             ),
@@ -191,8 +219,18 @@ class _SettingsPageState extends State<SettingsPage> {
       child: Column(
         crossAxisAlignment: .stretch,
         children: [
-          Text("Library include folders:"),
-          ElevatedButton(
+          ListTile(
+            title: Text(Platform.isAndroid ? "Only show DCIM photos" : "Only show Desktop photos"),
+            leading: Switch(
+              value: Settings.onlyShowDCIM,
+              onChanged: (value) {
+                setState(() => Settings.onlyShowDCIM = value);
+                Settings.save();
+              },
+            ),
+          ),
+          !Settings.onlyShowDCIM ? Text("Library include folders:") : SizedBox(),
+          !Settings.onlyShowDCIM ? ElevatedButton(
             onPressed: () async {
               var t = await showPathPickerDialog(context);
               if (t != null && !Settings.libInclude.contains(t))
@@ -200,8 +238,8 @@ class _SettingsPageState extends State<SettingsPage> {
               Settings.save();
             },
             child: Text("Add")
-          ),
-          SizedBox(
+          ) : SizedBox(),
+          !Settings.onlyShowDCIM ? SizedBox(
             height: 160,
             child: ListView.builder(
               itemCount: Settings.libInclude.length,
@@ -212,13 +250,14 @@ class _SettingsPageState extends State<SettingsPage> {
                     setState(() => Settings.libInclude.remove(Settings.libInclude[i]));
                     Settings.save();
                   },
+                  tooltip: "Remove",
                   icon: Icon(Icons.remove_circle_outline),
                   color: Theme.of(context).colorScheme.error,
                   highlightColor: Theme.of(context).colorScheme.errorContainer,
                 ) : null,
               ),
             ),
-          ),
+          ) : SizedBox(),
           SizedBox(height: 15,),
           Text("Library exclude folders:"),
           ElevatedButton(
@@ -241,6 +280,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     setState(() => Settings.libExclude.remove(Settings.libExclude[i]));
                     Settings.save();
                   },
+                  tooltip: "Remove",
                   icon: Icon(Icons.remove_circle_outline),
                   color: Theme.of(context).colorScheme.error,
                   highlightColor: Theme.of(context).colorScheme.errorContainer,

@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:memories_photos/Pages/home_page.dart';
 import 'package:memories_photos/settings.dart';
@@ -8,22 +9,52 @@ late FragmentProgram colorfulBackgroundProgram;
 void main() async {
   await Settings.load();
   colorfulBackgroundProgram = await FragmentProgram.fromAsset("Assets/Shaders/bg.frag");
+  if (Settings.adaptiveColors) {
+    WidgetsFlutterBinding.ensureInitialized();
+  }
   runApp(const MainApp());
 }
 
-class MainApp extends StatelessWidget {
+class MainApp extends StatefulWidget {
   const MainApp({super.key});
+  @override
+  State<MainApp> createState() => MainAppState();
+}
+
+class MainAppState extends State<MainApp> {
+  Color seed = Settings.accent;
+  static Brightness brightness = .light;
+  static MainAppState? instance;
+
+  void chnageColorSeed() async {
+    var col = Settings.accent;
+    if (Settings.adaptiveColors)
+      col = await DynamicColorPlugin.getAccentColor() ?? Settings.accent;
+    setState(() => seed = col);
+  }
+
+  void setColorSeed(Color color) {
+    setState(() => seed = color);
+  }
+
+  @override
+  void initState() {
+    chnageColorSeed();
+    super.initState();
+    instance = this;
+  }
 
   @override
   Widget build(BuildContext context) {
+    brightness = MediaQuery.platformBrightnessOf(context);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         fontFamily: Settings.LexendDeca,
         colorScheme: .fromSeed(
-          seedColor: Settings.accent,
+          seedColor: seed,
           dynamicSchemeVariant: .rainbow,
-          brightness: MediaQuery.platformBrightnessOf(context),
+          brightness: brightness
         ),
         tooltipTheme: _tooltipTheme(context),
         sliderTheme: _sliderTheme(context),
@@ -42,7 +73,7 @@ class MainApp extends StatelessWidget {
       thumbSize: WidgetStatePropertyAll(Size(10, 50)),
       trackShape: GappedSliderTrackShape(),
       thumbShape: HandleThumbShape(),
-      inactiveTrackColor: Settings.accent
+      inactiveTrackColor: seed.withAlpha(100)
     );
   }
 

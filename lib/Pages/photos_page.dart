@@ -3,6 +3,7 @@ import 'package:blur/blur.dart';
 import 'package:flutter/material.dart';
 import 'package:memories_photos/Structs/photo.dart';
 import 'package:memories_photos/Widgets/photo_card.dart';
+import 'package:memories_photos/main.dart';
 import 'package:memories_photos/photo_indexer.dart';
 import 'package:memories_photos/settings.dart';
 
@@ -18,6 +19,7 @@ class PhotosPage extends StatefulWidget {
 
 class _PhotosPageState extends State<PhotosPage> {
   List<Photo>? photos;
+  ColorScheme appbarColorScheme = ColorScheme.fromSeed(seedColor: Settings.accent);
 
   void load() async {
     if (widget.folder != null) {
@@ -31,6 +33,13 @@ class _PhotosPageState extends State<PhotosPage> {
     }
     else
       photos = PhotoIndexer.photos;
+
+    if (Settings.adaptiveColors)
+      appbarColorScheme = await ColorScheme.fromImageProvider(
+        provider: FileImage(File(photos!.first.path)),
+        dynamicSchemeVariant: .rainbow,
+        brightness: MainAppState.brightness,
+      );
     setState(() {});
   }
 
@@ -46,41 +55,7 @@ class _PhotosPageState extends State<PhotosPage> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       
-      appBar: AppBar(
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
-        surfaceTintColor: Colors.transparent,
-        title: Text(
-          widget.folder != null
-          ? widget.folder!.substring(widget.folder!.lastIndexOf(Platform.pathSeparator) + 1)
-          : "All Photos",
-        ).frosted(
-          blur: 5,
-          borderRadius: .circular(50),
-          padding: .symmetric(vertical: 10, horizontal: 20),
-          frostColor: Theme.of(context).colorScheme.surfaceContainer
-        ),
-        leading: IconButton.filledTonal(
-          icon: Icon(Icons.arrow_back_rounded),
-          tooltip: "Back",
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        actionsPadding: .only(right: 8),
-        actions: [
-          IconButton.filledTonal(
-            icon: Icon(Icons.grid_view_rounded),
-            tooltip: "Grid Settings",
-            onPressed: () {
-              showModalBottomSheet(
-                context: context,
-                showDragHandle: true,
-                backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
-                builder: (context) => _GridScalePopup(onChanged: () => setState(() {}))
-              );
-            }
-          ),
-        ],
-      ),
+      appBar: _appbar(context),
       
       body: photos != null ? Column(
         crossAxisAlignment: .stretch,
@@ -103,6 +78,57 @@ class _PhotosPageState extends State<PhotosPage> {
           ),
         ],
       ) : Center(child: CircularProgressIndicator()),
+    );
+  }
+
+  AppBar _appbar(BuildContext context) {
+    return AppBar(
+      centerTitle: true,
+      backgroundColor: Colors.transparent,
+      surfaceTintColor: Colors.transparent,
+      title: Text(
+        widget.folder != null
+        ? widget.folder!.substring(widget.folder!.lastIndexOf(Platform.pathSeparator) + 1)
+        : "All Photos",
+        style: TextStyle(color: appbarColorScheme.onSecondaryContainer),
+      ).frosted(
+        blur: 5,
+        borderRadius: .circular(50),
+        padding: .symmetric(vertical: 10, horizontal: 20),
+        frostColor: appbarColorScheme.secondaryContainer
+      ),
+      leading: widget.folder != null ? IconButton.filled(
+        style: ButtonStyle(
+          backgroundColor: WidgetStatePropertyAll(appbarColorScheme.primaryContainer)
+        ),
+        icon: Icon(
+          Icons.arrow_back_rounded,
+          color: appbarColorScheme.onPrimaryContainer
+        ),
+        tooltip: "Back",
+        onPressed: () => Navigator.of(context).pop(),
+      ) : null,
+      actionsPadding: .only(right: 8),
+      actions: [
+        IconButton.filled(
+          style: ButtonStyle(
+            backgroundColor: WidgetStatePropertyAll(appbarColorScheme.secondaryContainer)
+          ),
+          icon: Icon(
+            Icons.grid_view_rounded,
+            color: appbarColorScheme.onSecondaryContainer,
+          ),
+          tooltip: "Grid Settings",
+          onPressed: () {
+            showModalBottomSheet(
+              context: context,
+              showDragHandle: true,
+              backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
+              builder: (context) => _GridScalePopup(onChanged: () => setState(() {}))
+            );
+          }
+        ),
+      ],
     );
   }
 }
