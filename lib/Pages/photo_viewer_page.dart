@@ -69,7 +69,11 @@ class _PhotoViewerPageState extends State<PhotoViewerPage> {
           enableRotation: Settings.allowRotateInPView,
           scrollPhysics: BouncingScrollPhysics(),
           pageController: PageController(initialPage: i),
-          onPageChanged: (index) => i = index,
+          onPageChanged: (index) {
+            i = index;
+            getName();
+            adaptColor();
+          },
           
           backgroundDecoration: BoxDecoration(
             color: Theme.of(context).colorScheme.surface
@@ -84,22 +88,26 @@ class _PhotoViewerPageState extends State<PhotoViewerPage> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         centerTitle: true,
-        toolbarHeight: 100,
+        toolbarHeight: 120,
         automaticallyImplyLeading: false,
         title: Stack(
           alignment: .center,
           children: [
             Column(
+              spacing: 5,
               crossAxisAlignment: .stretch,
               children: [
-                Text(
-                  name,
-                  textAlign: .center,
-                  maxLines: 2,
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onPrimaryContainer,
-                    fontFamily: Settings.ElmsSans,
-                    fontSize: 16
+                Padding(
+                  padding: .symmetric(horizontal: 50),
+                  child: Text(
+                    name,
+                    textAlign: .center,
+                    maxLines: 2,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                      fontFamily: Settings.ElmsSans,
+                      fontSize: 16,
+                    ),
                   ),
                 ),
                 Text(

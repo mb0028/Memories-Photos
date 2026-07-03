@@ -23,6 +23,7 @@ class Settings {
   static bool specialSectionsShuffle = true;
   static bool allowRotateInPView = false;
   static bool adaptiveColors = false;
+  static bool inAppCamera = true; //TODO: Show setting in settings page
   static Color accent = defaultColor;
 
   static List<String> libInclude = [];

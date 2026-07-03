@@ -1,3 +1,14 @@
+buildscript {
+    dependencies {
+        classpath("com.android.tools.build:gradle:9.2.1")
+        //classpath("org.jetbrains.kotlin.plugin.compose:org.jetbrains.kotlin.plugin.compose.gradle.plugin:2.4.0")
+    }
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
 allprojects {
     repositories {
         google()

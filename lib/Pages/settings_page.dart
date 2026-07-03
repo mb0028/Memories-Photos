@@ -65,7 +65,7 @@ class _SettingsPageState extends State<SettingsPage> {
         children: [
           ListTile(
             title: Text("Adaptive coloring"),
-            subtitle: Text("UI by default will uses device accent color. When viewing photos, color adapts to image accent color", style: TextStyle(fontSize: 12)),
+            subtitle: Text("UI by default will uses device accent color. When viewing photos, color adapts to image accent color\nAFFACTS PERFORMANCE", style: TextStyle(fontSize: 12)),
             leading: Switch(
               value: Settings.adaptiveColors,
               onChanged: (value) {

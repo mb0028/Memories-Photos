@@ -48,9 +48,9 @@ Future<bool> showHomeCreateNewPopup(BuildContext context) async {
                   ),
                   icon: Icon(Icons.add_a_photo_rounded),
                   onPressed: () async {
-                    await ImageHelper.takePicture();
                     returnTrue = true;
                     Navigator.of(context).pop();
+                    await ImageHelper.takePicture(context);
                   },
                 ),
               ),

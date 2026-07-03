@@ -1,17 +1,20 @@
+import 'dart:io';
 import 'dart:ui';
+import 'package:camera/camera.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:memories_photos/Pages/home_page.dart';
 import 'package:memories_photos/settings.dart';
 
 late FragmentProgram colorfulBackgroundProgram;
+late List<CameraDescription> cameras;
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Settings.load();
+  if (Platform.isAndroid)
+    cameras = await availableCameras();
   colorfulBackgroundProgram = await FragmentProgram.fromAsset("Assets/Shaders/bg.frag");
-  if (Settings.adaptiveColors) {
-    WidgetsFlutterBinding.ensureInitialized();
-  }
   runApp(const MainApp());
 }
 

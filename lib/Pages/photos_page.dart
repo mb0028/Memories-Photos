@@ -34,7 +34,7 @@ class _PhotosPageState extends State<PhotosPage> {
     else
       photos = PhotoIndexer.photos;
 
-    if (Settings.adaptiveColors)
+    if (Settings.adaptiveColors && widget.folder != null)
       appbarColorScheme = await ColorScheme.fromImageProvider(
         provider: FileImage(File(photos!.first.path)),
         dynamicSchemeVariant: .rainbow,

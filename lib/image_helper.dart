@@ -1,31 +1,25 @@
-import 'package:flutter/services.dart';
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:memories_photos/Pages/camera_page.dart';
+import 'package:memories_photos/settings.dart';
 
 class ImageHelper {
-  static const channel = MethodChannel("mb28.monoP.camera/camera_channel");
-
-  static Future<void> takePicture() async {
-    // final picker = ImagePicker();
-    // final XFile? photo = await picker.pickImage(
-    //   source: ImageSource.camera,
-    //   imageQuality: 100,
-    // );
-    // if (photo != null) {
-    //   final t = DateTime.now();
-    //   var time = "${t.year}${t.month}${t.day} ${t.hour}${t.minute}${t.second}.jpg";
-    //   await photo.saveTo(Settings.appPath + Platform.pathSeparator + time);
-    //   await File(photo.path).delete();
-    // }
-    
+  static Future<void> takePicture(BuildContext context) async {
+    if (Settings.inAppCamera && Platform.isAndroid) {
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => CameraPage()));
+      return;
+    }
+    final picker = ImagePicker();
+    final XFile? photo = await picker.pickImage(
+      source: ImageSource.camera,
+      imageQuality: 100,
+    );
+    if (photo != null) {
+      final t = DateTime.now();
+      var time = "Photo ${t.year}-${t.month}-${t.day} ${t.hour}-${t.minute}-${t.second}.jpg";
+      await photo.saveTo(Settings.appPath + Platform.pathSeparator + time);
+      await File(photo.path).delete();
+    }
   }
-
-  // static Future<String> _takePictureAndroid() async {
-  //   if (Platform.isWindows) return "";
-  //   try {
-  //     final result = await channel.invokeMethod<String>("takePictureAndroid");
-  //     return result!;
-  //   } on Exception {
-  //     return "";
-  //   }
-  // }
-
 }
