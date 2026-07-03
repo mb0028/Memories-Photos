@@ -97,7 +97,7 @@ class _PhotoViewerPageState extends State<PhotoViewerPage> {
                   textAlign: .center,
                   maxLines: 2,
                   style: TextStyle(
-                    color: Theme.of(context).colorScheme.onTertiaryContainer,
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
                     fontFamily: Settings.ElmsSans,
                     fontSize: 16
                   ),
@@ -107,7 +107,7 @@ class _PhotoViewerPageState extends State<PhotoViewerPage> {
                   textAlign: .center,
                   maxLines: 1,
                   style: TextStyle(
-                    color: Theme.of(context).colorScheme.onTertiaryContainer,
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
                     fontFamily: Settings.CherryBombOne,
                     fontSize: 16
                   ),
@@ -155,7 +155,7 @@ class _PhotoViewerPageState extends State<PhotoViewerPage> {
           blur: 8,
           borderRadius: .circular(50),
           padding: .all(10),
-          frostColor: Theme.of(context).colorScheme.tertiaryContainer
+          frostColor: Theme.of(context).colorScheme.primaryContainer
         ),
       ),
     
@@ -226,7 +226,7 @@ class _FooterState extends State<_Footer> {
         blur: 8,
         borderRadius: .circular(50),
         padding: .symmetric(horizontal: 10, vertical: 4),
-        frostColor: Theme.of(context).colorScheme.primaryContainer
+        frostColor: Theme.of(context).colorScheme.tertiaryContainer
       ),
     );
   }

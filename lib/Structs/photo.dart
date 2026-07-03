@@ -60,7 +60,7 @@ class Photo {
   }
 
   Future<bool> showMoreActionsPopup(BuildContext context, {bool evenMoreActions = false}) async =>
-    await photosMoreActionPopup(context, this);
+    await photosMoreActionPopup(context, this, evenMoreActions);
 
   Future<Widget> getDetailsWidget(BuildContext context) async =>
     await getPhotoDetailsWidget(this, context);
