@@ -72,12 +72,11 @@ class _CameraPageState extends State<CameraPage> {
         mainAxisAlignment: .spaceBetween,
         children: [
           SizedBox(height: padding.top),
-          Flexible(
-            child: CameraPreview(controller)
-          ),
+          Flexible(child: CameraPreview(controller)),
+          
           Container(
-            padding: .symmetric(horizontal: 15),
-            height: 30,
+            padding: .symmetric(horizontal: 10),
+            height: 35,
             child: ListView.builder(
               itemCount: cameras.length,
               scrollDirection: .horizontal,
@@ -89,7 +88,7 @@ class _CameraPageState extends State<CameraPage> {
                     .front => "Front",
                     .back => "Back",
                     _ => "???"
-                  }}  ${switch (cameras[index].lensType) {
+                  }} ${switch (cameras[index].lensType) {
                     .telephoto => "Default",
                     .wide => "Wild",
                     .ultraWide => "Ultrawild",
@@ -99,6 +98,7 @@ class _CameraPageState extends State<CameraPage> {
               ),
             ),
           ),
+
           Slider(
             value: zoom,
             min: minZoom,
@@ -108,25 +108,39 @@ class _CameraPageState extends State<CameraPage> {
               setState(() => zoom = value);
             },
           ),
-          Row(
-            mainAxisAlignment: .spaceAround,
-            children: [
-              IconButton.filled(
-                icon: Icon(Icons.camera, size: 60),
-                onPressed: () async {
-                  var photo = await controller.takePicture();
-                  final t = DateTime.now();
-                  var time = "Photo ${t.year}-${t.month}-${t.day} ${t.hour}-${t.minute}-${t.second}.jpg";
-                  await photo.saveTo(Settings.appPath + Platform.pathSeparator + time);
-                  await File(photo.path).delete();
-                  showStyledToast("Saved: $time", context);
-                },
-              ),
-            ],
-          ),
+
+          ShutterRow(controller: controller),
           SizedBox(height: padding.bottom)
         ],
       ),
+    );
+  }
+}
+
+class ShutterRow extends StatelessWidget {
+  const ShutterRow({
+    super.key,
+    required this.controller,
+  });
+  final CameraController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: .spaceAround,
+      children: [
+        IconButton.filled(
+          icon: Icon(Icons.camera, size: 60),
+          onPressed: () async {
+            var photo = await controller.takePicture();
+            final t = DateTime.now();
+            var time = "Photo ${t.year}-${t.month}-${t.day} ${t.hour}-${t.minute}-${t.second}.jpg";
+            await photo.saveTo(Settings.appPath + Platform.pathSeparator + time);
+            await File(photo.path).delete();
+            showStyledToast("Saved: $time", context);
+          },
+        ),
+      ],
     );
   }
 }

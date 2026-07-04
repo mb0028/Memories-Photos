@@ -7,19 +7,14 @@ class PhotoIndexer {
   static List<Photo> photos = [];
   static Map<String, AlbumInfo> albums = <String, AlbumInfo>{};
 
-  static Future startCache() async {
+  static Future<void> startCache() async {
     photos = [];
     albums = <String, AlbumInfo>{};
+
     List<Photo> temp = [];
+    List<String> pathsToSearch = Settings.onlyShowDCIM ? [Settings.dcimPath] : Settings.libInclude;
+    List<FileSystemEntity> np = []; 
 
-    List<String> pathsToSearch = [];
-
-    if (Settings.onlyShowDCIM)
-      pathsToSearch = [Settings.dcimPath];
-    else
-      pathsToSearch = Settings.libInclude;
-
-    List<FileSystemEntity> np = [];
     for (var dir in pathsToSearch) {
       np = [Directory(dir)];
       while (np.isNotEmpty) {
@@ -49,7 +44,7 @@ class PhotoIndexer {
         }
       }
     }
-
+      
     temp.sort((a, b) => b.dateTaken.compareTo(a.dateTaken));
     photos = temp;
   }
@@ -57,7 +52,7 @@ class PhotoIndexer {
   static Future<List<Photo>> getFolderPhotos(String path) async {
     List<Photo> temp = [];
     for (var file in Directory(path).listSync())
-      if (file.path.contains(".png") || file.path.contains(".jpg") || file.path.contains(".jpeg"))
+      if (file.path.endsWith(".png") || file.path.endsWith(".jpg") || file.path.endsWith(".jpeg"))
         temp.add(await Photo.fromPath(file.path));
     temp.sort((a, b) => b.dateTaken.compareTo(a.dateTaken));
     return temp;
@@ -66,7 +61,7 @@ class PhotoIndexer {
   static int _getFolderPhotosCount(String path) { //TODO Impprove performance
     int result = 0;
     for (var file in Directory(path).listSync())
-      if (file.path.contains(".png") || file.path.contains(".jpg") || file.path.contains(".jpeg"))
+      if (file.path.endsWith(".png") || file.path.endsWith(".jpg") || file.path.endsWith(".jpeg"))
         result++;
     return result;
   }

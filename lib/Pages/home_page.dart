@@ -45,14 +45,23 @@ class MonoPHomePageState extends State<MonoPHomePage> {
               ),
             ),
             _DrawerItem(
-              title: "Trash",
-              icon: Icons.recycling_rounded,
-              onClick: () {},
+              title: "About",
+              icon: Icons.info_outline_rounded,
+              onClick: () => showAboutDialog(
+                context: context,
+                applicationName: "Memories Photos",
+                applicationVersion: "Beta"
+              ),
             ),
             _DrawerItem(
               title: "Settings",
               icon: Icons.settings,
               onClick: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => SettingsPage())),
+            ),
+            _DrawerItem(
+              title: "Trash",
+              icon: Icons.recycling_rounded,
+              onClick: () {},
             ),
             _DrawerItem(
               title: "Favorites",
