@@ -15,7 +15,9 @@ dependencies:
   image_picker: ^1.2.3
 
   dynamic_color: ^1.8.1
+  keep_screen_on: ^6.0.0
   material_color_utilities: ^0.13.0
+  
   blur: ^4.0.2
   flutter_styled_toast: ^2.3.0
   flutter_colorpicker: ^1.1.0

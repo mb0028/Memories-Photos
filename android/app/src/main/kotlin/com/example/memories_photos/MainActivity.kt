@@ -28,9 +28,9 @@ class MainActivity : FlutterActivity() {
             startActivity(intent)
             Toast.makeText(applicationContext, "All files access is rejected", Toast.LENGTH_SHORT).show()
         }
-        if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 2)
-        }
+        //if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+        //    requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 2)
+        // }
         super.onCreate(savedInstanceState)
         //LiveNotifs().show(this)
     }

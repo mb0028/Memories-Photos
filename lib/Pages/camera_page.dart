@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:keep_screen_on/keep_screen_on.dart';
 import 'package:memories_photos/Popups/toast.dart';
 import 'package:memories_photos/main.dart';
 import 'package:memories_photos/settings.dart';
@@ -52,12 +53,14 @@ class _CameraPageState extends State<CameraPage> {
   @override
   void initState() {
     super.initState();
+    KeepScreenOn.turnOn();
     initCamera(0);
   }
 
   @override
   void dispose() {
     controller.dispose();
+    KeepScreenOn.turnOff();
     super.dispose();
   }
 
