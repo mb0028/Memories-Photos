@@ -77,7 +77,7 @@ class MonoPHomePageState extends State<MonoPHomePage> {
 
   Container _bottomSheet(BuildContext context) {
     return Container(
-      margin: .all(15).add(.only(bottom: MediaQuery.paddingOf(context).bottom)),
+      margin: .symmetric(horizontal: 15).add(.only(bottom: MediaQuery.paddingOf(context).bottom)),
       child: Container(
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.primaryContainer.withAlpha(60),

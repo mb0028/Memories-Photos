@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:camera/camera.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:memories_photos/Pages/home_page.dart';
 import 'package:memories_photos/settings.dart';
 
@@ -11,6 +12,14 @@ late List<CameraDescription> cameras;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  SystemChrome.setSystemUIOverlayStyle(
+    SystemUiOverlayStyle(
+      systemNavigationBarContrastEnforced: false,
+      systemNavigationBarIconBrightness: .dark
+    )
+  );
+
   await Settings.load();
   if (Platform.isAndroid)
     cameras = await availableCameras();
@@ -29,7 +38,7 @@ class MainAppState extends State<MainApp> {
   static Brightness brightness = .light;
   static MainAppState? instance;
 
-  void chnageColorSeed() async {
+  void changeColorSeed() async {
     var col = Settings.accent;
     if (Settings.adaptiveColors)
       col = await DynamicColorPlugin.getAccentColor() ?? Settings.accent;
@@ -42,14 +51,13 @@ class MainAppState extends State<MainApp> {
 
   @override
   void initState() {
-    chnageColorSeed();
+    changeColorSeed();
     super.initState();
     instance = this;
   }
 
   @override
   Widget build(BuildContext context) {
-    brightness = MediaQuery.platformBrightnessOf(context);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -82,6 +90,7 @@ class MainAppState extends State<MainApp> {
 
   TooltipThemeData _tooltipTheme(BuildContext context) {
     return TooltipThemeData(
+      preferBelow: false,
       textStyle: TextStyle(
         color: Theme.of(context).colorScheme.onSecondaryContainer
       ),

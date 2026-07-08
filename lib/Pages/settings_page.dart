@@ -71,7 +71,7 @@ class _SettingsPageState extends State<SettingsPage> {
               onChanged: (value) {
                 setState(() => Settings.adaptiveColors = value);
                 Settings.save();
-                MainAppState.instance!.chnageColorSeed();
+                MainAppState.instance!.changeColorSeed();
               },
             ),
           ),
@@ -84,7 +84,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 if (col.$2) {
                   setState(() => Settings.accent = col.$1);
                   Settings.save();
-                  MainAppState.instance!.chnageColorSeed();
+                  MainAppState.instance!.changeColorSeed();
                 }
               },
             ),
@@ -103,7 +103,7 @@ class _SettingsPageState extends State<SettingsPage> {
               onPressed: () {
                 setState(() => Settings.accent = Settings.defaultColor);
                   Settings.save();
-                MainAppState.instance!.chnageColorSeed();
+                MainAppState.instance!.changeColorSeed();
               }, 
             ),
           ) : SizedBox(),

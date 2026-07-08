@@ -52,7 +52,7 @@ class _PhotoViewerPageState extends State<PhotoViewerPage> {
     super.dispose();
 
     if (Settings.adaptiveColors)
-    Future.delayed(Duration(milliseconds: 10), () => MainAppState.instance!.chnageColorSeed());
+    Future.delayed(Duration(milliseconds: 10), () => MainAppState.instance!.changeColorSeed());
   }
 
   @override
@@ -88,7 +88,7 @@ class _PhotoViewerPageState extends State<PhotoViewerPage> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         centerTitle: true,
-        toolbarHeight: 120,
+        toolbarHeight: 80,
         automaticallyImplyLeading: false,
         title: Stack(
           alignment: .center,
@@ -196,7 +196,7 @@ class _FooterState extends State<_Footer> {
   Widget build(BuildContext context) {
     double size = 28;
     return Container(
-      margin: .symmetric(horizontal: 15).add(.only(bottom: MediaQuery.paddingOf(context).bottom + 15)),
+      margin: .symmetric(horizontal: 15).add(.only(bottom: MediaQuery.paddingOf(context).bottom)),
       height: 55,
       child: Row(
         mainAxisAlignment: .spaceEvenly,

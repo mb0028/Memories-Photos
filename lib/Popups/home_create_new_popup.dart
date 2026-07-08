@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:memories_photos/Editor/collage_maker_page.dart';
 import 'package:memories_photos/Editor/editor_page.dart';
+import 'package:memories_photos/Pages/camera_timelapse_page.dart';
 import 'package:memories_photos/Popups/new_album_popup.dart';
 import 'package:memories_photos/image_helper.dart';
 import 'package:memories_photos/settings.dart';
@@ -55,6 +56,21 @@ Future<bool> showHomeCreateNewPopup(BuildContext context) async {
                 ),
               ),
             ],
+          ),
+          SizedBox(height: 5),
+          FilledButton.icon(
+            label: Text(
+              "Timelapse",
+              style: TextStyle(
+                fontFamily: Settings.ElmsSans
+              ),
+            ),
+            icon: Icon(Icons.timelapse_outlined),
+            onPressed: () async {
+              returnTrue = true;
+              Navigator.of(context).pop();
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => CameraTakeTimelapsePage()));
+            },
           ),
           SizedBox(height: 5),
           Text(

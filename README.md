@@ -4,7 +4,7 @@ A gallery app for android & windows
 
 (App is still in development progress)
 
-[Download Beta](https://github.com/mb0028/Memories-Photos/blob/main/Beta.apk)
+Download Beta from release page
 
 
 ## Fonts Used:
