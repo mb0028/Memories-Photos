@@ -25,6 +25,7 @@ class _CreateTimelapseState extends State<_CreateTimelapse> {
   var albumPath = TextEditingController();
   int framerate = 15;
   bool showButtons = true;
+  String cmd = "";
 
   @override
   void initState() {
@@ -95,7 +96,7 @@ class _CreateTimelapseState extends State<_CreateTimelapse> {
               label: "  Framerate: ${framerate.toInt()} ${framerate.toInt() == 15 ? "(Recommended)" : ""}  ",
               showValueIndicator: .alwaysVisible,
               onChanged: (value) => setState(() => framerate = value.toInt()),
-            ) : SizedBox(height: 100),
+            ) : SizedBox(height: 0),
             
             SizedBox(height: 10),
             showButtons ? FilledButton(
@@ -115,7 +116,9 @@ class _CreateTimelapseState extends State<_CreateTimelapse> {
                   await imagesListFile.create(recursive: true);
                   await imagesListFile.writeAsString(paths);
 
-                  await FFmpegKit.execute('-f concat -r $framerate -safe 0 -i "$imagesListPath" -vf scale=1080:-1 -c:v mpeg4 "$outFilePath"').thenReturnResultOrLogs(
+                  cmd = '-f concat -r $framerate -safe 0 -i "$imagesListPath" -vf scale=1080:-1 -b:v 50M "$outFilePath"';
+                  setState(() {});
+                  await FFmpegKit.execute(cmd).thenReturnResultOrLogs(
                     (_) => outFilePath,
                   ).then( (result) {
                       Navigator.of(context).pop();
@@ -145,7 +148,7 @@ class _CreateTimelapseState extends State<_CreateTimelapse> {
                   borderRadius: .circular(25),
                 ),
                 Text(
-                  "Creating timelapse video using FFmpeg...\n" + '-f concat -r framerate -safe 0 -i "imagesListPath" -vf scale=1080:-1 -c:v mpeg4 "outFilePath"',
+                  "Creating timelapse video using FFmpeg...\n> ffmpeg $cmd",
                   textAlign: .center,
                 ),
               ],
