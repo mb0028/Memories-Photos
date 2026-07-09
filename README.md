@@ -4,7 +4,7 @@ A gallery app for android & windows
 
 (App is still in development progress)
 
-Download Beta from release page
+Download Beta (Android only) from release page
 
 
 ## Fonts Used:
