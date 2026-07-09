@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:keep_screen_on/keep_screen_on.dart';
+import 'package:memories_photos/Popups/create_timelapse_popup.dart';
 import 'package:memories_photos/Popups/toast.dart';
 import 'package:memories_photos/main.dart';
 import 'package:memories_photos/settings.dart';
@@ -184,8 +185,21 @@ class _CameraTakeTimelapsePageState extends State<CameraTakeTimelapsePage> {
               
                   Row(
                     mainAxisAlignment: .center,
-                    spacing: timelapseStarted ? 15 : 0,
+                    spacing: 15,
                     children: [
+                      IconButton.filledTonal(
+                        icon: Icon(Icons.movie_creation_rounded, size: 30),
+                        tooltip: "Create Timelapse video from folder",
+                        onPressed: () async {
+                          if (timelapseStarted) {
+                            showStyledToast("This action will turns camera off.\nStop timelapse then click the button again 😀", context, duration: 5);
+                            return;
+                          }
+                          controller.pausePreview();
+                          await showCreateTimelapseDialog(context);
+                          controller.resumePreview();
+                        },
+                      ),
                       Stack(
                         alignment: .center,
                         children: [
@@ -203,13 +217,13 @@ class _CameraTakeTimelapsePageState extends State<CameraTakeTimelapsePage> {
                           ),
                         ],
                       ),
-                      timelapseStarted ? IconButton.filledTonal(
-                        icon: Icon(showCameraPreview ? Icons.gps_off_sharp : Icons.camera_alt_rounded, size: 60),
+                      IconButton.filledTonal(
+                        icon: Icon(showCameraPreview ? Icons.gps_off_sharp : Icons.camera_alt_rounded, size: 30),
                         tooltip: "Show/Hide Camera Perview",
                         onPressed: () {
                           setState(() => showCameraPreview = !showCameraPreview);
                         },
-                      ) : SizedBox(width: 0, height: 0),
+                      ),
                     ],
                   ),
               

@@ -1,6 +1,6 @@
 import 'package:blur/blur.dart';
 import 'package:flutter/material.dart';
-import 'package:memories_photos/Pages/albums_page.dart';
+import 'package:memories_photos/Pages/More/albums_page.dart';
 import 'package:memories_photos/Pages/home_page_contents.dart';
 import 'package:memories_photos/Pages/photos_page.dart';
 import 'package:memories_photos/Pages/settings_page.dart';

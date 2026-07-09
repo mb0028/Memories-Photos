@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:memories_photos/Pages/camera_page.dart';
+import 'package:memories_photos/Pages/More/camera_page.dart';
 import 'package:memories_photos/settings.dart';
 
 class ImageHelper {

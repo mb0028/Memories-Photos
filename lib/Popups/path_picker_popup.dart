@@ -21,7 +21,7 @@ Future<String?> showPathPickerDialog(BuildContext context) async {
           physics: BouncingScrollPhysics(),
           children: [
             Text(
-              "Add Path",
+              "Pickup Path",
               textAlign: .center,
               style: TextStyle(
                 fontSize: 22,
