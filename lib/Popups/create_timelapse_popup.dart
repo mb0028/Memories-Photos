@@ -145,7 +145,7 @@ class _CreateTimelapseState extends State<_CreateTimelapse> {
                   borderRadius: .circular(25),
                 ),
                 Text(
-                  "Creating timelapse video using FFmpeg...\n" + '-f concat -r framerate -safe 0 -i "imagesListPath" -vf scale=320:-1 -c:v mpeg4 "outFilePath"',
+                  "Creating timelapse video using FFmpeg...\n" + '-f concat -r framerate -safe 0 -i "imagesListPath" -vf scale=1080:-1 -c:v mpeg4 "outFilePath"',
                   textAlign: .center,
                 ),
               ],
