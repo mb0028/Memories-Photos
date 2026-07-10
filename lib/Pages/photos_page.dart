@@ -6,6 +6,7 @@ import 'package:memories_photos/Widgets/photo_card.dart';
 import 'package:memories_photos/main.dart';
 import 'package:memories_photos/photo_indexer.dart';
 import 'package:memories_photos/settings.dart';
+import 'package:share_plus/share_plus.dart';
 
 class PhotosPage extends StatefulWidget {
   final String? folder;
@@ -118,6 +119,28 @@ class _PhotosPageState extends State<PhotosPage> {
 
       actionsPadding: .only(right: 8),
       actions: [
+        widget.folder != null && photos != null && photos!.isNotEmpty ? IconButton.filled(
+          style: ButtonStyle(
+            backgroundColor: WidgetStatePropertyAll(appbarColorScheme.secondaryContainer)
+          ),
+          icon: Icon(
+            Icons.share,
+            color: appbarColorScheme.onSecondaryContainer,
+          ),
+          tooltip: "Share album (limited to 50 recent images)",
+          onPressed: () async {
+            List<XFile> share = [];
+            for (var i = 0; i < photos!.length.clamp(1, 50); i++)
+              share.add(XFile(photos![i].path));
+
+            var params = ShareParams(
+              title: "Share Album",
+              files: share,
+            );
+            await SharePlus.instance.share(params);
+          }
+        ) : SizedBox(),
+
         IconButton.filled(
           style: ButtonStyle(
             backgroundColor: WidgetStatePropertyAll(appbarColorScheme.secondaryContainer)

@@ -3,6 +3,7 @@
 - Permissions page
 - UI improvements
 - Share button is now works
+- New: Share albums (limited to 50 recent images in album)
 - Open with google maps is now works (for images that have location tag)
 - Fix: Very bad timelapse video quality
 - Fix: App crashes when there is no images found
