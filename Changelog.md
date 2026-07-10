@@ -1,4 +1,6 @@
 ## Upcoming Version
+
+## v2026.07.11 (Beta)
 - Compose-styled popups
 - Permissions page
 - UI improvements
