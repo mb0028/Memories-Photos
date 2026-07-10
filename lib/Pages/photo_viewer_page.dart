@@ -1,7 +1,7 @@
 import 'dart:io';
-import 'package:blur/blur.dart';
 import 'package:flutter/material.dart';
 import 'package:memories_photos/Structs/photo.dart';
+import 'package:memories_photos/Widgets/blur.dart';
 import 'package:memories_photos/main.dart';
 import 'package:memories_photos/settings.dart';
 import 'package:photo_view/photo_view.dart';
@@ -90,85 +90,58 @@ class _PhotoViewerPageState extends State<PhotoViewerPage> {
         centerTitle: true,
         toolbarHeight: 80,
         automaticallyImplyLeading: false,
-        title: Stack(
-          alignment: .center,
-          children: [
-            Column(
-              spacing: 5,
-              crossAxisAlignment: .stretch,
-              children: [
-                Padding(
-                  padding: .symmetric(horizontal: 50),
-                  child: Text(
-                    name,
-                    textAlign: .center,
-                    maxLines: 2,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimaryContainer,
-                      fontFamily: Settings.ElmsSans,
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-                Text(
-                  widget.query[i].dateTaken.toString(),
+        title: BlurredContainerMonoP(
+          blur: 8,
+          roundneess: 50,
+          padding: .all(10),
+          color: Theme.of(context).colorScheme.primaryContainer.withAlpha(80),
+          child: Column(
+            spacing: 5,
+            crossAxisAlignment: .stretch,
+            children: [
+              Padding(
+                padding: .symmetric(horizontal: 50),
+                child: Text(
+                  name,
                   textAlign: .center,
-                  maxLines: 1,
+                  maxLines: 2,
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.onPrimaryContainer,
-                    fontFamily: Settings.CherryBombOne,
-                    fontSize: 16
+                    fontFamily: Settings.ElmsSans,
+                    fontSize: 16,
                   ),
                 ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: .spaceBetween,
-              children: [
-                IconButton(
-                  icon: Icon(Icons.arrow_back_rounded, size: 28),
-                  tooltip: "Back",
-                  onPressed: () => Navigator.of(context).pop(),
+              ),
+              Text(
+                widget.query[i].dateTaken.toString(),
+                textAlign: .center,
+                maxLines: 1,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                  fontFamily: Settings.CherryBombOne,
+                  fontSize: 16
                 ),
-                IconButton(
-                  icon: Icon(Icons.more_vert_rounded, size: 28),
-                  tooltip: "More",
-                  onPressed: () => widget.query[i].showMoreActionsPopup(context),
-                ),
-              ],
-            ), //TODO: Windows Next/Previous button
-            // Row(
-            //   mainAxisAlignment: .spaceBetween,
-            //   children: [
-            //     IconButton.filledTonal(
-            //       icon: Icon(Icons.arrow_back),
-            //       tooltip: "Previous",
-            //       onPressed: () {
-            //         setState(() => i = (i - 1).clamp(0, widget.query.length - 1));
-            //         getName();
-            //       },
-            //     ),
-            //     IconButton.filledTonal(
-            //       icon: Icon(Icons.arrow_forward),
-            //       tooltip: "Next",
-            //       onPressed: () {
-            //         setState(() => i = (i + 1).clamp(0, widget.query.length - 1));
-            //         getName();
-            //       },
-            //     ),
-            //   ],
-            // ),
-          ],
-        ).frosted(
-          blur: 8,
-          borderRadius: .circular(50),
-          padding: .all(10),
-          frostColor: Theme.of(context).colorScheme.primaryContainer
+              ),
+            ],
+          ),
         ),
+        leading: IconButton.filledTonal(
+          icon: Icon(Icons.arrow_back_rounded, size: 28),
+          tooltip: "Back",
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        actionsPadding: .only(right: 5),
+        actions: [
+          IconButton.filledTonal(
+            icon: Icon(Icons.more_vert_rounded, size: 28),
+            tooltip: "More",
+            onPressed: () => widget.query[i].showMoreActionsPopup(context),
+          ),
+        ],
       ),
     
       drawer: Drawer(
-        backgroundColor: Theme.of(context).colorScheme.surface.withAlpha(220),
+        backgroundColor: Theme.of(context).colorScheme.surfaceContainer.withAlpha(220),
         width: 360,
         child: details,
       ),
@@ -195,9 +168,12 @@ class _FooterState extends State<_Footer> {
   @override
   Widget build(BuildContext context) {
     double size = 28;
-    return Container(
+    return BlurredContainerMonoP(
+      blur: 8,
+      roundneess: 50,
       margin: .symmetric(horizontal: 15).add(.only(bottom: MediaQuery.paddingOf(context).bottom)),
       height: 55,
+      color: Theme.of(context).colorScheme.tertiaryContainer.withAlpha(80),
       child: Row(
         mainAxisAlignment: .spaceEvenly,
         children: [
@@ -230,12 +206,7 @@ class _FooterState extends State<_Footer> {
             },
           ),
         ],
-      ).frosted(
-        blur: 8,
-        borderRadius: .circular(50),
-        padding: .symmetric(horizontal: 10, vertical: 4),
-        frostColor: Theme.of(context).colorScheme.tertiaryContainer
-      ),
+      )
     );
   }
 }

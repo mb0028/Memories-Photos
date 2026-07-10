@@ -75,7 +75,7 @@ Future<Widget> getPhotoDetailsWidget(Photo photo, BuildContext context) async {
             fontFamily: Settings.CherryBombOne,
           ),
         ),
-        Text(path),
+        Text(path, textAlign: .center,),
         Divider(),
         Expanded(
           child: ListView(
@@ -137,9 +137,13 @@ Future<Widget> getPhotoDetailsWidget(Photo photo, BuildContext context) async {
         Row(
           mainAxisAlignment: .spaceBetween,
           children: [
-            uniID.isNotEmpty ? Text(
-              "Image Unique ID: $uniID", 
-              maxLines: 2,
+            uniID.isNotEmpty ? SizedBox(
+              width: 280,
+              child: Text(
+                "Image Unique ID: $uniID", 
+                maxLines: 2,
+                overflow: .fade,
+              ),
             ) : SizedBox(),
             IconButton.filled(
               onPressed: () => Navigator.of(context).pop(),
@@ -167,29 +171,23 @@ class _DetailsTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: .symmetric(vertical: 10),
-      padding: .all(7.5),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface.withAlpha(90),
-        borderRadius: .circular(18)
-      ),
-      child: Row(
-        spacing: 15,
-        children: [
-          icon,
-          Flexible(
-            child: Text(
-              text,
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onSecondaryContainer,
-                fontSize: fontSize,
-                fontFamily: font
-              ),
-              maxLines: 3,
-              overflow: .ellipsis,
-            ),
+      margin: .symmetric(vertical: 5),
+      child: ListTile(
+        tileColor: Theme.of(context).colorScheme.secondaryContainer.withAlpha(200),
+        shape: RoundedRectangleBorder(
+          borderRadius: .circular(18)
+        ),
+        title: Text(
+          text,
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onTertiaryContainer,
+            fontSize: fontSize,
+            fontFamily: font
           ),
-        ],
+          maxLines: 3,
+          overflow: .ellipsis,
+        ),
+        leading: icon,
       ),
     );
   }

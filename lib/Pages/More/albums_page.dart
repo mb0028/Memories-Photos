@@ -29,11 +29,14 @@ class AlbumsPage extends StatelessWidget {
         ),
         Expanded(
           child: Padding(
-            padding: .symmetric(horizontal: 15),
+            padding: .symmetric(horizontal: 5),
             child: GridView.builder(
               padding: .only(bottom: 250),
               physics: BouncingScrollPhysics(),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: (screenWidth / Settings.gridScale / 1.5).toInt()),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: (screenWidth / Settings.gridScale / 1.5).toInt(),
+                childAspectRatio: 0.75
+              ),
               itemCount: PhotoIndexer.albums.length,
               itemBuilder: (context, i) => AlbumCard(path: PhotoIndexer.albums.keys.elementAt(i))
             ),

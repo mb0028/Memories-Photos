@@ -1,8 +1,8 @@
 import 'dart:io';
-import 'package:blur/blur.dart';
 import 'package:flutter/material.dart';
 import 'package:memories_photos/Pages/photo_viewer_page.dart';
 import 'package:memories_photos/Structs/photo.dart';
+import 'package:memories_photos/Widgets/blur.dart';
 
 class PhotoCardHomePage extends StatelessWidget {
   final List<Photo> query;
@@ -17,7 +17,7 @@ class PhotoCardHomePage extends StatelessWidget {
         GestureDetector(
           onTap: () => Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => PhotoViewerPage(query: query, i: i,),
+              builder: (context) => PhotoViewerPage(query: query, i: i),
             )
           ),
           child: Container(
@@ -37,10 +37,15 @@ class PhotoCardHomePage extends StatelessWidget {
             ),
           ),
         ),
+        
         GestureDetector(
           onTap: () => query[i].showMoreActionsPopup(context, evenMoreActions: true),
-          child: Container(
-            margin: .symmetric(vertical: 5),
+          child: BlurredContainerMonoP(
+            margin: .all(5),
+            padding: .all(5),
+            width: 180,
+            blur: 3,
+            color: Theme.of(context).colorScheme.tertiaryContainer.withAlpha(80),
             child: Text(
               query[i].name,
               maxLines: 2,
@@ -50,13 +55,7 @@ class PhotoCardHomePage extends StatelessWidget {
                 fontSize: 12,
                 color: Theme.of(context).colorScheme.onSurface
               ),
-            ).frosted(
-              blur: 4,
-              borderRadius: .circular(15),
-              padding: .all(6),
-              width: 180,
-              frostColor: Theme.of(context).colorScheme.surface
-            ),
+            )
           ),
         )
       ],

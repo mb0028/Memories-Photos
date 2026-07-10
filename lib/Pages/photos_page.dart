@@ -1,7 +1,7 @@
 import 'dart:io';
-import 'package:blur/blur.dart';
 import 'package:flutter/material.dart';
 import 'package:memories_photos/Structs/photo.dart';
+import 'package:memories_photos/Widgets/blur.dart';
 import 'package:memories_photos/Widgets/photo_card.dart';
 import 'package:memories_photos/main.dart';
 import 'package:memories_photos/photo_indexer.dart';
@@ -70,7 +70,8 @@ class _PhotosPageState extends State<PhotosPage> {
           ) : SizedBox() ,
           Expanded(
             child: GridView.builder(
-              padding: .only(bottom: 200, top: widget.folder == null ? padding.top + 60 : 10),
+              padding: .only(bottom: 200, top: widget.folder == null ? padding.top + 60 : 10,
+                left: 5, right: 5),
               physics: BouncingScrollPhysics(),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: (screenWidth / Settings.gridScale).toInt()),
               itemCount: photos!.length,
@@ -87,16 +88,20 @@ class _PhotosPageState extends State<PhotosPage> {
       centerTitle: true,
       backgroundColor: Colors.transparent,
       surfaceTintColor: Colors.transparent,
-      title: Text(
-        widget.folder != null
-        ? widget.folder!.substring(widget.folder!.lastIndexOf(Platform.pathSeparator) + 1)
-        : "All Photos",
-        style: TextStyle(color: appbarColorScheme.onSecondaryContainer),
-      ).frosted(
-        blur: 5,
-        borderRadius: .circular(50),
+      title: BlurredContainerMonoP(
+        roundneess: 50,
         padding: .symmetric(vertical: 10, horizontal: 20),
-        frostColor: appbarColorScheme.secondaryContainer
+        color: appbarColorScheme.secondaryContainer.withAlpha(120),
+        // border: .all(
+        //   width: 2,
+        //   color: appbarColorScheme.surface
+        // ),
+        child: Text(
+          widget.folder != null
+          ? widget.folder!.substring(widget.folder!.lastIndexOf(Platform.pathSeparator) + 1)
+          : "All Photos",
+          style: TextStyle(color: appbarColorScheme.onSecondaryContainer),
+        )
       ),
 
       leading: widget.folder != null ? IconButton.filled(
@@ -126,7 +131,7 @@ class _PhotosPageState extends State<PhotosPage> {
             showModalBottomSheet(
               context: context,
               showDragHandle: true,
-              backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
+              backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
               builder: (context) => _GridScalePopup(onChanged: () => setState(() {}))
             );
           }

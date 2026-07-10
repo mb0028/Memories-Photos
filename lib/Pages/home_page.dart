@@ -1,10 +1,10 @@
-import 'package:blur/blur.dart';
 import 'package:flutter/material.dart';
 import 'package:memories_photos/Pages/More/albums_page.dart';
 import 'package:memories_photos/Pages/home_page_contents.dart';
 import 'package:memories_photos/Pages/photos_page.dart';
 import 'package:memories_photos/Pages/settings_page.dart';
 import 'package:memories_photos/Popups/home_create_new_popup.dart';
+import 'package:memories_photos/Widgets/blur.dart';
 import 'package:memories_photos/settings.dart';
 
 class MonoPHomePage extends StatefulWidget {
@@ -75,48 +75,42 @@ class MonoPHomePageState extends State<MonoPHomePage> {
     );
   }
 
-  Container _bottomSheet(BuildContext context) {
-    return Container(
+  Widget _bottomSheet(BuildContext context) {
+    return BlurredContainerMonoP(
+      blur: 8,
       margin: .symmetric(horizontal: 15).add(.only(bottom: MediaQuery.paddingOf(context).bottom)),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.primaryContainer.withAlpha(60),
-          borderRadius: .circular(80),
-          border: .all(
-            color: Theme.of(context).colorScheme.secondaryContainer,
-            width: 3
-          )
-        ),
-        child: NavigationBar(
-          backgroundColor: Colors.transparent,
-          selectedIndex: currentPage,
-          height: 65,
-          onDestinationSelected: (value) {
-            setState(() {
-              currentPage = value;
-            });
-          },
-          destinations: [
-            NavigationDestination(
-              icon: Icon(Icons.star_outline_rounded),
-              selectedIcon: Icon(Icons.star_rounded),
-              label: "Home",
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.photo_outlined),
-              selectedIcon: Icon(Icons.photo_rounded),
-              label: "Photos"
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.photo_album_outlined),
-              selectedIcon: Icon(Icons.photo_album_rounded),
-              label: "Albums"
-            ),
-          ]
-        ),
-      ).frosted(
-        blur: 4,
-        borderRadius: .circular(80)
+      color: Theme.of(context).colorScheme.secondaryContainer.withAlpha(140),
+      roundneess: 50,
+      border: .all(
+        color: Theme.of(context).colorScheme.secondaryContainer.withAlpha(180),
+        width: 3
+      ),
+      child: NavigationBar(
+        backgroundColor: Colors.transparent,
+        selectedIndex: currentPage,
+        height: 62,
+        onDestinationSelected: (value) {
+          setState(() {
+            currentPage = value;
+          });
+        },
+        destinations: [
+          NavigationDestination(
+            icon: Icon(Icons.star_outline_rounded),
+            selectedIcon: Icon(Icons.star_rounded),
+            label: "Home",
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.photo_outlined),
+            selectedIcon: Icon(Icons.photo_rounded),
+            label: "Photos"
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.photo_album_outlined),
+            selectedIcon: Icon(Icons.photo_album_rounded),
+            label: "Albums"
+          ),
+        ]
       ),
     );
   }
@@ -152,7 +146,7 @@ class _FloatingBtn extends StatelessWidget {
       verticalDirection: .up,
       spacing: 10,
       children: [
-        SizedBox(height: 90),
+        SizedBox(height: 60),
         FloatingActionButton(
           onPressed: () async {
             showHomeCreateNewPopup(context); //TODO: Refresh on pop
