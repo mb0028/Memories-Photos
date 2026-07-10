@@ -13,6 +13,7 @@ import androidx.annotation.NonNull
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
+import androidx.core.net.toUri
 
 class MainActivity : FlutterActivity() {
     private val CHANNEL_EXIF = "mb28.monoP.exif/exif_channel"
@@ -70,6 +71,15 @@ class MainActivity : FlutterActivity() {
                 "openAllFilesAccess" -> {
                     val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
                     intent.setData(Uri.fromParts("package", packageName, null))
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
+                    result.success(true)
+                }
+                "openWithMaps" -> {
+                    val lat = call.argument<String>("lat")!!
+                    val long = call.argument<String>("long")!!
+                    val mapUri = "https://maps.google.com/maps/search/${lat.subSequence(0, 2)},${long.subSequence(0, 2)}".toUri()
+                    val intent = Intent(Intent.ACTION_VIEW, mapUri)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(intent)
                     result.success(true)

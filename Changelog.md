@@ -1,10 +1,11 @@
 ## Upcoming Version
-- Fixed timelapse video quality
-- Fix: App crashes when there is no images found
 - Compose-styled popups
 - Permissions page
 - UI improvements
-- Small bug fixes
+- Open with google maps is now works (for images that have location tag)
+- Fix: Very bad timelapse video quality
+- Fix: App crashes when there is no images found
+- Lot of bug fixes
 
 ## v2026.07.09 (Beta)
 - Keep screen on in camera page

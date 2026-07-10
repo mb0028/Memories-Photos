@@ -18,7 +18,13 @@ class AndroidHelper {
 
   static Future<void> openAllFilesAccess() async {
     try {
-      await channel.invokeMethod<bool>("openAllFilesAccess");
+      await channel.invokeMethod("openAllFilesAccess");
+    } on PlatformException {}
+  }
+
+  static void openWithMaps(String lat, String long) async {
+    try {
+      await channel.invokeMethod("openWithMaps", {"lat": lat, "long": long});
     } on PlatformException {}
   }
 

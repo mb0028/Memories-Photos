@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:memories_photos/ExifInterface/exif_interface.dart';
 import 'package:memories_photos/ExifInterface/tags.dart';
 import 'package:memories_photos/Structs/photo.dart';
+import 'package:memories_photos/android_helper.dart';
 import 'package:memories_photos/settings.dart';
 
 Future<Widget> getPhotoDetailsWidget(Photo photo, BuildContext context) async {
@@ -122,7 +123,7 @@ Future<Widget> getPhotoDetailsWidget(Photo photo, BuildContext context) async {
                 text: "Lat: $lat ($latRef)\nLong: $long ($longRef)\nAlt: $alt", 
                 icon: IconButton.filledTonal(
                   icon: Icon(Icons.location_searching_outlined, size: 28, color: Theme.of(context).colorScheme.onSecondaryContainer),
-                  onPressed: () {},
+                  onPressed: () => AndroidHelper.openWithMaps(lat, long),
                   tooltip: "Open in google maps",
                 ),
                 fontSize: 14,
