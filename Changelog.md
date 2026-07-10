@@ -1,5 +1,6 @@
 ## Upcoming Version
 - Fixed timelapse video quality
+- Permissions page
 - Small bug fixes
 
 ## v2026.07.09 (Beta)

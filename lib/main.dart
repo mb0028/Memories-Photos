@@ -4,7 +4,9 @@ import 'package:camera/camera.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:memories_photos/Pages/More/permissions_page.dart';
 import 'package:memories_photos/Pages/home_page.dart';
+import 'package:memories_photos/android_helper.dart';
 import 'package:memories_photos/settings.dart';
 
 late FragmentProgram colorfulBackgroundProgram;
@@ -13,22 +15,27 @@ late List<CameraDescription> cameras;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  SystemChrome.setSystemUIOverlayStyle(
-    SystemUiOverlayStyle(
-      systemNavigationBarContrastEnforced: false,
-      systemNavigationBarIconBrightness: .dark
-    )
-  );
+  if (await AndroidHelper.isExternalStorageManager()) {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        systemNavigationBarContrastEnforced: false,
+        systemNavigationBarIconBrightness: .dark
+      )
+    );
 
-  await Settings.load();
-  if (Platform.isAndroid)
-    cameras = await availableCameras();
-  colorfulBackgroundProgram = await FragmentProgram.fromAsset("Assets/Shaders/bg.frag");
-  runApp(const MainApp());
+    await Settings.load();
+    if (Platform.isAndroid)
+      cameras = await availableCameras();
+    colorfulBackgroundProgram = await FragmentProgram.fromAsset("Assets/Shaders/bg.frag");
+
+    runApp(const MainApp(hasFileAccess: false));
+  }
+  else runApp(const MainApp(hasFileAccess: true));
 }
 
 class MainApp extends StatefulWidget {
-  const MainApp({super.key});
+  const MainApp({super.key, required this.hasFileAccess});
+  final bool hasFileAccess;
   @override
   State<MainApp> createState() => MainAppState();
 }
@@ -37,6 +44,7 @@ class MainAppState extends State<MainApp> {
   Color seed = Settings.accent;
   static Brightness brightness = .light;
   static MainAppState? instance;
+  late bool hasFileAccess;
 
   void changeColorSeed() async {
     var col = Settings.accent;
@@ -51,6 +59,7 @@ class MainAppState extends State<MainApp> {
 
   @override
   void initState() {
+    hasFileAccess = widget.hasFileAccess;
     changeColorSeed();
     super.initState();
     instance = this;
@@ -73,7 +82,7 @@ class MainAppState extends State<MainApp> {
           backgroundColor: Colors.transparent
         )
       ),
-      home: MonoPHomePage(),
+      home: hasFileAccess ? MonoPHomePage() : PermissionsPage(),
     );
   }
 

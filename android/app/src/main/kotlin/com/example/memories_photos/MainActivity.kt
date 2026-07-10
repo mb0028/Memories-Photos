@@ -16,23 +16,10 @@ import io.flutter.plugin.common.MethodChannel
 
 class MainActivity : FlutterActivity() {
     private val CHANNEL_EXIF = "mb28.monoP.exif/exif_channel"
-    private val CHANNEL_CAMERA = "mb28.monoP.camera/camera_channel"
+    private val CHANNEL_Helper = "mb28.monoP.helper/helper_channel"
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        window.navigationBarColor = 0x00000000
-
-        if (!Environment.isExternalStorageManager()) {
-            val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
-            intent.setData(Uri.fromParts("package", packageName, null))
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
-            Toast.makeText(applicationContext, "All files access is rejected", Toast.LENGTH_SHORT).show()
-        }
-        //if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-        //    requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 2)
-        // }
         super.onCreate(savedInstanceState)
-        //LiveNotifs().show(this)
     }
 
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
@@ -70,35 +57,29 @@ class MainActivity : FlutterActivity() {
                 }
             }
         }
-    }
 
-//        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL_CAMERA).setMethodCallHandler {
-//            call, result ->
-//            when (call.method) {
-//                "takePictureAndroid" -> {
-//                    val i = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-//                        i.putExtra(
-//                            MediaStore.EXTRA_OUTPUT,
-//                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-//                        )
-//                    startActivityForResult(i, 28001)
-//                    result.success("")
-//                }
-//                else -> {
-//                    result.notImplemented()
-//                }
-//            }
-//        }
-//    }
-//
-//    override fun onActivityResult(
-//        requestCode: Int,
-//        resultCode: Int,
-//        data: Intent?,
-//        caller: ComponentCaller
-//    ) {
-//
-//        super.onActivityResult(requestCode, resultCode, data, caller)
-//    }
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            CHANNEL_Helper
+        ).setMethodCallHandler { call, result ->
+            when (call.method) {
+                "isExternalStorageManager" -> {
+                    result.success(Environment.isExternalStorageManager())
+                }
+
+                "openAllFilesAccess" -> {
+                    val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
+                    intent.setData(Uri.fromParts("package", packageName, null))
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
+                    result.success(true)
+                }
+
+                else -> {
+                    result.notImplemented()
+                }
+            }
+        }
+    }
 
 }
