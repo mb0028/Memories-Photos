@@ -25,7 +25,8 @@ dependencies:
 
   open_filex: ^4.7.0
   filesystem_picker: ^4.1.0
-
+  
+  share_plus: ^13.2.0
   # ftp_server: ^2.3.2
   # ftpconnect: ^2.0.10
   # ip_go: ^1.0.0

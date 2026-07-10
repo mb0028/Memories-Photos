@@ -79,7 +79,7 @@ Future<bool> photosMoreActionPopup(BuildContext context, Photo photo, bool moreA
             title: Text("Share"),
             leading: Icon(Icons.share_rounded),
             onTap: () {
-              needsRefresh = true;
+              photo.share();
               Navigator.of(context).pop();
             },
           ),

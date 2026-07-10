@@ -9,6 +9,7 @@ import 'package:memories_photos/Popups/toast.dart';
 import 'package:memories_photos/Widgets/monop_text_field.dart';
 import 'package:memories_photos/Widgets/photo_details.dart';
 import 'package:memories_photos/settings.dart';
+import 'package:share_plus/share_plus.dart';
 
 /// Holds path to the photo and helpful methods. <br/>
 /// F**k dart with this lowercase naming rule
@@ -111,4 +112,12 @@ class Photo {
     return edited;
   }
 
+  void share() async {
+    final params = ShareParams(
+      title: "Share with",
+      text: await commentOrName,
+      files: [XFile(path)],
+    );
+    await SharePlus.instance.share(params);
+  }
 }
