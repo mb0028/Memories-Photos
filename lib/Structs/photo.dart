@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:memories_photos/ExifInterface/exif_interface.dart';
 import 'package:memories_photos/ExifInterface/tags.dart';
+import 'package:memories_photos/Popups/monop_dialog.dart';
 import 'package:memories_photos/Popups/photo_more_actions.dart';
 import 'package:memories_photos/Popups/toast.dart';
 import 'package:memories_photos/Widgets/monop_text_field.dart';
@@ -66,116 +67,47 @@ class Photo {
     await getPhotoDetailsWidget(this, context);
 
   Future<bool> showDeletePopup(BuildContext context, Function onDelete) async {
-    bool deleted = false;
-    await showDialog(
-      context: context,
-      builder: (context) => Dialog(
-        backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
-        child: Container(
-          height: 200,
-          padding: .all(15),
-          child: Column(
-            spacing: 15,
-            children: [
-              Text(
-                "Delete?",
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: .bold
-                ),
-              ),
-              Flexible(child: Text("Delete $path ?")),
-              Row(
-                spacing: 15,
-                children: [
-                  Expanded(
-                    child: FilledButton(
-                      child: Text("Delete"),
-                      onPressed: () async {
-                        await File(path).delete();
-                        if (isInFavorites)
-                          Settings.favorites.remove(path);
-                        deleted = true;
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ),
-                  Expanded(
-                    child: OutlinedButton(
-                      child: Text("Cancel"),
-                      onPressed: () => Navigator.of(context).pop(),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
+    bool delete = await showMonoPDialog(
+      context,
+      title: "Delete?",
+      ok: "Delete",
+      cancel: "Cancel",
+      child: Text("Delete $name ?")
     );
-    if (deleted)
+
+    if (delete) {
+      await File(path).delete();
+      if (isInFavorites)
+        Settings.favorites.remove(path);
+      showStyledToast("Deleted!", context);
       onDelete();
-    return deleted;
+    }
+
+    return delete;
   }
 
   Future<bool> showEditCommentPopup(BuildContext context, Function onEdit) async {
-    var comment = await ExifInterface.getAttribute(path, ExifTag.TAG_USER_COMMENT);
-    var ctrlr = TextEditingController();
-    ctrlr.text = comment;
-    bool edited = false;
-
+    var ctrlr = TextEditingController(text: await ExifInterface.getAttribute(path, ExifTag.TAG_USER_COMMENT));
     List<String> randomPlaceholders = ["Beautiful skies", "Rainy ☔", "Son 😭😭😭😭", "hehehe (●'◡'●)", "Night", "Today is ____",
       "⛅", "☀️", "💀", "That was so scary!", "Here we at ____"]; //TODO: add more
-    await showDialog(
-      context: context,
-      builder: (context) => Dialog(
-        backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
-        child: Container(
-          height: 250,
-          padding: .all(15),
-          child: Column(
-            spacing: 15,
-            children: [
-              Text(
-                "Change User Comment",
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: .bold
-                ),
-              ),
-              MonoPTextField(
-                controller: ctrlr,
-                maxLines: 3,
-                placeholder: "${randomPlaceholders[Random.secure().nextInt(randomPlaceholders.length)]} ...",
-              ),
-              Row(
-                spacing: 15,
-                children: [
-                  Expanded(
-                    child: FilledButton(
-                      child: Text("Save"),
-                      onPressed: () async {
-                        await ExifInterface.setAttribute(path, ExifTag.TAG_USER_COMMENT, ctrlr.text);
-                        edited = true;
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ),
-                  Expanded(
-                    child: OutlinedButton(
-                      child: Text("Cancel"),
-                      onPressed: () => Navigator.of(context).pop(),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
+
+    bool edited = await showMonoPDialog(
+      context,
+      title: "Edit User Comment",
+      ok: "Save",
+      cancel: "Cancel",
+      child: MonoPTextField(
+        controller: ctrlr,
+        maxLines: 3,
+        placeholder: "${randomPlaceholders[Random.secure().nextInt(randomPlaceholders.length)]} ...",
       ),
     );
-    if (edited)
+
+    if (edited) {
+      await ExifInterface.setAttribute(path, ExifTag.TAG_USER_COMMENT, ctrlr.text);
       onEdit();
+    }
+      
     return edited;
   }
 

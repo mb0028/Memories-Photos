@@ -73,14 +73,16 @@ class _CreateTimelapseState extends State<_CreateTimelapse> {
                         pickText: "Select Folder",
                         showGoUp: false,
                         fsType: .folder,
-                        rootDirectory: Platform.isAndroid ? Directory(Settings.appPath) : null,
                         shortcuts: Platform.isWindows ? [
                           .new(name: "C:", path: .new("C:")),
                           .new(name: "D:", path: .new("D:")),
                           .new(name: "E:", path: .new("E:")),
                           .new(name: "Users", path: .new("C:/Users")),
-                          .new(name: "Memories Photos folder", path: .new(Settings.appPath)),
-                        ] : [],
+                          .new(name: "Memories Photos", path: .new(Settings.appPath)),
+                        ] : [
+                          .new(name: "Internal storage", path: .new("/sdcard/")),
+                          .new(name: "DCIM/Memories Photos", path: .new(Settings.appPath)),
+                        ],
                       );
                       
                       albumPath.text = t ?? "";

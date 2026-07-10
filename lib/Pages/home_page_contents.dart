@@ -20,6 +20,7 @@ class _HomePageContentsState extends State<HomePageContents> {
   List<Photo> sunrise = [];
   List<Photo> night = [];
   Photo? header;
+  bool noImages = false;
 
   Future<void> refresh() async {
     recents = []; sunrise = []; night = [];
@@ -27,6 +28,11 @@ class _HomePageContentsState extends State<HomePageContents> {
 
     await PhotoIndexer.startCache();
     var temp = PhotoIndexer.photos.toList();
+
+    if(PhotoIndexer.photos.isEmpty) {
+      setState(() => noImages = true);
+      return;
+    }
 
     header = temp[Random.secure().nextInt(temp.length)];
 
@@ -48,6 +54,7 @@ class _HomePageContentsState extends State<HomePageContents> {
         nightCount++;
       }
     }
+    noImages = false;
     setState(() {});
   }
 
@@ -59,6 +66,24 @@ class _HomePageContentsState extends State<HomePageContents> {
 
   @override
   Widget build(BuildContext context) {
+    if (noImages)
+      return Center(
+        child: SizedBox(
+          height: 200,
+          child: ListView(
+            physics: BouncingScrollPhysics(),
+            padding: .all(15),
+            children: [
+              Text("No images found 😭😭\nGo to 'Settings -> Library include' then add folders you want to show in app.", textAlign: .center,),
+              OutlinedButton(
+                onPressed: () => refresh(),
+                child: Text("Refresh")
+              )
+            ],
+          ),
+        ),
+      );
+
     return RefreshIndicator(
       onRefresh: () async => await refresh(),
       elevation: 0,
@@ -87,7 +112,7 @@ class _HomePageContentsState extends State<HomePageContents> {
           _Section(photos: recents, flexWeights: [1, 3, 1]),
       
           _SectionHeader(text: "Sunrise Captures"), // TODO: better naming + random section names
-          _Section(photos: sunrise, flexWeights: [2, 4, 1]),
+          _Section(photos: sunrise, flexWeights: [1, 4, 2]),
       
           _SectionHeader(text: "Night Captures"), // TODO: better naming + random section names
           _Section(photos: night, flexWeights: [1, 4, 2])

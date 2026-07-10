@@ -34,7 +34,7 @@ class _PhotosPageState extends State<PhotosPage> {
     else
       photos = PhotoIndexer.photos;
 
-    if (Settings.adaptiveColors && widget.folder != null)
+    if (Settings.adaptiveColors && widget.folder != null && photos!.isNotEmpty)
       appbarColorScheme = await ColorScheme.fromImageProvider(
         provider: FileImage(File(photos!.first.path)),
         dynamicSchemeVariant: .rainbow,
@@ -52,16 +52,17 @@ class _PhotosPageState extends State<PhotosPage> {
   @override
   Widget build(BuildContext context) {
     var screenWidth = MediaQuery.widthOf(context);
+    var padding = MediaQuery.paddingOf(context);
     return Scaffold(
       extendBodyBehindAppBar: true,
       
       appBar: _appbar(context),
       
-      body: photos != null ? Column(
+      body: photos != null && photos!.isNotEmpty ? Column(
         crossAxisAlignment: .stretch,
         children: [
           widget.folder != null ? SizedBox(
-            height: 90,
+            height: padding.top + 60,
             child: Image.file(
               File(photos!.first.path),
               fit: .cover,
@@ -69,7 +70,7 @@ class _PhotosPageState extends State<PhotosPage> {
           ) : SizedBox() ,
           Expanded(
             child: GridView.builder(
-              padding: .only(bottom: 200, top: widget.folder == null ? 90 : 10),
+              padding: .only(bottom: 200, top: widget.folder == null ? padding.top + 60 : 10),
               physics: BouncingScrollPhysics(),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: (screenWidth / Settings.gridScale).toInt()),
               itemCount: photos!.length,
@@ -77,7 +78,7 @@ class _PhotosPageState extends State<PhotosPage> {
             ),
           ),
         ],
-      ) : Center(child: CircularProgressIndicator()),
+      ) : Center(child: Text("0 Photos 😭"))
     );
   }
 
@@ -97,6 +98,7 @@ class _PhotosPageState extends State<PhotosPage> {
         padding: .symmetric(vertical: 10, horizontal: 20),
         frostColor: appbarColorScheme.secondaryContainer
       ),
+
       leading: widget.folder != null ? IconButton.filled(
         style: ButtonStyle(
           backgroundColor: WidgetStatePropertyAll(appbarColorScheme.primaryContainer)
@@ -108,6 +110,7 @@ class _PhotosPageState extends State<PhotosPage> {
         tooltip: "Back",
         onPressed: () => Navigator.of(context).pop(),
       ) : null,
+
       actionsPadding: .only(right: 8),
       actions: [
         IconButton.filled(

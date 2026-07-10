@@ -50,7 +50,7 @@ class MonoPHomePageState extends State<MonoPHomePage> {
               onClick: () => showAboutDialog(
                 context: context,
                 applicationName: "Memories Photos",
-                applicationVersion: "Beta"
+                applicationVersion: "By: mb28"
               ),
             ),
             _DrawerItem(

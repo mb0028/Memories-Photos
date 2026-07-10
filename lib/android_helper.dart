@@ -17,9 +17,8 @@ class AndroidHelper {
   }
 
   static Future<void> openAllFilesAccess() async {
-    if (Platform.isWindows) return;
     try {
-      await channel.invokeMethod<bool>("setAttribute");
+      await channel.invokeMethod<bool>("openAllFilesAccess");
     } on PlatformException {}
   }
 

@@ -28,9 +28,9 @@ void main() async {
       cameras = await availableCameras();
     colorfulBackgroundProgram = await FragmentProgram.fromAsset("Assets/Shaders/bg.frag");
 
-    runApp(const MainApp(hasFileAccess: false));
+    runApp(const MainApp(hasFileAccess: true));
   }
-  else runApp(const MainApp(hasFileAccess: true));
+  else runApp(const MainApp(hasFileAccess: false));
 }
 
 class MainApp extends StatefulWidget {

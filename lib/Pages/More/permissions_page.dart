@@ -25,26 +25,28 @@ class _PermissionsPageState extends State<PermissionsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        spacing: 15,
-        mainAxisAlignment: .center,
-        crossAxisAlignment: .center,
-        children: [
-          Text(hasFileAccess ? "Permission Granted!" : "All files access is needed"),
-
-          hasFileAccess ? FilledButton(
-            onPressed: () => AndroidHelper.openAllFilesAccess(), 
-            child: Text("Open Settings")
-          ) : SizedBox(),
-          hasFileAccess ? OutlinedButton(
-            onPressed: () => init(), 
-            child: Text("Refresh")
-          ) : SizedBox(),
-          hasFileAccess ? OutlinedButton(
-            onPressed: () => setState(() => MainAppState.instance!.setState(() => MainAppState.instance!.hasFileAccess = true)), 
-            child: Text("Restart App")
-          ) : SizedBox(),
-        ],
+      body: Center(
+        child: Column(
+          spacing: 15,
+          mainAxisAlignment: .center,
+          crossAxisAlignment: .center,
+          children: [
+            Text(hasFileAccess ? "Permission Granted!" : "All files access is needed"),
+        
+            !hasFileAccess ? FilledButton(
+              onPressed: () => AndroidHelper.openAllFilesAccess(), 
+              child: Text("Open Settings")
+            ) : SizedBox(),
+            !hasFileAccess ? OutlinedButton(
+              onPressed: () => init(), 
+              child: Text("Refresh")
+            ) : SizedBox(),
+            hasFileAccess ? OutlinedButton(
+              onPressed: () => setState(() => MainAppState.instance!.setState(() => MainAppState.instance!.hasFileAccess = true)), 
+              child: Text("Restart App")
+            ) : SizedBox(),
+          ],
+        ),
       ),
     );
   }
