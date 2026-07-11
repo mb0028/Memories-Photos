@@ -1,4 +1,5 @@
 ## Upcoming Version
+- Small bug fixes
 
 ## v2026.07.11 (Beta)
 - Compose-styled popups

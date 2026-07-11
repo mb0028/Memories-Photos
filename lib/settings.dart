@@ -41,9 +41,9 @@ class Settings {
           libInclude.add(line.split("[LIB_I]")[1]);
         else if (line.startsWith("[LIB_X]"))
           libExclude.add(line.split("[LIB_X]")[1]);
-        else if (line.startsWith("[FAV]") && await File(line.split("[FAV]")[1]).exists())
+        else if (line.startsWith("[FAV]"))
           favorites.add(line.split("[FAV]")[1]);
-        else if (line.startsWith("[ARC]") && await File(line.split("[ARC]")[1]).exists())
+        else if (line.startsWith("[ARC]"))
           archived.add(line.split("[ARC]")[1]);
         else if (line.startsWith("[GS]"))
           gridScale = int.parse(line.split("[GS]")[1]);
