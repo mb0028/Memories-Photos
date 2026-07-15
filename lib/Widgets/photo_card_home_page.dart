@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:memories_photos/Pages/photo_viewer_page.dart';
 import 'package:memories_photos/Structs/photo.dart';
 import 'package:memories_photos/Widgets/blur.dart';
+import 'package:memories_photos/settings.dart';
 
 class PhotoCardHomePage extends StatelessWidget {
   final List<Photo> query;
@@ -23,7 +24,7 @@ class PhotoCardHomePage extends StatelessWidget {
           child: Container(
             clipBehavior: .antiAlias,
             decoration: BoxDecoration(
-              borderRadius: .circular(20),
+              borderRadius: .circular(20 * Settings.rm),
               color: Theme.of(context).colorScheme.secondaryContainer
             ),
             child: Hero(
@@ -31,8 +32,9 @@ class PhotoCardHomePage extends StatelessWidget {
               child: Image.file(
                 File(query[i].path),
                 fit: .cover,
-                width: 190,
-                height: 190,
+                width: 192,
+                height: 192,
+                cacheWidth: 192,
               ),
             ),
           ),
@@ -44,8 +46,9 @@ class PhotoCardHomePage extends StatelessWidget {
             margin: .all(5),
             padding: .all(5),
             width: 180,
-            blur: 3,
-            color: Theme.of(context).colorScheme.tertiaryContainer.withAlpha(80),
+            roundneess: 15 * Settings.rm,
+            blur: 2.5,
+            color: Theme.of(context).colorScheme.surfaceBright.withAlpha(120),
             child: Text(
               query[i].name,
               maxLines: 2,

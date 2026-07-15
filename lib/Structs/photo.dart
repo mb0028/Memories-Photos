@@ -40,6 +40,12 @@ class Photo {
     return name;
   }
 
+  Future<int> get megaPixels async {
+    int x = int.tryParse(await ExifInterface.getAttribute(path, ExifTag.TAG_PIXEL_X_DIMENSION)) ?? 1;
+    int y = int.tryParse(await ExifInterface.getAttribute(path, ExifTag.TAG_PIXEL_Y_DIMENSION)) ?? 1;
+    return ((x * y) / 1000000).round();
+  }
+
   /// Returns: true if 5..9 AM
   bool get isTakenAtMorning => dateTaken.hour > 5 && dateTaken.hour < 10;
   /// Returns: true if 7..10 PM

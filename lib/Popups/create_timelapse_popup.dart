@@ -1,6 +1,6 @@
 import 'dart:io';
-import 'package:ffmpeg_kit_flutter_new_video/extensions.dart';
-import 'package:ffmpeg_kit_flutter_new_video/ffmpeg_kit.dart';
+// import 'package:ffmpeg_kit_flutter_new_video/extensions.dart';
+// import 'package:ffmpeg_kit_flutter_new_video/ffmpeg_kit.dart';
 import 'package:filesystem_picker/filesystem_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:memories_photos/Popups/toast.dart';
@@ -35,6 +35,9 @@ class _CreateTimelapseState extends State<_CreateTimelapse> {
 
   @override
   Widget build(BuildContext context) {
+    if (cmd == "")
+      return Placeholder();
+
     return Dialog(
       backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
       child: Container(
@@ -120,24 +123,24 @@ class _CreateTimelapseState extends State<_CreateTimelapse> {
 
                   cmd = '-f concat -r $framerate -safe 0 -i "$imagesListPath" -vf scale=1080:-1 -b:v 50M "$outFilePath"';
                   setState(() {});
-                  await FFmpegKit.execute(cmd).thenReturnResultOrLogs(
-                    (_) => outFilePath,
-                  ).then( (result) {
-                      Navigator.of(context).pop();
-                      showStyledToast("Saved!\n$result", context, duration: 6);
-                    }
-                  ).catchError( (error) {
-                      Navigator.of(context).pop();
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => Scaffold(
-                        body: ListView(
-                          padding: .all(30),
-                          children: [
-                            Text("FFmpeg command failed with error: $error"),
-                          ],
-                        ),
-                      )));
-                    }
-                  );
+                  // await FFmpegKit.execute(cmd).thenReturnResultOrLogs(
+                  //   (_) => outFilePath,
+                  // ).then( (result) {
+                  //     Navigator.of(context).pop();
+                  //     showStyledToast("Saved!\n$result", context, duration: 6);
+                  //   }
+                  // ).catchError( (error) {
+                  //     Navigator.of(context).pop();
+                  //     Navigator.of(context).push(MaterialPageRoute(builder: (context) => Scaffold(
+                  //       body: ListView(
+                  //         padding: .all(30),
+                  //         children: [
+                  //           Text("FFmpeg command failed with error: $error"),
+                  //         ],
+                  //       ),
+                  //     )));
+                  //   }
+                  // );
                 } catch (e) {
                   showStyledToast(e.toString(), context, duration: 5);
                 }

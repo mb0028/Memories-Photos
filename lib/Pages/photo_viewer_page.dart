@@ -88,13 +88,13 @@ class _PhotoViewerPageState extends State<PhotoViewerPage> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         centerTitle: true,
-        toolbarHeight: 80,
+        toolbarHeight: Platform.isAndroid ? 80 : 130,
         automaticallyImplyLeading: false,
         title: BlurredContainerMonoP(
-          blur: 8,
-          roundneess: 50,
+          blur: 10,
+          roundneess: 50 * Settings.rm,
           padding: .all(10),
-          color: Theme.of(context).colorScheme.primaryContainer.withAlpha(80),
+          color: Theme.of(context).colorScheme.primaryContainer.withAlpha(140),
           child: Column(
             spacing: 5,
             crossAxisAlignment: .stretch,
@@ -141,7 +141,10 @@ class _PhotoViewerPageState extends State<PhotoViewerPage> {
       ),
     
       drawer: Drawer(
-        backgroundColor: Theme.of(context).colorScheme.surfaceContainer.withAlpha(220),
+        shape: RoundedRectangleBorder(
+          borderRadius: .only(topRight: .circular(35 * Settings.rm), bottomRight: .circular(35 * Settings.rm)),
+        ),
+        backgroundColor: Theme.of(context).colorScheme.surface.withAlpha(245),
         width: 360,
         child: details,
       ),
@@ -169,11 +172,13 @@ class _FooterState extends State<_Footer> {
   Widget build(BuildContext context) {
     double size = 28;
     return BlurredContainerMonoP(
-      blur: 8,
-      roundneess: 50,
-      margin: .symmetric(horizontal: 15).add(.only(bottom: MediaQuery.paddingOf(context).bottom)),
+      blur: 10,
+      roundneess: 50 * Settings.rm,
+      margin: .symmetric(horizontal: 15).add(.only(
+        bottom: MediaQuery.paddingOf(context).bottom + (Platform.isWindows ? 15 : 0)
+      )),
       height: 55,
-      color: Theme.of(context).colorScheme.tertiaryContainer.withAlpha(80),
+      color: Theme.of(context).colorScheme.tertiaryContainer.withAlpha(140),
       child: Row(
         mainAxisAlignment: .spaceEvenly,
         children: [

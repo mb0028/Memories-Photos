@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memories_photos/settings.dart';
 
 // ignore: must_be_immutable
 class MonoPTextField extends StatelessWidget {
@@ -15,7 +16,7 @@ class MonoPTextField extends StatelessWidget {
       decoration: InputDecoration(
         hintText: placeholder,
         border: OutlineInputBorder(
-          borderRadius: .circular(15),
+          borderRadius: .circular(15 * Settings.rm),
         ),
       ),
     );

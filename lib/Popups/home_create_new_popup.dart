@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:memories_photos/Editor/collage_maker_page.dart';
 import 'package:memories_photos/Editor/editor_page.dart';
-import 'package:memories_photos/Pages/camera_timelapse_page.dart';
+import 'package:memories_photos/Pages/More/camera_timelapse_page.dart';
 import 'package:memories_photos/Popups/new_album_popup.dart';
+import 'package:memories_photos/Popups/toast.dart';
 import 'package:memories_photos/image_helper.dart';
 import 'package:memories_photos/settings.dart';
 
@@ -51,7 +54,9 @@ Future<bool> showHomeCreateNewPopup(BuildContext context) async {
                   onPressed: () async {
                     returnTrue = true;
                     Navigator.of(context).pop();
-                    await ImageHelper.takePicture(context);
+                    if (Platform.isWindows)
+                      showStyledToast("Coming Soon!", context);
+                     else await ImageHelper.takePicture(context);
                   },
                 ),
               ),
@@ -69,7 +74,9 @@ Future<bool> showHomeCreateNewPopup(BuildContext context) async {
             onPressed: () async {
               returnTrue = true;
               Navigator.of(context).pop();
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => CameraTakeTimelapsePage()));
+              if (Platform.isWindows) // TODO: Implement for windows
+                showStyledToast("Coming Soon!", context);
+              else Navigator.of(context).push(MaterialPageRoute(builder: (context) => CameraTakeTimelapsePage()));
             },
           ),
           SizedBox(height: 5),
@@ -83,6 +90,7 @@ Future<bool> showHomeCreateNewPopup(BuildContext context) async {
           ),
           ListTile(
             title: Text("Album"),
+            shape: RoundedRectangleBorder(borderRadius: .circular(25 * Settings.rm)),
             leading: Icon(Icons.photo_album_outlined),
             onTap: () async {
               await showNewAlbumDialog(context);
@@ -92,6 +100,7 @@ Future<bool> showHomeCreateNewPopup(BuildContext context) async {
           ),
           ListTile(
             title: Text("Collage"),
+            shape: RoundedRectangleBorder(borderRadius: .circular(25 * Settings.rm)),
             leading: Icon(Icons.collections_outlined),
             onTap: () {
               returnTrue = true;
@@ -101,6 +110,7 @@ Future<bool> showHomeCreateNewPopup(BuildContext context) async {
           ),
           ListTile(
             title: Text("Edit then save as"),
+            shape: RoundedRectangleBorder(borderRadius: .circular(25 * Settings.rm)),
             leading: Icon(Icons.image_outlined),
             onTap: () {
               returnTrue = true;
@@ -110,6 +120,7 @@ Future<bool> showHomeCreateNewPopup(BuildContext context) async {
           ),
           ListTile(
             title: Text("GIF"),
+            shape: RoundedRectangleBorder(borderRadius: .circular(25 * Settings.rm)),
             leading: Icon(Icons.gif_rounded),
             onTap: () {
               // TODO: create gif using png comparer 28

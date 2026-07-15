@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:memories_photos/Widgets/blur.dart';
+import 'package:memories_photos/settings.dart';
 
 void showStyledToast(String text, BuildContext context, {int duration = 3}) {
   showToastWidget(
@@ -9,7 +10,7 @@ void showStyledToast(String text, BuildContext context, {int duration = 3}) {
       child: BlurredContainerMonoP(
         padding: .symmetric(vertical: 8, horizontal: 15),
         color: Theme.of(context).colorScheme.tertiaryContainer.withAlpha(90),
-        roundneess: 25,
+        roundneess: 25 * Settings.rm,
         border: .all(
           width: 2,
           color: Colors.white

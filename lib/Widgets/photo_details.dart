@@ -176,7 +176,7 @@ class _DetailsTile extends StatelessWidget {
       child: ListTile(
         tileColor: Theme.of(context).colorScheme.secondaryContainer.withAlpha(200),
         shape: RoundedRectangleBorder(
-          borderRadius: .circular(18)
+          borderRadius: .circular(18 * Settings.rm)
         ),
         title: Text(
           text,

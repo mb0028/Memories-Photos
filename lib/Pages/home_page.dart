@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:memories_photos/Pages/More/albums_page.dart';
 import 'package:memories_photos/Pages/home_page_contents.dart';
@@ -20,15 +22,32 @@ class MonoPHomePageState extends State<MonoPHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: switch (currentPage) {
-        0 => HomePageContents(),
-        1 => PhotosPage(),
-        2 => AlbumsPage(),
-        int() => throw UnimplementedError(),
-      },
+      backgroundColor: Colors.black,
+      body: Stack(
+        alignment: .center,
+        children: [
+          SizedBox(
+            width: MediaQuery.widthOf(context),
+            height: MediaQuery.heightOf(context),
+            child: Image.asset(
+              "Assets/BG.png",
+              fit: .cover,
+            ),
+          ),
+          switch (currentPage) {
+            0 => HomePageContents(),
+            1 => PhotosPage(),
+            2 => AlbumsPage(),
+            int() => throw UnimplementedError(),
+          },
+        ],
+      ),
       extendBody: true,
       floatingActionButton: _FloatingBtn(),
       drawer: Drawer(
+        shape: RoundedRectangleBorder(
+          borderRadius: .only(topRight: .circular(35 * Settings.rm), bottomRight: .circular(35 * Settings.rm)),
+        ),
         elevation: 0,
         child: ListView(
           physics: BouncingScrollPhysics(),
@@ -77,18 +96,18 @@ class MonoPHomePageState extends State<MonoPHomePage> {
 
   Widget _bottomSheet(BuildContext context) {
     return BlurredContainerMonoP(
-      blur: 8,
-      margin: .symmetric(horizontal: 15).add(.only(bottom: MediaQuery.paddingOf(context).bottom)),
-      color: Theme.of(context).colorScheme.secondaryContainer.withAlpha(140),
-      roundneess: 50,
-      border: .all(
-        color: Theme.of(context).colorScheme.secondaryContainer.withAlpha(180),
-        width: 3
-      ),
+      blur: 10,
+      margin: .symmetric(horizontal: 15).add(.only(
+        bottom: MediaQuery.paddingOf(context).bottom + (Platform.isWindows ? 15 : 0)
+      )),
+      color: Theme.of(context).colorScheme.secondaryContainer.withAlpha(160),
+      roundneess: 50 * Settings.rm,
+      width: 250,
       child: NavigationBar(
         backgroundColor: Colors.transparent,
         selectedIndex: currentPage,
-        height: 62,
+        height: 50,
+        labelBehavior: .alwaysHide,
         onDestinationSelected: (value) {
           setState(() {
             currentPage = value;
@@ -129,7 +148,7 @@ class _DrawerItem extends StatelessWidget {
       padding: .all(5),
       child: ListTile(
         tileColor: Theme.of(context).colorScheme.surfaceContainerHigh,
-        shape: RoundedRectangleBorder(borderRadius: .circular(15)),
+        shape: RoundedRectangleBorder(borderRadius: .circular(15 * Settings.rm)),
         leading: Icon(icon),
         title: Text(title, textAlign: .center),
         onTap: () => onClick(),
@@ -146,14 +165,14 @@ class _FloatingBtn extends StatelessWidget {
       verticalDirection: .up,
       spacing: 10,
       children: [
-        SizedBox(height: 60),
+        SizedBox(height: 35),
         FloatingActionButton(
           onPressed: () async {
             showHomeCreateNewPopup(context); //TODO: Refresh on pop
           },
           tooltip: "Create",
           heroTag: "Create",
-          elevation: 1,
+          elevation: 0,
           backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
           child: Icon(Icons.add_a_photo_outlined, color: Theme.of(context).colorScheme.onTertiaryContainer,),
         ),
@@ -161,7 +180,7 @@ class _FloatingBtn extends StatelessWidget {
           onPressed: () => Scaffold.of(context).openDrawer(),
           tooltip: "Drawer",
           heroTag: "Drawer",
-          elevation: 1,
+          elevation: 0,
           backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
           child: Icon(Icons.more_horiz_rounded, color: Theme.of(context).colorScheme.onSecondaryContainer,),
         ),

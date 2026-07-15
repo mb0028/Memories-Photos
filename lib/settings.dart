@@ -2,6 +2,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:memories_photos/android_helper.dart';
 
 class Settings {
   static const String LexendDeca = "LexendDeca";
@@ -17,6 +18,8 @@ class Settings {
   static int recentsCount = 20;
   static int specialSectionsCount = 15;
   static int maxUndoCount = 10;
+  /// Roundness multiple
+  static double rm = 1.0;
   static bool showHidden = false;
   static bool trashInstead = false;
   static bool onlyShowDCIM = false;
@@ -32,7 +35,8 @@ class Settings {
   static List<String> archived = [];
 
   static Future<void> load() async {
-    if (await settingsFile.exists()) {
+    var access = await AndroidHelper.isExternalStorageManager();
+    if (access && await settingsFile.exists()) {
       var splitter = LineSplitter();
       var data = splitter.convert(await settingsFile.readAsString());
 
@@ -41,7 +45,7 @@ class Settings {
           libInclude.add(line.split("[LIB_I]")[1]);
         else if (line.startsWith("[LIB_X]"))
           libExclude.add(line.split("[LIB_X]")[1]);
-        else if (line.startsWith("[FAV]"))
+        else if (line.startsWith("[FAV]") && await File(line.split("[FAV]")[1]).exists())
           favorites.add(line.split("[FAV]")[1]);
         else if (line.startsWith("[ARC]"))
           archived.add(line.split("[ARC]")[1]);
@@ -53,6 +57,8 @@ class Settings {
           specialSectionsCount = int.parse(line.split("[SSC]")[1]);
         else if (line.startsWith("[MUC]"))
           maxUndoCount = int.parse(line.split("[MUC]")[1]);
+        else if (line.startsWith("[RM]"))
+          rm = double.parse(line.split("[RM]")[1]);
         else if (line.startsWith("[SH]"))
           showHidden = bool.parse(line.split("[SH]")[1]);
         else if (line.startsWith("[TI]"))
@@ -84,6 +90,7 @@ class Settings {
     data += "[RC]$recentsCount\n";
     data += "[SSC]$specialSectionsCount\n";
     data += "[MUC]$maxUndoCount\n";
+    data += "[RM]$rm\n";
     data += "[SH]$showHidden\n";
     data += "[TI]$trashInstead\n";
     data += "[OSDCIM]$onlyShowDCIM\n";

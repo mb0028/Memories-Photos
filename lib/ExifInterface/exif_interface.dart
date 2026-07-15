@@ -1,12 +1,13 @@
 import 'dart:io';
-
 import 'package:flutter/services.dart';
 
 class ExifInterface {
   static const channel = MethodChannel("mb28.monoP.exif/exif_channel");
 
   static Future<String> getAttribute(String path, String tag) async {
-    if (Platform.isWindows) return ""; // TODO: Implement ExifInterface for windows
+    if (Platform.isWindows) {
+      return "";
+    }  // TODO: Implement ExifInterface for windows
     try {
       final result = await channel.invokeMethod<String>("getAttribute",
         {"path": path, "tag": tag});

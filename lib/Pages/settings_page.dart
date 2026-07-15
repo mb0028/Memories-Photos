@@ -6,6 +6,7 @@ import 'package:memories_photos/Widgets/colorful_bg.dart';
 import 'package:memories_photos/main.dart';
 import 'package:memories_photos/settings.dart';
 import 'package:open_filex/open_filex.dart';
+import 'package:silky_scroll/silky_scroll.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -31,7 +32,8 @@ class _SettingsPageState extends State<SettingsPage> {
       body: ColorfulBackground(
         child: Container(
           padding: .symmetric(horizontal: 15),
-          child: ListView(
+          child: SilkyListView(
+            scrollSpeed: 1.5,
             physics: BouncingScrollPhysics(),
             children: [
               uiSettings(),
@@ -59,7 +61,7 @@ class _SettingsPageState extends State<SettingsPage> {
       padding: .all(10),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surfaceContainer.withAlpha(a),
-        borderRadius: .circular(25)
+        borderRadius: .circular(25 * Settings.rm)
       ),
       child: Column(
         children: [
@@ -94,7 +96,7 @@ class _SettingsPageState extends State<SettingsPage> {
               decoration: BoxDecoration(
                 color: Settings.accent,
                 border: .all(width: 2),
-                borderRadius: .circular(15)
+                borderRadius: .circular(15 * Settings.rm)
               ),
             ),
             trailing: IconButton.outlined(
@@ -107,6 +109,19 @@ class _SettingsPageState extends State<SettingsPage> {
               }, 
             ),
           ) : SizedBox(),
+          ListTile(
+            title: Text("Corner Roundness: ${(Settings.rm * 100).round()}%"),
+            subtitle: Slider(
+              min: 0.05,
+              max: 3.0,
+              showValueIndicator: .alwaysVisible,
+              value: Settings.rm.toDouble(),
+              onChanged: (value) {
+                setState(() => Settings.rm = value);
+                Settings.save();
+              },
+            ),
+          ),
         ]
       )
     );
@@ -117,7 +132,7 @@ class _SettingsPageState extends State<SettingsPage> {
       padding: .all(10),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surfaceContainer.withAlpha(a),
-        borderRadius: .circular(25)
+        borderRadius: .circular(25 * Settings.rm)
       ),
       child: Column(
         children: [
@@ -214,7 +229,7 @@ class _SettingsPageState extends State<SettingsPage> {
       padding: .all(10),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surfaceContainer.withAlpha(a),
-        borderRadius: .circular(25)
+        borderRadius: .circular(25 * Settings.rm)
       ),
       child: Column(
         crossAxisAlignment: .stretch,

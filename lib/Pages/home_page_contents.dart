@@ -5,6 +5,7 @@ import 'package:memories_photos/Structs/photo.dart';
 import 'package:memories_photos/Widgets/photo_card_home_page.dart';
 import 'package:memories_photos/photo_indexer.dart';
 import 'package:memories_photos/settings.dart';
+import 'package:silky_scroll/silky_scroll.dart';
 
 class HomePageContents extends StatefulWidget {
   const HomePageContents({
@@ -19,12 +20,16 @@ class _HomePageContentsState extends State<HomePageContents> {
   List<Photo> recents = [];
   List<Photo> sunrise = [];
   List<Photo> night = [];
+  List<Photo> highRes = [];
   Photo? header;
   bool noImages = false;
+  var scroll = ScrollController();
+  double bannerBlur = 0;
+  List<int> flexSize = Platform.isAndroid ? [1, 3, 1] : [1, 2, 3, 2, 1];
 
   Future<void> refresh() async {
-    recents = []; sunrise = []; night = [];
-    int sunriseCount = 0; int nightCount = 0;
+    recents = []; sunrise = []; night = []; highRes = [];
+    int sunriseCount = 0; int nightCount = 0; int hqCount = 0;
 
     await PhotoIndexer.startCache();
     var temp = PhotoIndexer.photos.toList();
@@ -43,7 +48,7 @@ class _HomePageContentsState extends State<HomePageContents> {
     if (Settings.specialSectionsShuffle) temp.shuffle();
     
     for (var p in temp) {
-      if (sunriseCount >= Settings.specialSectionsCount && nightCount >= Settings.specialSectionsCount)
+      if ((sunriseCount + nightCount + hqCount) > (Settings.specialSectionsCount * 3))
         break;
 
       if(p.isTakenAtMorning && sunriseCount < Settings.specialSectionsCount) {
@@ -53,7 +58,13 @@ class _HomePageContentsState extends State<HomePageContents> {
         night.add(p);
         nightCount++;
       }
+
+      if (await p.megaPixels >= 48 && hqCount < Settings.specialSectionsCount) {
+        highRes.add(p);
+        hqCount++;
+      }
     }
+    
     noImages = false;
     setState(() {});
   }
@@ -62,6 +73,7 @@ class _HomePageContentsState extends State<HomePageContents> {
   void initState() {
     refresh();
     super.initState();
+    scroll.addListener(() => setState(() => bannerBlur = (scroll.position.pixels * 0.1).clamp(0, 15) ));
   }
 
   @override
@@ -87,35 +99,49 @@ class _HomePageContentsState extends State<HomePageContents> {
     return RefreshIndicator(
       onRefresh: () async => await refresh(),
       elevation: 0,
-      child: ListView(
+      child: SilkyListView(
         padding: .only(bottom: 280),
+        controller: scroll,
         children: [
-          SizedBox(
-            height: 185,
-            child: header != null ? Image.file(
-              File(header!.path),
-              fit: .cover,
-            ) : SizedBox(),
+          Transform.scale(
+            scale: 1.1,
+            alignment: .bottomCenter,
+            child: SizedBox(
+              height: 150,
+              child: header != null ? ImageFiltered(
+                imageFilter: .blur(sigmaX: bannerBlur, sigmaY: 0),
+                child: Image.file(
+                  File(header!.path),
+                  fit: .cover,
+                ),
+              ) : SizedBox(),
+            ),
           ),
-          Text(
-            "Memories Photos",
-            textAlign: .center,
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.secondary,
-              fontSize: 32,
-              fontFamily: Settings.CherryBombOne
+          Transform.scale(
+            scale: 1 - (bannerBlur * 0.07).clamp(0, 1),
+            child: Text(
+              "Memories Photos",
+              textAlign: .center,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.secondary,
+                fontSize: 32,
+                fontFamily: Settings.CherryBombOne
+              ),
             ),
           ),
           SizedBox(height: 30),
       
           _SectionHeader(text: "Recent Photos"),
-          _Section(photos: recents, flexWeights: [1, 3, 1]),
+          _Section(photos: recents, flexWeights: flexSize),
       
-          _SectionHeader(text: "Sunrise Captures"), // TODO: better naming + random section names
-          _Section(photos: sunrise, flexWeights: [1, 4, 2]),
+          sunrise.isNotEmpty ? _SectionHeader(text: "Sunrise Captures") : SizedBox(), // TODO: better naming + random section names
+          sunrise.isNotEmpty ? _Section(photos: sunrise, flexWeights: flexSize) : SizedBox(),
       
-          _SectionHeader(text: "Night Captures"), // TODO: better naming + random section names
-          _Section(photos: night, flexWeights: [1, 4, 2])
+          night.isNotEmpty ? _SectionHeader(text: "Night Captures") : SizedBox(), // TODO: better naming + random section names
+          night.isNotEmpty ? _Section(photos: night, flexWeights: flexSize) : SizedBox(),
+
+          highRes.isNotEmpty ? _SectionHeader(text: "High Quality") : SizedBox(), // TODO: better naming + random section names
+          highRes.isNotEmpty ? _Section(photos: highRes, flexWeights: flexSize) : SizedBox(),
         ],
       ),
     );
@@ -144,7 +170,6 @@ class _Section extends StatelessWidget {
   const _Section({
     required this.photos, required this.flexWeights
   });
-
   final List<Photo> photos;
   final List<int> flexWeights;
 

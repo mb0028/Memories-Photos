@@ -7,6 +7,7 @@ import 'package:memories_photos/main.dart';
 import 'package:memories_photos/photo_indexer.dart';
 import 'package:memories_photos/settings.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:silky_scroll/silky_scroll.dart';
 
 class PhotosPage extends StatefulWidget {
   final String? folder;
@@ -56,6 +57,7 @@ class _PhotosPageState extends State<PhotosPage> {
     var padding = MediaQuery.paddingOf(context);
     return Scaffold(
       extendBodyBehindAppBar: true,
+      backgroundColor: widget.folder == null ? Colors.transparent : null,
       
       appBar: _appbar(context),
       
@@ -70,11 +72,12 @@ class _PhotosPageState extends State<PhotosPage> {
             )
           ) : SizedBox() ,
           Expanded(
-            child: GridView.builder(
+            child: SilkyGridView.builder(
+              scrollSpeed: 1.5,
               padding: .only(bottom: 200, top: widget.folder == null ? padding.top + 60 : 10,
                 left: 5, right: 5),
               physics: BouncingScrollPhysics(),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: (screenWidth / Settings.gridScale).toInt()),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: (screenWidth / Settings.gridScale).toInt().clamp(1, 100)),
               itemCount: photos!.length,
               itemBuilder: (context, i) => PhotoCard(i: i, query: photos!),
             ),
@@ -90,7 +93,7 @@ class _PhotosPageState extends State<PhotosPage> {
       backgroundColor: Colors.transparent,
       surfaceTintColor: Colors.transparent,
       title: BlurredContainerMonoP(
-        roundneess: 50,
+        roundneess: 50 * Settings.rm,
         padding: .symmetric(vertical: 10, horizontal: 20),
         color: appbarColorScheme.secondaryContainer.withAlpha(120),
         // border: .all(
@@ -140,6 +143,8 @@ class _PhotosPageState extends State<PhotosPage> {
             await SharePlus.instance.share(params);
           }
         ) : SizedBox(),
+
+        SizedBox(width: 10),
 
         IconButton.filled(
           style: ButtonStyle(

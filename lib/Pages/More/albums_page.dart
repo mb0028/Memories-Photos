@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:memories_photos/Widgets/album_card.dart';
 import 'package:memories_photos/photo_indexer.dart';
 import 'package:memories_photos/settings.dart';
+import 'package:silky_scroll/silky_scroll.dart';
 
 class AlbumsPage extends StatelessWidget {
   const AlbumsPage({super.key});
@@ -10,39 +11,19 @@ class AlbumsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     var screenWidth = MediaQuery.widthOf(context);
 
-    return Column(
-      crossAxisAlignment: .stretch,
-      spacing: 5,
-      children: [
-        SizedBox(
-          height: 135,
-          child: Center(
-            child: Text(
-              "Albums",
-              style: TextStyle(
-                fontFamily: Settings.CherryBombOne,
-                fontSize: 36,
-                color: Theme.of(context).colorScheme.onSurfaceVariant
-              ),
-            ),
-          ),
+    return Padding(
+      padding: .symmetric(horizontal: 5),
+      child: SilkyGridView.builder(
+        scrollSpeed: 1.5,
+        padding: .only(bottom: 250, top: MediaQuery.paddingOf(context).top + 5),
+        physics: BouncingScrollPhysics(),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: (screenWidth / Settings.gridScale / 1.5).toInt().clamp(1, 100),
+          childAspectRatio: 0.75
         ),
-        Expanded(
-          child: Padding(
-            padding: .symmetric(horizontal: 5),
-            child: GridView.builder(
-              padding: .only(bottom: 250),
-              physics: BouncingScrollPhysics(),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: (screenWidth / Settings.gridScale / 1.5).toInt(),
-                childAspectRatio: 0.75
-              ),
-              itemCount: PhotoIndexer.albums.length,
-              itemBuilder: (context, i) => AlbumCard(path: PhotoIndexer.albums.keys.elementAt(i))
-            ),
-          ),
-        ),
-      ],
+        itemCount: PhotoIndexer.albums.length,
+        itemBuilder: (context, i) => AlbumCard(path: PhotoIndexer.albums.keys.elementAt(i))
+      ),
     );
   }
 }

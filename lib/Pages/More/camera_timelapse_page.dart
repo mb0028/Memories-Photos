@@ -129,7 +129,14 @@ class _CameraTakeTimelapsePageState extends State<CameraTakeTimelapsePage> {
           child: Stack(
             alignment: .topCenter,
             children: [
-              showCameraPreview ? CameraPreview(controller) : SizedBox(height: 500),
+              showCameraPreview ? Container(
+                clipBehavior: .antiAlias,
+                padding: .all(1.5),
+                decoration: BoxDecoration(
+                  borderRadius: .circular(25 * Settings.rm)
+                ),
+                child: CameraPreview(controller)
+              ) : SizedBox(height: 500),
               Column(
                 mainAxisAlignment: .spaceBetween,
                 children: [

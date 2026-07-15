@@ -1,5 +1,9 @@
 ## Upcoming Version
+- Massive amount of ui changes
+- New homepage section: high quality images
+- Smooth scroll for windows
 - Small bug fixes
+- Temporary disabled timelapse video making because of ffmpeg package bugs
 
 ## v2026.07.11 (Beta)
 - Compose-styled popups

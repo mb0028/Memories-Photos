@@ -40,7 +40,7 @@ Future<bool> photosMoreActionPopup(BuildContext context, Photo photo, bool moreA
             },
           ) : SizedBox(),
           moreActions ? ListTile(
-            title: Text("Chnage Comment"),
+            title: Text("Change Comment"),
             leading: Icon(Icons.insert_comment_outlined),
             onTap: () async {
               needsRefresh = true;

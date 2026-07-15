@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:memories_photos/Pages/photos_page.dart';
 import 'package:memories_photos/Widgets/blur.dart';
 import 'package:memories_photos/photo_indexer.dart';
+import 'package:memories_photos/settings.dart';
 
 class AlbumCard extends StatelessWidget {
   final String path;
@@ -27,30 +28,29 @@ class AlbumCard extends StatelessWidget {
         padding: .all(5),
         margin: .all(5),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.secondaryContainer,
-          borderRadius: .only(bottomLeft: .circular(10), bottomRight: .circular(25),
-            topLeft: .circular(25), topRight: .circular(10))
+          color: Theme.of(context).colorScheme.secondaryContainer.withAlpha(200),
+          borderRadius: .only(bottomLeft: .circular(10 * Settings.rm), bottomRight: .circular(25 * Settings.rm),
+            topLeft: .circular(25 * Settings.rm), topRight: .circular(10 * Settings.rm))
         ),
         child: Stack(
           alignment: .bottomCenter,
           children: [
-
             Container(
               clipBehavior: .antiAlias,
               decoration: BoxDecoration(
-                borderRadius: .only(bottomLeft: .circular(8), bottomRight: .circular(20),
-                  topLeft: .circular(20), topRight: .circular(8))
+                borderRadius: .only(bottomLeft: .circular(8 * Settings.rm), bottomRight: .circular(20 * Settings.rm),
+                  topLeft: .circular(20 * Settings.rm), topRight: .circular(8 * Settings.rm))
               ),
               child: thumbnail != null ? Image.file(
                 File(thumbnail),
-                width: 256,
-                height: 256,
+                width: 512,
+                height: 512,
                 fit: .cover,
               ) : null,
             ),
             
             BlurredContainerMonoP(
-              blur: 10,
+              blur: 6,
               height: 60,
               width: 400,
               margin: .all(5),

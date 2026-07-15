@@ -104,12 +104,10 @@ class MainAppState extends State<MainApp> {
         color: Theme.of(context).colorScheme.onSecondaryContainer
       ),
       decoration: BoxDecoration(
-        borderRadius: .circular(50),
+        borderRadius: .circular(20 * Settings.rm),
         color: Theme.of(context).colorScheme.surfaceContainerHighest,
         border: .all(width: 3, color: Theme.of(context).colorScheme.outlineVariant)
       )
     );
   }
 }
-
-

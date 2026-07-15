@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:memories_photos/Pages/photo_viewer_page.dart';
 import 'package:memories_photos/Structs/photo.dart';
+import 'package:memories_photos/settings.dart';
 
 class PhotoCard extends StatelessWidget {
   final List<Photo> query;
@@ -16,19 +17,19 @@ class PhotoCard extends StatelessWidget {
           builder: (context) => PhotoViewerPage(query: query, i: i),
         )
       ),
+      onLongPress: () => query[i].showMoreActionsPopup(context, evenMoreActions: true),
       child: Container(
         clipBehavior: .antiAlias,
         margin: .all(2),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceContainer,
-          borderRadius: .all(.circular(25)),
+          color: Theme.of(context).colorScheme.surfaceContainer.withAlpha(200),
+          borderRadius: .circular(25 * Settings.rm),
         ),
         child: Hero(
           tag: query[i],
           child: Image.file(
             File(query[i].path),
-            cacheHeight: 180,
-            cacheWidth: 180,
+            cacheWidth: 256,
             fit: .cover,
           ),
         ),
