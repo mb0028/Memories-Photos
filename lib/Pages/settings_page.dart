@@ -148,6 +148,17 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
           ),
           ListTile(
+            title: Text("In-App Camera"),
+            subtitle: Text("Use in app camera instead of switching to phone's default camera app", style: TextStyle(fontSize: 12)),
+            leading: Switch(
+              value: Settings.inAppCamera,
+              onChanged: (value) {
+                setState(() => Settings.inAppCamera = value);
+                Settings.save();
+              },
+            ),
+          ),
+          ListTile(
             title: Text("Shuffle special sections"),
             subtitle: Text("Shuffle homepage special sections (like sunrise & night sections)", style: TextStyle(fontSize: 12)),
             leading: Switch(
@@ -158,28 +169,28 @@ class _SettingsPageState extends State<SettingsPage> {
               },
             ),
           ),
-          ListTile(
-            title: Text("Trash instead of delete"),
-            subtitle: Text("Move photos to trash instead of deleting (Coming soon)", style: TextStyle(fontSize: 12)),
-            leading: Switch(
-              value: Settings.trashInstead,
-              onChanged: (value) {
-                setState(() => Settings.trashInstead = value);
-                Settings.save();
-              },
-            ),
-          ),
-          ListTile(
-            title: Text("Show hidden photos"),
-            subtitle: Text("Not works as excepted. don't turn it on until next updates", style: TextStyle(fontSize: 12)),
-            leading: Switch(
-              value: Settings.showHidden,
-              onChanged: (value) {
-                setState(() => Settings.showHidden = value);
-                Settings.save();
-              },
-            ),
-          ),
+          // ListTile(
+          //   title: Text("Trash instead of delete"),
+          //   subtitle: Text("Move photos to trash instead of deleting (Coming soon)", style: TextStyle(fontSize: 12)),
+          //   leading: Switch(
+          //     value: Settings.trashInstead,
+          //     onChanged: (value) {
+          //       setState(() => Settings.trashInstead = value);
+          //       Settings.save();
+          //     },
+          //   ),
+          // ),
+          // ListTile(
+          //   title: Text("Show hidden photos"),
+          //   subtitle: Text("Not works as excepted. don't turn it on until next updates", style: TextStyle(fontSize: 12)),
+          //   leading: Switch(
+          //     value: Settings.showHidden,
+          //     onChanged: (value) {
+          //       setState(() => Settings.showHidden = value);
+          //       Settings.save();
+          //     },
+          //   ),
+          // ),
           ListTile(
             title: Text("Max home recent items: ${Settings.recentsCount}"),
             subtitle: Slider(

@@ -1,6 +1,7 @@
 ## Upcoming Version
 - Massive amount of ui changes
 - New homepage section: high quality images
+- Option for turning in-app camera on or off
 - Smooth scroll for windows
 - Adaptive coloring is now works for android
 - Small bug fixes
