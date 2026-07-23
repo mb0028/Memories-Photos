@@ -2,6 +2,7 @@
 - Massive amount of ui changes
 - New homepage section: high quality images
 - Smooth scroll for windows
+- Adaptive coloring is now works for android
 - Small bug fixes
 - Temporary disabled timelapse video making because of ffmpeg package bugs
 

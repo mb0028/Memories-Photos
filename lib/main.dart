@@ -48,8 +48,13 @@ class MainAppState extends State<MainApp> {
 
   void changeColorSeed() async {
     var col = Settings.accent;
-    if (Settings.adaptiveColors)
-      col = await DynamicColorPlugin.getAccentColor() ?? Settings.accent;
+    if (Settings.adaptiveColors) {
+      if (Platform.isAndroid)
+        col = (await DynamicColorPlugin.getCorePalette())?.toColorScheme().primary ?? Settings.accent;
+      else
+        col = await DynamicColorPlugin.getAccentColor() ?? Settings.accent;
+    }
+      
     setState(() => seed = col);
   }
 
