@@ -11,8 +11,6 @@ import 'package:memories_photos/Widgets/photo_details.dart';
 import 'package:memories_photos/settings.dart';
 import 'package:share_plus/share_plus.dart';
 
-/// Holds path to the photo and helpful methods. <br/>
-/// F**k dart with this lowercase naming rule
 class Photo {
   Photo({required this.path});
 
@@ -29,7 +27,7 @@ class Photo {
 
   // Fields
   final String path;
-  DateTime dateTaken = DateTime(0); // Its used a lot so better storing it in memeory
+  DateTime dateTaken = DateTime(0);
   
   String get name => path.substring(path.lastIndexOf(Platform.pathSeparator) + 1);
   

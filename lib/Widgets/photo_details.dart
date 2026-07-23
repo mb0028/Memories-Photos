@@ -63,7 +63,7 @@ Future<Widget> getPhotoDetailsWidget(Photo photo, BuildContext context) async {
   };
 
   return Container(
-    margin: .all(10),
+    margin: .all(6),
     padding: .only(top: 50),
     child: Column(
       spacing: 3,
@@ -90,7 +90,7 @@ Future<Widget> getPhotoDetailsWidget(Photo photo, BuildContext context) async {
               ) : SizedBox(),
 
               _DetailsTile(
-                text: "${File(path).lengthSync()} bytes\n${x}x$y  •  ${((xi * yi) / 1000000).round()} MP", 
+                text: "${await File(path).length()} bytes\n${x}x$y  •  ${((xi * yi) / 1000000).round()} MP", 
                 icon: Icon(Icons.photo_size_select_large, size: 30, color: Theme.of(context).colorScheme.onSecondaryContainer),
                 fontSize: 15.5,
               ),
@@ -126,7 +126,7 @@ Future<Widget> getPhotoDetailsWidget(Photo photo, BuildContext context) async {
                   onPressed: () => AndroidHelper.openWithMaps(lat, long),
                   tooltip: "Open in google maps",
                 ),
-                fontSize: 14,
+                fontSize: 13.5,
               ) : SizedBox(),
 
               SizedBox(height: 50)
@@ -181,11 +181,11 @@ class _DetailsTile extends StatelessWidget {
         title: Text(
           text,
           style: TextStyle(
-            color: Theme.of(context).colorScheme.onTertiaryContainer,
+            color: Theme.of(context).colorScheme.onSecondaryContainer,
             fontSize: fontSize,
             fontFamily: font
           ),
-          maxLines: 3,
+          maxLines: 4,
           overflow: .ellipsis,
         ),
         leading: icon,

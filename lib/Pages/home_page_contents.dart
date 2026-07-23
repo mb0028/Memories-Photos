@@ -25,7 +25,6 @@ class _HomePageContentsState extends State<HomePageContents> {
   bool noImages = false;
   var scroll = ScrollController();
   double bannerBlur = 0;
-  List<int> flexSize = Platform.isAndroid ? [1, 3, 1] : [1, 2, 3, 2, 1];
 
   Future<void> refresh() async {
     recents = []; sunrise = []; night = []; highRes = [];
@@ -73,7 +72,7 @@ class _HomePageContentsState extends State<HomePageContents> {
   void initState() {
     refresh();
     super.initState();
-    scroll.addListener(() => setState(() => bannerBlur = (scroll.position.pixels * 0.1).clamp(0, 15) ));
+    scroll.addListener(() => setState(() => bannerBlur = (scroll.position.pixels * 0.3).clamp(0, 30) ));
   }
 
   @override
@@ -132,16 +131,16 @@ class _HomePageContentsState extends State<HomePageContents> {
           SizedBox(height: 30),
       
           _SectionHeader(text: "Recent Photos"),
-          _Section(photos: recents, flexWeights: flexSize),
+          _Section(photos: recents, flexWeights: [1, 3, 1]),
       
           sunrise.isNotEmpty ? _SectionHeader(text: "Sunrise Captures") : SizedBox(), // TODO: better naming + random section names
-          sunrise.isNotEmpty ? _Section(photos: sunrise, flexWeights: flexSize) : SizedBox(),
+          sunrise.isNotEmpty ? _Section(photos: sunrise, flexWeights: [1, 3, 1]) : SizedBox(),
       
           night.isNotEmpty ? _SectionHeader(text: "Night Captures") : SizedBox(), // TODO: better naming + random section names
-          night.isNotEmpty ? _Section(photos: night, flexWeights: flexSize) : SizedBox(),
+          night.isNotEmpty ? _Section(photos: night, flexWeights: [1, 3, 1]) : SizedBox(),
 
           highRes.isNotEmpty ? _SectionHeader(text: "High Quality") : SizedBox(), // TODO: better naming + random section names
-          highRes.isNotEmpty ? _Section(photos: highRes, flexWeights: flexSize) : SizedBox(),
+          highRes.isNotEmpty ? _Section(photos: highRes, flexWeights: [1, 3, 1]) : SizedBox(),
         ],
       ),
     );

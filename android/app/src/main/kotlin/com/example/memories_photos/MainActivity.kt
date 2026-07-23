@@ -90,6 +90,6 @@ class MainActivity : FlutterActivity() {
                 }
             }
         }
-    }
 
+    }
 }

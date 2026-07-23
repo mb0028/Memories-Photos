@@ -4,7 +4,7 @@ import androidx.exifinterface.media.ExifInterface as EX
 
 class ExifDart {
 
-    public fun getAttribute(path: String, att: String): String {
+    fun getAttribute(path: String, att: String): String {
         val exif = EX(path)
         val result = exif.getAttribute(att)
         if (result != null)
@@ -12,7 +12,7 @@ class ExifDart {
         return ""
     }
 
-    public fun setAttribute(path: String, att: String, value: String): Boolean {
+    fun setAttribute(path: String, att: String, value: String): Boolean {
         try {
             val exif = EX(path)
             exif.setAttribute(att, value)

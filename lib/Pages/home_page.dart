@@ -22,7 +22,6 @@ class MonoPHomePageState extends State<MonoPHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
       body: Stack(
         alignment: .center,
         children: [

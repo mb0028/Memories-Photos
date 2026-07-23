@@ -60,35 +60,40 @@ class _PhotoViewerPageState extends State<PhotoViewerPage> {
     return Scaffold(
       extendBody: true,
       extendBodyBehindAppBar: true,
-      bottomNavigationBar: _Footer(photo: widget.query[i]),
       
-      body: Center(
-        child: PhotoViewGallery.builder(
-          itemCount: widget.query.length,
-          gaplessPlayback: true,
-          enableRotation: Settings.allowRotateInPView,
-          scrollPhysics: BouncingScrollPhysics(),
-          pageController: PageController(initialPage: i),
-          onPageChanged: (index) {
-            i = index;
-            getName();
-            adaptColor();
-          },
-          
-          backgroundDecoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface
+      body: Stack(
+        alignment: .bottomCenter,
+        children: [
+          Center(
+            child: PhotoViewGallery.builder(
+              itemCount: widget.query.length,
+              gaplessPlayback: true,
+              enableRotation: Settings.allowRotateInPView,
+              scrollPhysics: BouncingScrollPhysics(),
+              pageController: PageController(initialPage: i),
+              onPageChanged: (index) {
+                i = index;
+                getName();
+                adaptColor();
+              },
+              
+              backgroundDecoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surface
+              ),
+              builder: (context, index) => PhotoViewGalleryPageOptions(
+                imageProvider: FileImage(File(widget.query[index].path)),
+                heroAttributes: PhotoViewHeroAttributes(tag: widget.query[index]),
+              ),
+            ),
           ),
-          builder: (context, index) => PhotoViewGalleryPageOptions(
-            imageProvider: FileImage(File(widget.query[index].path)),
-            heroAttributes: PhotoViewHeroAttributes(tag: widget.query[index]),
-          ),
-        ),
+          _Footer(photo: widget.query[i])
+        ],
       ),
       
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         centerTitle: true,
-        toolbarHeight: Platform.isAndroid ? 80 : 130,
+        toolbarHeight: Platform.isAndroid ? 90 : 130,
         automaticallyImplyLeading: false,
         title: BlurredContainerMonoP(
           blur: 10,
@@ -142,10 +147,10 @@ class _PhotoViewerPageState extends State<PhotoViewerPage> {
     
       drawer: Drawer(
         shape: RoundedRectangleBorder(
-          borderRadius: .only(topRight: .circular(35 * Settings.rm), bottomRight: .circular(35 * Settings.rm)),
+          borderRadius: .only(topRight: .circular(45 * Settings.rm), bottomRight: .circular(45 * Settings.rm)),
         ),
         backgroundColor: Theme.of(context).colorScheme.surface.withAlpha(245),
-        width: 360,
+        width: 380,
         child: details,
       ),
       onDrawerChanged: (isOpened) async {
@@ -173,11 +178,12 @@ class _FooterState extends State<_Footer> {
     double size = 28;
     return BlurredContainerMonoP(
       blur: 10,
+      width: 230,
+      height: 55,
       roundneess: 50 * Settings.rm,
       margin: .symmetric(horizontal: 15).add(.only(
         bottom: MediaQuery.paddingOf(context).bottom + (Platform.isWindows ? 15 : 0)
       )),
-      height: 55,
       color: Theme.of(context).colorScheme.tertiaryContainer.withAlpha(140),
       child: Row(
         mainAxisAlignment: .spaceEvenly,

@@ -47,7 +47,7 @@ class PhotoCardHomePage extends StatelessWidget {
             padding: .all(5),
             width: 180,
             roundneess: 15 * Settings.rm,
-            blur: 2.5,
+            blur: 3.5,
             color: Theme.of(context).colorScheme.surfaceBright.withAlpha(120),
             child: Text(
               query[i].name,
