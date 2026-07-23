@@ -35,11 +35,11 @@ class _CreateTimelapseState extends State<_CreateTimelapse> {
 
   @override
   Widget build(BuildContext context) {
-    if (cmd == "")
-      return Placeholder();
+    if (cmd == "") // Temporaty disabled Timelapse making
+      return Center(child: Text("Coming Soon"));
 
     return Dialog(
-      backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+      backgroundColor: Theme.of(context).colorScheme.surfaceContainer, //TODO: Change it to secondary container
       child: Container(
         padding: .all(25),
         width: 500,
@@ -89,7 +89,7 @@ class _CreateTimelapseState extends State<_CreateTimelapse> {
                       );
                       
                       albumPath.text = t ?? "";
-                    }, //TODO
+                    },
                   ),
                 ),
               ],

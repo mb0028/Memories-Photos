@@ -44,11 +44,11 @@ class Photo {
     return ((x * y) / 1000000).round();
   }
 
-  /// Returns: true if 5..9 AM
+  /// Returns: true if 5..9:59 AM
   bool get isTakenAtMorning => dateTaken.hour > 5 && dateTaken.hour < 10;
-  /// Returns: true if 7..10 PM
+  /// Returns: true if 7..10:59 PM
   bool get isTakenAtEvening => dateTaken.hour > 19 && dateTaken.hour < 23;
-  /// Returns: true if 6AM..8PM . false = isTakenAtNight
+  /// Returns: true if 6AM..8:59PM . false = isTakenAtNight
   bool get isTakenAtDay => dateTaken.hour > 6 && dateTaken.hour < 21;
 
   bool get isInFavorites => Settings.favorites.contains(path);
@@ -81,10 +81,20 @@ class Photo {
     );
 
     if (delete) {
-      await File(path).delete();
-      if (isInFavorites)
-        Settings.favorites.remove(path);
-      showStyledToast("Deleted!", context);
+      if (Settings.trashInstead) {
+        var dir = path.substring(0, path.lastIndexOf(Platform.pathSeparator) + 1);
+        var fileName = path.substring(path.lastIndexOf(Platform.pathSeparator) + 1);
+        await File(path).rename("$dir.${Settings.trashFileName}$fileName");
+
+        if (isInFavorites)
+          Settings.favorites.remove(path);
+        showStyledToast("Moved to trash!", context);
+      } else {
+        await File(path).delete();
+        if (isInFavorites)
+          Settings.favorites.remove(path);
+        showStyledToast("Deleted!", context);
+      }
       onDelete();
     }
 
@@ -93,8 +103,9 @@ class Photo {
 
   Future<bool> showEditCommentPopup(BuildContext context, Function onEdit) async {
     var ctrlr = TextEditingController(text: await ExifInterface.getAttribute(path, ExifTag.TAG_USER_COMMENT));
-    List<String> randomPlaceholders = ["Beautiful skies", "Rainy ☔", "Son 😭😭😭😭", "hehehe (●'◡'●)", "Night", "Today is ____",
-      "⛅", "☀️", "💀", "That was so scary!", "Here we at ____"]; //TODO: add more
+    List<String> randomPlaceholders = ["Beautiful skies", "Rainy ☔", "Son 😭😭😭😭", "Night", "Today is ____",
+      "⛅", "☀️", "💀", "Landscape at", "Here we at 192.168.__.__", "Write comment", "Placeholder"];
+      //TODO: add more more! more!!
 
     bool edited = await showMonoPDialog(
       context,
@@ -124,4 +135,7 @@ class Photo {
     );
     await SharePlus.instance.share(params);
   }
+
+  Future<void> restoreFromTrash() async => await File(path).rename(path.replaceFirst(".${Settings.trashFileName}", ""));
+
 }

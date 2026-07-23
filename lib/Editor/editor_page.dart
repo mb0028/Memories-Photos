@@ -78,7 +78,7 @@ class _EditorPageState extends State<EditorPage> {
 
   Widget? bottomBar() {
     return widget.photo != null ? Container(
-      margin: .all(15),
+      margin: .all(15).add(.only(bottom: MediaQuery.paddingOf(context).bottom + 5)),
       height: 75,
       child: Column(
         spacing: 10,

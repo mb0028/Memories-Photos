@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:memories_photos/android_helper.dart';
+import 'package:memories_photos/Scripts/android_helper.dart';
 import 'package:memories_photos/main.dart';
 
 class PermissionsPage extends StatefulWidget {

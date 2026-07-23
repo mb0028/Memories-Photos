@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:memories_photos/Pages/More/albums_page.dart';
+import 'package:memories_photos/Pages/More/trash_page.dart';
 import 'package:memories_photos/Pages/home_page_contents.dart';
 import 'package:memories_photos/Pages/photos_page.dart';
 import 'package:memories_photos/Pages/settings_page.dart';
@@ -22,6 +23,9 @@ class MonoPHomePageState extends State<MonoPHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
+      floatingActionButton: _FloatingBtn(),
+      
       body: Stack(
         alignment: .center,
         children: [
@@ -41,8 +45,7 @@ class MonoPHomePageState extends State<MonoPHomePage> {
           },
         ],
       ),
-      extendBody: true,
-      floatingActionButton: _FloatingBtn(),
+      
       drawer: Drawer(
         shape: RoundedRectangleBorder(
           borderRadius: .only(topRight: .circular(35 * Settings.rm), bottomRight: .circular(35 * Settings.rm)),
@@ -79,7 +82,7 @@ class MonoPHomePageState extends State<MonoPHomePage> {
             _DrawerItem(
               title: "Trash",
               icon: Icons.recycling_rounded,
-              onClick: () {},
+              onClick: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => TrashPage())),
             ),
             _DrawerItem(
               title: "Favorites",
@@ -166,9 +169,7 @@ class _FloatingBtn extends StatelessWidget {
       children: [
         SizedBox(height: 35),
         FloatingActionButton(
-          onPressed: () async {
-            showHomeCreateNewPopup(context); //TODO: Refresh on pop
-          },
+          onPressed: () async => await showHomeCreateNewPopup(context),
           tooltip: "Create",
           heroTag: "Create",
           elevation: 0,

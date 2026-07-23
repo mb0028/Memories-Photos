@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:memories_photos/Pages/photos_page.dart';
 import 'package:memories_photos/Widgets/blur.dart';
-import 'package:memories_photos/photo_indexer.dart';
+import 'package:memories_photos/Scripts/photo_indexer.dart';
 import 'package:memories_photos/settings.dart';
 
 class AlbumCard extends StatelessWidget {

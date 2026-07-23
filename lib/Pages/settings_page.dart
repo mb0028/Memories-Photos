@@ -47,7 +47,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: Text(Platform.isWindows ? "Edit Settings.txt" : "View Settings.txt"),
               ),
               SizedBox(height: 8),
-              Text("Settings file path: ${Settings.settingsFile.path}"),
+              Text("Settings file path: ${Settings.settingsFile.path}\n\nApp files path: ${Settings.appPath}\n\nApp cache path: ${Settings.appCache}"),
               SizedBox(height: 50),
             ],
           ),
@@ -122,6 +122,18 @@ class _SettingsPageState extends State<SettingsPage> {
               },
             ),
           ),
+          ListTile(
+            title: Text("Blur Effect"),
+            subtitle: Text("Not affacts performance that much. even on low-end devices", style: TextStyle(fontSize: 12)),
+            leading: Switch(
+              value: Settings.uiBlur,
+              onChanged: (value) {
+                setState(() => Settings.uiBlur = value);
+                Settings.save();
+                MainAppState.instance!.changeColorSeed();
+              },
+            ),
+          ),
         ]
       )
     );
@@ -169,17 +181,17 @@ class _SettingsPageState extends State<SettingsPage> {
               },
             ),
           ),
-          // ListTile(
-          //   title: Text("Trash instead of delete"),
-          //   subtitle: Text("Move photos to trash instead of deleting (Coming soon)", style: TextStyle(fontSize: 12)),
-          //   leading: Switch(
-          //     value: Settings.trashInstead,
-          //     onChanged: (value) {
-          //       setState(() => Settings.trashInstead = value);
-          //       Settings.save();
-          //     },
-          //   ),
-          // ),
+          ListTile(
+            title: Text("Trash instead of delete"),
+            subtitle: Text("Move photos to trash instead of deleting it.", style: TextStyle(fontSize: 12)),
+            leading: Switch(
+              value: Settings.trashInstead,
+              onChanged: (value) {
+                setState(() => Settings.trashInstead = value);
+                Settings.save();
+              },
+            ),
+          ),
           // ListTile(
           //   title: Text("Show hidden photos"),
           //   subtitle: Text("Not works as excepted. don't turn it on until next updates", style: TextStyle(fontSize: 12)),

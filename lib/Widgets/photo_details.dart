@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:memories_photos/ExifInterface/exif_interface.dart';
 import 'package:memories_photos/ExifInterface/tags.dart';
 import 'package:memories_photos/Structs/photo.dart';
-import 'package:memories_photos/android_helper.dart';
+import 'package:memories_photos/Scripts/android_helper.dart';
 import 'package:memories_photos/settings.dart';
 
 Future<Widget> getPhotoDetailsWidget(Photo photo, BuildContext context) async {

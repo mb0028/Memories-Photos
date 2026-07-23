@@ -6,6 +6,11 @@ A gallery app for android & windows
 
 Download Beta (Android only) from release page
 
+## Screenshots
+
+<img height="500" src="/Things/demo (1).png" />
+<img height="500" src="/Things/demo (2).png" />
+<img height="500" src="/Things/demo (3).png" />
 
 ## Fonts Used:
 

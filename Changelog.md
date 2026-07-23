@@ -1,11 +1,19 @@
-## Upcoming Version
+## v2026.07.24 (Beta)
 - Massive amount of ui changes
 - New homepage section: high quality images
 - Option for turning in-app camera on or off
-- Smooth scroll for windows
-- Adaptive coloring is now works for android
-- Small bug fixes
+- Option for turning ui blur on or off
+- Moving photos to trash is now works and it is on by default.
+- Lot of bug fixes
 - Temporary disabled timelapse video making because of ffmpeg package bugs
+
+Android:
+- Adaptive coloring is now works
+- APK is now signed with release keystore
+
+Windows:
+- Smooth scroll
+- Changed app path to C:\\Users\\Public\\Memories Photos
 
 ## v2026.07.11 (Beta)
 - Compose-styled popups

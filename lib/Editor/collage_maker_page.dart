@@ -9,7 +9,7 @@ class CollageMakerPage extends StatelessWidget {
     return Scaffold(
       //backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
       bottomSheet: Container(
-        margin: .all(15).add(.only(bottom: 40)), //TODO: adaptive nav bar padding
+        margin: .all(15).add(.only(bottom: MediaQuery.paddingOf(context).bottom + 5)),
         child: Row(
           mainAxisAlignment: .spaceEvenly,
           children: [

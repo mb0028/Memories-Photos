@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memories_photos/Widgets/album_card.dart';
-import 'package:memories_photos/photo_indexer.dart';
+import 'package:memories_photos/Scripts/photo_indexer.dart';
 import 'package:memories_photos/settings.dart';
 import 'package:silky_scroll/silky_scroll.dart';
 

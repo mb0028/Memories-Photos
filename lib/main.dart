@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:memories_photos/Pages/More/permissions_page.dart';
 import 'package:memories_photos/Pages/home_page.dart';
-import 'package:memories_photos/android_helper.dart';
+import 'package:memories_photos/Scripts/android_helper.dart';
 import 'package:memories_photos/settings.dart';
 
 late FragmentProgram colorfulBackgroundProgram;
@@ -105,12 +105,21 @@ class MainAppState extends State<MainApp> {
   TooltipThemeData _tooltipTheme(BuildContext context) {
     return TooltipThemeData(
       preferBelow: false,
+      padding: .all(15),
       textStyle: TextStyle(
-        color: Theme.of(context).colorScheme.onSecondaryContainer
+        color: Theme.of(context).colorScheme.onSecondaryContainer,
+        fontSize: 16
       ),
       decoration: BoxDecoration(
-        borderRadius: .circular(20 * Settings.rm),
-        color: Theme.of(context).colorScheme.surfaceContainerHighest,
+        borderRadius: .circular(40 * Settings.rm),
+        gradient: LinearGradient(
+          colors: [
+            Theme.of(context).colorScheme.surface,
+            Theme.of(context).colorScheme.secondaryContainer,
+          ],
+          begin: .topCenter,
+          end: .bottomCenter
+        ),
         border: .all(width: 3, color: Theme.of(context).colorScheme.outlineVariant)
       )
     );

@@ -6,8 +6,8 @@ class ExifInterface {
 
   static Future<String> getAttribute(String path, String tag) async {
     if (Platform.isWindows) {
-      return "";
-    }  // TODO: Implement ExifInterface for windows
+      return ""; // TODO: Implement ExifInterface for windows
+    }
     try {
       final result = await channel.invokeMethod<String>("getAttribute",
         {"path": path, "tag": tag});
@@ -18,7 +18,9 @@ class ExifInterface {
   }
 
   static Future<String> setAttribute(String path, String tag, String value) async {
-    if (Platform.isWindows) return ""; // TODO: Implement ExifInterface for windows
+    if (Platform.isWindows) {
+      return ""; // TODO: Implement ExifInterface for windows
+    }
     try {
       final result = await channel.invokeMethod<bool>("setAttribute",
         {"path": path, "tag": tag, "value": value});

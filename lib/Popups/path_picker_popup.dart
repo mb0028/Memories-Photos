@@ -45,7 +45,7 @@ Future<String?> showPathPickerDialog(BuildContext context) async {
                     ],
                   );
                   path.text = t ?? "";
-                }, //TODO
+                },
               ),
             ),
           ],
@@ -57,7 +57,7 @@ Future<String?> showPathPickerDialog(BuildContext context) async {
   if (picked) {
     if (FileSystemEntity.isDirectorySync(path.text) && Directory(path.text).existsSync()) {
       return Platform.isAndroid
-      ? path.text.replaceAll(String.fromCharCode(0x005C), "/") // 0x005C is backslash
+      ? path.text.replaceAll("\\", "/")
       : path.text.replaceAll("/", Platform.pathSeparator);
       }
     else showStyledToast("Folder is not exists (┬┬﹏┬┬)", context);

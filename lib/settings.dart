@@ -2,12 +2,13 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:memories_photos/android_helper.dart';
+import 'package:memories_photos/Scripts/android_helper.dart';
 
 class Settings {
   static const String LexendDeca = "LexendDeca";
   static const String ElmsSans = "ElmsSans";
   static const String CherryBombOne = "CherryBombOne";
+  static const String trashFileName = "monoP_trashed_";
   static const Color defaultColor = Color.fromARGB(255, 164, 255, 196);
 
   static File settingsFile = File("$appPath${Platform.pathSeparator}Settings${Platform.pathSeparator}Settings.txt");
@@ -18,15 +19,16 @@ class Settings {
   static int recentsCount = 20;
   static int specialSectionsCount = 15;
   static int maxUndoCount = 10;
-  /// Roundness multiple
+  /// rm = Roundness multiple
   static double rm = 1.0;
   static bool showHidden = false;
-  static bool trashInstead = false;
+  static bool trashInstead = true;
   static bool onlyShowDCIM = false;
   static bool specialSectionsShuffle = true;
   static bool allowRotateInPView = false;
   static bool adaptiveColors = false;
   static bool inAppCamera = true;
+  static bool uiBlur = true;
   static Color accent = defaultColor;
 
   static List<String> libInclude = [];
@@ -71,6 +73,8 @@ class Settings {
           allowRotateInPView = bool.parse(line.split("[ROTA]")[1]);
         else if (line.startsWith("[ADAPT]"))
           adaptiveColors = bool.parse(line.split("[ADAPT]")[1]);
+        else if (line.startsWith("[BLUR]"))
+          uiBlur = bool.parse(line.split("[BLUR]")[1]);
         else if (line.startsWith("[COLOR]")) {
           var rgb = line.split("[COLOR]")[1].split("|");
           accent = Color.fromARGB(255, (double.parse(rgb[0]) * 255).toInt(), (double.parse(rgb[1]) * 255).toInt(), (double.parse(rgb[2]) * 255).toInt());
@@ -79,7 +83,7 @@ class Settings {
     }
     else {
       await settingsFile.create(recursive: true);
-      libInclude.add(Platform.isAndroid? "/sdcard/DCIM" : "C:/Users/mb28/Pictures"); // TODO: change windows path. its temporary
+      libInclude.add(Platform.isAndroid? "/sdcard/DCIM" : "C:/Users/mb28/Memories Photos"); // TODO: Temporary
       save();
     }
   }
@@ -96,7 +100,8 @@ class Settings {
     data += "[OSDCIM]$onlyShowDCIM\n";
     data += "[SSSH]$specialSectionsShuffle\n";
     data += "[ROTA]$allowRotateInPView\n";
-    data += "[ADAPT]$adaptiveColors\n";
+    data += "[ADAPT]$adaptiveColors\n";;
+    data += "[BLUR]$uiBlur\n";
     data += "[COLOR]${accent.r}|${accent.g}|${accent.b}\n";
 
     for (var i in libInclude)
@@ -115,7 +120,7 @@ class Settings {
   static String get appPath {
     var path = Platform.isAndroid
       ? "/sdcard/DCIM/Memories Photos"
-      : "E:${Platform.pathSeparator}"; // Temporary. TODO
+      : "C:\\Users\\Public\\Memories Photos";
     Directory(path).createSync(recursive: true);
     return path;
   } 
@@ -123,12 +128,12 @@ class Settings {
   static String get appCache {
     var path = Platform.isAndroid
       ? "/sdcard/DCIM/Memories Photos/.temp"
-      : "E:${Platform.pathSeparator}.temp${Platform.pathSeparator}"; // Temporary. TODO
+      : "C:\\Users\\Public\\Memories Photos\\.temp";
     Directory(path).createSync(recursive: true);
     return path;
   } 
   
   static String dcimPath = Platform.isAndroid
     ? "/sdcard/DCIM"
-    : "C:${Platform.pathSeparator}Users${Platform.pathSeparator}mb28${Platform.pathSeparator}Desktop"; // Temporary. TODO
+    : "C:\\Users\\mb28\\Desktop"; // TODO: Temporary
 }

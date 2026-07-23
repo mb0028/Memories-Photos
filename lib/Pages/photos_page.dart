@@ -4,7 +4,7 @@ import 'package:memories_photos/Structs/photo.dart';
 import 'package:memories_photos/Widgets/blur.dart';
 import 'package:memories_photos/Widgets/photo_card.dart';
 import 'package:memories_photos/main.dart';
-import 'package:memories_photos/photo_indexer.dart';
+import 'package:memories_photos/Scripts/photo_indexer.dart';
 import 'package:memories_photos/settings.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:silky_scroll/silky_scroll.dart';
@@ -83,7 +83,7 @@ class _PhotosPageState extends State<PhotosPage> {
             ),
           ),
         ],
-      ) : Center(child: Text("0 Photos 😭"))
+      ) : Center(child: Text("Still loading or no photos 😵"))
     );
   }
 

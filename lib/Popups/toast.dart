@@ -8,7 +8,7 @@ void showStyledToast(String text, BuildContext context, {int duration = 3}) {
     Container(
       margin: .only(top: 80),
       child: BlurredContainerMonoP(
-        padding: .symmetric(vertical: 8, horizontal: 15),
+        padding: .all(15),
         color: Theme.of(context).colorScheme.tertiaryContainer.withAlpha(90),
         roundneess: 25 * Settings.rm,
         border: .all(
@@ -19,6 +19,7 @@ void showStyledToast(String text, BuildContext context, {int duration = 3}) {
           text,
           style: TextStyle(
             color: Theme.of(context).colorScheme.onTertiaryContainer,
+            fontSize: 15
           ),
         ),
       )

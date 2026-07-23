@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:memories_photos/Structs/photo.dart';
 import 'package:memories_photos/Widgets/photo_card_home_page.dart';
-import 'package:memories_photos/photo_indexer.dart';
+import 'package:memories_photos/Scripts/photo_indexer.dart';
 import 'package:memories_photos/settings.dart';
 import 'package:silky_scroll/silky_scroll.dart';
 
@@ -24,9 +24,16 @@ class _HomePageContentsState extends State<HomePageContents> {
   Photo? header;
   bool noImages = false;
   var scroll = ScrollController();
-  double bannerBlur = 0;
+  double scrollOffset = 0;
+  List<int> randomNums = [0, 0, 0];
 
   Future<void> refresh() async {
+    randomNums = [
+      Random.secure().nextInt(4),
+      Random.secure().nextInt(4),
+      Random.secure().nextInt(4)
+    ];
+
     recents = []; sunrise = []; night = []; highRes = [];
     int sunriseCount = 0; int nightCount = 0; int hqCount = 0;
 
@@ -58,7 +65,7 @@ class _HomePageContentsState extends State<HomePageContents> {
         nightCount++;
       }
 
-      if (await p.megaPixels >= 48 && hqCount < Settings.specialSectionsCount) {
+      if (await p.megaPixels >= 30 && hqCount < Settings.specialSectionsCount) {
         highRes.add(p);
         hqCount++;
       }
@@ -72,7 +79,7 @@ class _HomePageContentsState extends State<HomePageContents> {
   void initState() {
     refresh();
     super.initState();
-    scroll.addListener(() => setState(() => bannerBlur = (scroll.position.pixels * 0.3).clamp(0, 30) ));
+    scroll.addListener(() => setState(() => scrollOffset = (scroll.position.pixels * 0.006).clamp(0, 1) ));
   }
 
   @override
@@ -85,7 +92,7 @@ class _HomePageContentsState extends State<HomePageContents> {
             physics: BouncingScrollPhysics(),
             padding: .all(15),
             children: [
-              Text("No images found 😭😭\nGo to 'Settings -> Library include' then add folders you want to show in app.", textAlign: .center,),
+              Text("No images found 😵\nGo to 'Settings -> Library include' then add folders you want to show in app.", textAlign: .center,),
               OutlinedButton(
                 onPressed: () => refresh(),
                 child: Text("Refresh")
@@ -102,22 +109,18 @@ class _HomePageContentsState extends State<HomePageContents> {
         padding: .only(bottom: 280),
         controller: scroll,
         children: [
-          Transform.scale(
-            scale: 1.1,
-            alignment: .bottomCenter,
-            child: SizedBox(
-              height: 150,
-              child: header != null ? ImageFiltered(
-                imageFilter: .blur(sigmaX: bannerBlur, sigmaY: 0),
-                child: Image.file(
-                  File(header!.path),
-                  fit: .cover,
-                ),
-              ) : SizedBox(),
-            ),
+          SizedBox(
+            height: 150,
+            child: header != null ? Opacity(
+              opacity: (1.2 - scrollOffset).clamp(0, 1),
+              child: Image.file(
+                File(header!.path),
+                fit: .cover,
+              ),
+            ) : SizedBox(),
           ),
           Transform.scale(
-            scale: 1 - (bannerBlur * 0.07).clamp(0, 1),
+            scale: 1 - scrollOffset,
             child: Text(
               "Memories Photos",
               textAlign: .center,
@@ -130,16 +133,28 @@ class _HomePageContentsState extends State<HomePageContents> {
           ),
           SizedBox(height: 30),
       
-          _SectionHeader(text: "Recent Photos"),
+          _SectionHeader(
+            text: "Recent Photos",
+            tip: "Last ${Settings.recentsCount} Photos across all folders",
+          ),
           _Section(photos: recents, flexWeights: [1, 3, 1]),
       
-          sunrise.isNotEmpty ? _SectionHeader(text: "Sunrise Captures") : SizedBox(), // TODO: better naming + random section names
+          sunrise.isNotEmpty ? _SectionHeader(
+            text: List.of(["Sunrise", "Morning Star", "Start of the Day", "🌄🌅"])[randomNums[0]],
+            tip: "Photos that are taken between 5..10 AM"
+          ) : SizedBox(),
           sunrise.isNotEmpty ? _Section(photos: sunrise, flexWeights: [1, 3, 1]) : SizedBox(),
       
-          night.isNotEmpty ? _SectionHeader(text: "Night Captures") : SizedBox(), // TODO: better naming + random section names
+          night.isNotEmpty ? _SectionHeader(
+            text: List.of(["Night", "Midnight", "3 AM's Ghosts", "🌃🌉"])[randomNums[1]],
+            tip: "Photos that are taken between 10 PM to 6 AM",
+          ) : SizedBox(),
           night.isNotEmpty ? _Section(photos: night, flexWeights: [1, 3, 1]) : SizedBox(),
 
-          highRes.isNotEmpty ? _SectionHeader(text: "High Quality") : SizedBox(), // TODO: better naming + random section names
+          highRes.isNotEmpty ? _SectionHeader(
+            text: List.of(["High Quality", "Large File Size", ">30 Megapixels", ">30 Megapixels"])[randomNums[2]],
+            tip: "Photos that have more than 30 megapixels",
+          ) : SizedBox(),
           highRes.isNotEmpty ? _Section(photos: highRes, flexWeights: [1, 3, 1]) : SizedBox(),
         ],
       ),
@@ -150,16 +165,20 @@ class _HomePageContentsState extends State<HomePageContents> {
 
 class _SectionHeader extends StatelessWidget {
   final String text;
-  const _SectionHeader({required this.text});
+  final String tip;
+  const _SectionHeader({required this.text, required this.tip});
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      text,
-      textAlign: .center,
-      style: TextStyle(
-        color: Theme.of(context).colorScheme.secondary,
-        fontSize: 20
+    return Tooltip(
+      message: tip,
+      child: Text(
+        text,
+        textAlign: .center,
+        style: TextStyle(
+          color: Theme.of(context).colorScheme.secondary,
+          fontSize: 20
+        ),
       ),
     );
   }
