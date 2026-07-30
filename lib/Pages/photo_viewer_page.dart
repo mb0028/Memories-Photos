@@ -86,7 +86,10 @@ class _PhotoViewerPageState extends State<PhotoViewerPage> {
               ),
             ),
           ),
-          _Footer(photo: widget.query[i])
+          _Footer(
+            photo: widget.query[i],
+            onUpdate: () => setState(() {}),
+          ),
         ],
       ),
       
@@ -167,7 +170,8 @@ class _PhotoViewerPageState extends State<PhotoViewerPage> {
 
 class _Footer extends StatefulWidget {
   final Photo photo;
-  const _Footer({required this.photo});
+  final Function onUpdate;
+  const _Footer({required this.photo, required this.onUpdate});
   @override
   State<_Footer> createState() => _FooterState();
 }
@@ -191,8 +195,9 @@ class _FooterState extends State<_Footer> {
           IconButton(
             icon: Icon(Icons.delete_outline, size: size),
             tooltip: "Delete",
-            onPressed: () {
-              widget.photo.showDeletePopup(context, () => setState(() {}));
+            onPressed: () async {
+              await widget.photo.showDeletePopup(context, () => setState(() {}));
+              widget.onUpdate();
             },
           ),
           IconButton(
@@ -212,8 +217,9 @@ class _FooterState extends State<_Footer> {
           IconButton(
             icon: Icon(Icons.insert_comment_outlined, size: size),
             tooltip: "Change Comment",
-            onPressed: () {
-              widget.photo.showEditCommentPopup(context, () => setState(() {}));
+            onPressed: () async {
+              await widget.photo.showEditCommentPopup(context, () => setState(() {}));
+              widget.onUpdate();
             },
           ),
         ],

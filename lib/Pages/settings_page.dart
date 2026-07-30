@@ -38,10 +38,16 @@ class _SettingsPageState extends State<SettingsPage> {
             children: [
               uiSettings(),
               SizedBox(height: 15),
+
               mainSettings(),
               SizedBox(height: 15),
+
+              Settings.inAppCamera ? cameraSettings() : SizedBox(),
+              SizedBox(height: Settings.inAppCamera ? 15 : 0),
+              
               libSettings(),
               SizedBox(height: 8),
+
               FilledButton(
                 onPressed: () => OpenFilex.open(Settings.settingsFile.path),
                 child: Text(Platform.isWindows ? "Edit Settings.txt" : "View Settings.txt"),
@@ -334,4 +340,33 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
     );
   }
+
+  Widget cameraSettings() {
+    return Container(
+      padding: .all(10),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surfaceContainer.withAlpha(a),
+        borderRadius: .circular(25 * Settings.rm)
+      ),
+      child: Column(
+        crossAxisAlignment: .stretch,
+        children: [
+          Text("In-app camera settings"),
+          ListTile(
+            title: Text("Edit Comment Instantly"),
+            subtitle: Text("Show edit comment panel right after taking picture", style: TextStyle(fontSize: 12)),
+            leading: Switch(
+              value: Settings.editCommentAfterCamPic,
+              onChanged: (value) {
+                setState(() => Settings.editCommentAfterCamPic = value);
+                Settings.save();
+              },
+            ),
+          ),
+        
+        ],
+      ),
+    );
+  }
+
 }

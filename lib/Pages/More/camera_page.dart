@@ -3,6 +3,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:keep_screen_on/keep_screen_on.dart';
 import 'package:memories_photos/Popups/toast.dart';
+import 'package:memories_photos/Structs/photo.dart';
 import 'package:memories_photos/main.dart';
 import 'package:memories_photos/settings.dart';
 
@@ -121,10 +122,10 @@ class _CameraModes extends StatelessWidget {
             label: Text("Normal"),
             onPressed: () => initCamera(0, (camI) => _CameraPageState.instance?.onCamUpdates(camI)),
           ),
-          cameras.length >= 3 ? FilledButton.icon(
+          cameras.length >= 2 ? FilledButton.icon(
             icon: Icon(Icons.width_wide_outlined),
             label: Text("wide"),
-            onPressed: () => initCamera(3, (camI) => _CameraPageState.instance?.onCamUpdates(camI)),
+            onPressed: () => initCamera(2, (camI) => _CameraPageState.instance?.onCamUpdates(camI)),
           ) : SizedBox()
         ],
       )
@@ -147,7 +148,10 @@ class _ShutterRow extends StatelessWidget {
           icon: Icon(Icons.cameraswitch_outlined, size: 40),
           tooltip: "Change camera",
           onPressed: () {
-            initCamera(currentCam + (_camBack ? -1 : 1), (camI) => _CameraPageState.instance?.onCamUpdates(camI));
+            initCamera(
+              currentCam + (_camBack ? -1 : 1),
+              (camI) => _CameraPageState.instance?.onCamUpdates(camI)
+            );
             _camBack = !_camBack;
           },
         ),
@@ -158,9 +162,13 @@ class _ShutterRow extends StatelessWidget {
             var photo = await controller.takePicture();
             final t = DateTime.now();
             var time = "Photo ${t.year}-${t.month}-${t.day} ${t.hour}-${t.minute}-${t.second}.jpg";
-            await photo.saveTo(Settings.appPath + Platform.pathSeparator + time);
+            var finalPath = Settings.appPath + Platform.pathSeparator + time;
+            await photo.saveTo(finalPath);
             await File(photo.path).delete();
+            
             showStyledToast("Saved: $time", context);
+            if (Settings.editCommentAfterCamPic)
+              (await Photo.fromPath(finalPath)).showEditCommentPopup(context, () {});
           },
         ),
         IconButton(

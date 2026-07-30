@@ -2,6 +2,7 @@
 - Material 3 expressive styled buttons, tiles & popups
 - App icon is now darker
 - Improved in-app camera 
+- Improved refreshing
 
 Windows:
 - MSIX Packaging

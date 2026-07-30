@@ -11,9 +11,10 @@ Future<bool> photosMoreActionPopup(BuildContext context, Photo photo, bool moreA
     context: context,
     builder: (context) => Dialog(
       backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+      insetPadding: .all(5),
       child: Container(
-        width: 340,
-        height: moreActions ? 610 : 280,
+        width: 380,
+        height: moreActions ? 612 : 280,
         padding: .symmetric(vertical: 15),
         child: ListView(
           physics: BouncingScrollPhysics(),
