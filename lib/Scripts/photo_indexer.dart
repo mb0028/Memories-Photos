@@ -9,82 +9,88 @@ class PhotoIndexer {
   static List<Photo> photosInTrash = [];
   static Map<String, AlbumInfo> albums = {};
 
-  // TODO: This method needs full remake. its so slow and messy...
-  static Future<void> startCache() async {
-    photos = [];
-    photosInTrash = [];
-    albums = {};
-
-    var stopwatch = Stopwatch()..start();
-    List<Photo> temp = [];
+  static Future<void> rescanAllPhotos() async {
+    final stopwatch = Stopwatch()..start();
     List<String> pathsToSearch = Settings.onlyShowDCIM ? [Settings.dcimPath] : Settings.libInclude;
-    List<FileSystemEntity> np = []; 
-
-    for (var dir in pathsToSearch) {
-      np = [Directory(dir)];
-      while (np.isNotEmpty) {
-        var t = np;
-        np = [];
-        for (var subdir in t) {
-          stopwatch.reset();
-          for (var fileSysEnti in (subdir as Directory).listSync()) {
-            if (!Settings.showHidden && (fileSysEnti is Directory 
-              && !fileSysEnti.path.contains("${Platform.pathSeparator}."))
-              && !Settings.libExclude.contains(fileSysEnti.path)) {
-              np.add(fileSysEnti);
-            }
-            else if (fileSysEnti is File) {
-              String path = fileSysEnti.path;
-              if (path.contains(".png") || path.contains(".jpg") || path.contains(".jpeg"))
-              {
-                var p = await Photo.fromPath(path);
-
-                // 1. Add to temp if its not hidden
-                temp.add(p);
-                if (!Settings.showHidden && path.startsWith("."))
-                  temp.removeLast();
-
-                // 2. Add to photosInTrash
-                if (path.contains("${Platform.pathSeparator}.monoP_trashed_")) {
-                  photosInTrash.add(p);
-                  if (temp.contains(p))
-                    temp.remove(p);
-                }
-                
-                // 3. Add the folder to folders list if already not
-                String folder = path.substring(0, path.lastIndexOf(Platform.pathSeparator));
-                if (!albums.containsKey(folder))
-                  albums[folder] = AlbumInfo(thumbnail: path, itemsInIt: _getFolderPhotosCount(folder));
-              }
-            }
-          }
-          print("--| PhotoIndexer: Last folder scanned:\n     Path: $subdir\n      In: ${stopwatch.elapsed}\n");
+    Set<String> libX = Settings.libExclude.toSet(); // TODO: Better excludes in scanning
+    
+    albums = {};
+    List<String> photoPaths = [];
+    final Map<String, int> albumCounts = {};
+    final Map<String, String> albumThumbnails = {};
+    for (var dir in pathsToSearch)
+      await for (final entity in Directory(dir).list(recursive: true)) {
+        if (entity is File && _isImageFile(entity.path)) {
+          final path = entity.path;
+          final folder = path.substring(0, path.lastIndexOf(Platform.pathSeparator));
+          if (libX.contains(folder)) continue;
+          photoPaths.add(path);
+          albumCounts[folder] = (albumCounts[folder] ?? 0) + 1;
+          albumThumbnails.putIfAbsent(folder, () => path);
         }
       }
+    
+    albumCounts.forEach((folderPath, count) =>
+      albums[folderPath] = AlbumInfo(thumbnail: albumThumbnails[folderPath]!, itemsInIt: count));
+    
+    photos = [];
+    photosInTrash = [];
+    List<Photo> temp = [];
+    
+    const int chunk = 50;
+    for (var i = 0; i < photoPaths.length; i += chunk) {
+      final end = (i + chunk < photoPaths.length) ? i + chunk : photoPaths.length;
+      final batch = photoPaths.sublist(i, end);
+      
+      final photosChunk = await Future.wait(
+        batch.map((path) => Photo.fromPath(path))
+      );
+
+      for (Photo p in photosChunk) {
+        final path = p.path;
+        final isHidden = path.substring(path.lastIndexOf("/") + 1).startsWith(".");
+        final isTrashed = path.contains("${Platform.pathSeparator}.monoP_trashed_");
+
+        if (isHidden) { // Add to temp if its not hidden
+          if (Settings.showHidden) {
+            temp.add(p);
+          }
+        }
+        else if (isTrashed) // If is in trash add to trashed list
+          photosInTrash.add(p);
+        else
+          temp.add(p);
+      }
     }
-    stopwatch.stop();
     
     temp.sort((a, b) => b.dateTaken.compareTo(a.dateTaken));
     photosInTrash.sort((a, b) => b.dateTaken.compareTo(a.dateTaken));
     photos = temp;
+
+    Settings.log("Photos scan finished in ${stopwatch.elapsedMilliseconds}ms",
+      moreInfo: "${photos.length} Photos  |  ${photosInTrash.length} In trash  |  ${albums.length} Albums",
+      sender: PhotoIndexer
+    );
   }
 
-  static Future<List<Photo>> getFolderPhotos(String path) async {
+  static Future<List<Photo>> scanFolderFunky(String dirPath) async {
     List<Photo> temp = [];
-    for (var file in Directory(path).listSync())
-      if (file.path.endsWith(".png") || file.path.endsWith(".jpg") || file.path.endsWith(".jpeg")) {
-        temp.add(await Photo.fromPath(file.path));
-      }
+    await for (var entity in Directory(dirPath).list()) {
+      final path = entity.path;
+      if (entity is File && _isImageFile(path)) {
+        if (path.substring(path.lastIndexOf("/") + 1).startsWith(".")) { // Add to temp if its not hidden
+          if (Settings.showHidden) {
+            temp.add(await Photo.fromPath(path));
+          }
+        }
+        else temp.add(await Photo.fromPath(path));
+      }          
+    }
+      
     temp.sort((a, b) => b.dateTaken.compareTo(a.dateTaken));
     return temp;
   }
 
-  static int _getFolderPhotosCount(String path) { //TODO Improve performance
-    int result = 0;
-    for (var file in Directory(path).listSync())
-      if (file.path.endsWith(".png") || file.path.endsWith(".jpg") || file.path.endsWith(".jpeg"))
-        result++;
-    return result;
-  }
+  static bool _isImageFile(String path) => path.endsWith(".png") || path.endsWith(".jpg") || path.endsWith(".jpeg");
 
 }

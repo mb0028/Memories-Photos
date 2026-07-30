@@ -31,7 +31,7 @@ class _PhotosPageState extends State<PhotosPage> {
           photos!.add(await Photo.fromPath(path));
       }
       else
-        photos = await PhotoIndexer.getFolderPhotos(widget.folder!);
+        photos = await PhotoIndexer.scanFolderFunky(widget.folder!);
     }
     else
       photos = PhotoIndexer.photos;

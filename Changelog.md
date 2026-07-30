@@ -2,7 +2,8 @@
 - Material 3 expressive styled buttons, tiles & popups
 - App icon is now darker
 - Improved in-app camera 
-- Improved refreshing
+- Improved refreshing & 10 times faster photo indexing.
+  - (Still not fast enough for real-time refreshing)
 
 Windows:
 - MSIX Packaging

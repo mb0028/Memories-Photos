@@ -11,8 +11,6 @@ class Settings {
   static const String trashFileName = "monoP_trashed_";
   static const Color defaultColor = Color.fromARGB(255, 164, 255, 196);
 
-  static File settingsFile = File("$appPath${Platform.pathSeparator}Settings${Platform.pathSeparator}Settings.txt");
-
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   static int gridScale = 120;
@@ -38,6 +36,8 @@ class Settings {
   static List<String> archived = [];
 
   static Future<void> load() async {
+    await logFile.create(recursive: true);
+    await historyFile.create();
     var access = await AndroidHelper.isExternalStorageManager();
     if (access && await settingsFile.exists()) {
       var splitter = LineSplitter();
@@ -126,7 +126,23 @@ class Settings {
     await settingsFile.writeAsString(data);
   }
 
-  /////////////////////////////////////////////////////////////////////////////////
+  static void log(String logText, {String? moreInfo, dynamic sender}) async {
+    final text = "[${DateTime.now()}] $sender --| $logText | $moreInfo";
+    print(text);
+
+    var lastLogs = await logFile.readAsLines();
+    if (lastLogs.length > 100)
+      lastLogs.removeLast();
+    lastLogs.insert(0, text);
+    await logFile.writeAsString(lastLogs.join("\n"));
+  }
+
+  /////////////////////////////////// Paths //////////////////////////////////////////////
+  
+  static File settingsFile = File("$appPath${Platform.pathSeparator}Settings${Platform.pathSeparator}Settings.txt");
+  static File logFile = File("$appPath${Platform.pathSeparator}Settings${Platform.pathSeparator}Log.txt");
+  static File historyFile = File("$appPath${Platform.pathSeparator}Settings${Platform.pathSeparator}History.txt");
+
   static String get appPath {
     var path = Platform.isAndroid
       ? "/sdcard/DCIM/Memories Photos"

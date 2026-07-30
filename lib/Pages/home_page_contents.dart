@@ -37,7 +37,7 @@ class _HomePageContentsState extends State<HomePageContents> {
     recents = []; sunrise = []; night = []; highRes = [];
     int sunriseCount = 0; int nightCount = 0; int hqCount = 0;
 
-    await PhotoIndexer.startCache();
+    await PhotoIndexer.rescanAllPhotos();
     var temp = PhotoIndexer.photos.toList();
 
     if(PhotoIndexer.photos.isEmpty) {
