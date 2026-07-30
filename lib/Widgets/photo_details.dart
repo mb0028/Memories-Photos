@@ -6,6 +6,7 @@ import 'package:memories_photos/ExifInterface/exif_interface.dart';
 import 'package:memories_photos/ExifInterface/tags.dart';
 import 'package:memories_photos/Structs/photo.dart';
 import 'package:memories_photos/Scripts/android_helper.dart';
+import 'package:memories_photos/Widgets/expressive_button.dart';
 import 'package:memories_photos/settings.dart';
 
 Future<Widget> getPhotoDetailsWidget(Photo photo, BuildContext context) async {
@@ -65,8 +66,7 @@ Future<Widget> getPhotoDetailsWidget(Photo photo, BuildContext context) async {
   };
 
   return Container(
-    margin: .all(6),
-    padding: .only(top: 50),
+    padding: .only(top: MediaQuery.paddingOf(context).top + 5),
     child: Column(
       spacing: 3,
       children: [
@@ -78,120 +78,84 @@ Future<Widget> getPhotoDetailsWidget(Photo photo, BuildContext context) async {
             fontFamily: Settings.CherryBombOne,
           ),
         ),
-        Text(path, textAlign: .center,),
+        Text(path, textAlign: .center),
         Divider(),
         Expanded(
           child: ListView(
             physics: BouncingScrollPhysics(),
             children: [
-              comment.isNotEmpty ? _DetailsTile(
-                text: comment,
-                icon: Icon(Icons.mode_comment_outlined, size: 30, color: Theme.of(context).colorScheme.onSecondaryContainer),
-                fontSize: 14,
-                font: Settings.ElmsSans,
+              comment.isNotEmpty ? Padding(
+                padding: .symmetric(horizontal: 15, vertical: 10),
+                child: Text(
+                  comment,
+                  textAlign: .center,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontFamily: Settings.ElmsSans
+                  ),
+                ),
               ) : SizedBox(),
 
-              _DetailsTile(
+              ExpressiveButton.top(
                 text: "${await File(path).length()} bytes\n${x}x$y  •  ${((xi * yi) / 1000000).round()} MP", 
                 icon: Icon(Icons.photo_size_select_large, size: 30, color: Theme.of(context).colorScheme.onSecondaryContainer),
                 fontSize: 15.5,
+                onClick: () {},
               ),
 
-              photoGSens.isNotEmpty || mm.isNotEmpty || ev.isNotEmpty || f.isNotEmpty || ss.isNotEmpty ? _DetailsTile(
+              photoGSens.isNotEmpty || mm.isNotEmpty || ev.isNotEmpty || f.isNotEmpty || ss.isNotEmpty ? ExpressiveButton(
                 text: "$photoGSens ISO  •  ${mm}mm  •  $ev ev\n${f}f  •  $ss s$flashText", 
                 icon: Icon(Icons.camera_outlined, size: 30, color: Theme.of(context).colorScheme.onSecondaryContainer),
                 fontSize: 15.5,
+                onClick: () {},
               ) : SizedBox(),
 
-              make.isNotEmpty || model.isNotEmpty || softwere.isNotEmpty ? _DetailsTile(
+              make.isNotEmpty || model.isNotEmpty || softwere.isNotEmpty ? ExpressiveButton(
                 text: "$make  •  $model\n$softwere", 
-                icon: Icon(Icons.camera_alt_outlined, size: 30, color: Theme.of(context).colorScheme.onSecondaryContainer),
+                icon: Icon(Icons.camera_enhance_outlined, size: 30, color: Theme.of(context).colorScheme.onSecondaryContainer),
                 fontSize: 14,
+                onClick: () {},
               ) : SizedBox(),
 
-              zoom.isNotEmpty || aper.isNotEmpty ? _DetailsTile(
+              zoom.isNotEmpty || aper.isNotEmpty ? ExpressiveButton(
                 text: "Digital zoom ratio: $zoom\nAperture: $aper  •  Max $maxAper", 
-                icon: Icon(Icons.photo_camera_front, size: 30, color: Theme.of(context).colorScheme.onSecondaryContainer),
+                icon: Icon(Icons.forest_outlined, size: 30, color: Theme.of(context).colorScheme.onSecondaryContainer),
                 fontSize: 14,
+                onClick: () {},
               ) : SizedBox(),
 
-              sceneText.isNotEmpty || meterinText.isNotEmpty ? _DetailsTile(
+              sceneText.isNotEmpty || meterinText.isNotEmpty ? ExpressiveButton(
                 text: "Scene capture type: $sceneText\nMetering mode: $meterinText",
-                icon: Icon(Icons.landscape_outlined, size: 30, color: Theme.of(context).colorScheme.onSecondaryContainer),
                 fontSize: 14,
+                onClick: () {},
               ) : SizedBox(),
 
-              lat.isNotEmpty ? _DetailsTile(
-                text: "Lat: $lat ($latRef)\nLong: $long ($longRef)\nAlt: $alt", 
-                icon: IconButton.filledTonal(
-                  icon: Icon(Icons.location_searching_outlined, size: 28, color: Theme.of(context).colorScheme.onSecondaryContainer),
-                  onPressed: () => AndroidHelper.openWithMaps(lat, long),
-                  tooltip: "Open in google maps",
-                ),
+              lat.isNotEmpty ? ExpressiveButton(
+                text: "Lat: $lat ($latRef)\nLong: $long ($longRef)\nAlt: $alt\nClick icon to open in google maps", 
+                icon: Icon(Icons.location_searching_outlined, size: 28, color: Theme.of(context).colorScheme.onSecondaryContainer),
                 fontSize: 13.5,
+                onClick: () => AndroidHelper.openWithMaps(lat, long),
               ) : SizedBox(),
 
               SizedBox(height: 50)
             ],
           ),
         ),
+        
+        Platform.isWindows ? IconButton.filled(
+          onPressed: () => Navigator.of(context).pop(),
+          icon: Icon(Icons.arrow_back_rounded),
+          tooltip: "Close",
+        ) : SizedBox(),
 
         Divider(),        
-        Row(
-          mainAxisAlignment: .spaceBetween,
-          children: [
-            uniID.isNotEmpty ? SizedBox(
-              width: 280,
-              child: Text(
-                "Image Unique ID: $uniID", 
-                maxLines: 2,
-                overflow: .fade,
-              ),
-            ) : SizedBox(),
-            IconButton.filled(
-              onPressed: () => Navigator.of(context).pop(),
-              icon: Icon(Icons.arrow_back_rounded),
-              tooltip: "Close",
-            )
-          ],
+        Text(
+          "  Image Unique ID: $uniID", 
+          maxLines: 2,
+          overflow: .fade,
         ),
         SizedBox(height: MediaQuery.paddingOf(context).bottom),
       ],
     ),
   );
-}
-
-// ignore: must_be_immutable
-class _DetailsTile extends StatelessWidget {
-  _DetailsTile({
-    required this.text, required this.icon, required this.fontSize, this.font
-  });
-  final Widget icon;
-  final String text;
-  final double fontSize;
-  String? font = Settings.LexendDeca;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: .symmetric(vertical: 5),
-      child: ListTile(
-        tileColor: Theme.of(context).colorScheme.secondaryContainer.withAlpha(200),
-        shape: RoundedRectangleBorder(
-          borderRadius: .circular(18 * Settings.rm)
-        ),
-        title: Text(
-          text,
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.onSecondaryContainer,
-            fontSize: fontSize,
-            fontFamily: font
-          ),
-          maxLines: 4,
-          overflow: .ellipsis,
-        ),
-        leading: icon,
-      ),
-    );
-  }
 }

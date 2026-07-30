@@ -114,7 +114,7 @@ class _CameraTakeTimelapsePageState extends State<CameraTakeTimelapsePage> {
   Widget build(BuildContext context) {
     orientation = MediaQuery.orientationOf(context);
     if (!controller.value.isInitialized) {
-      return CircularProgressIndicator();
+      return SizedBox();
     }
     return Scaffold(
       backgroundColor: timelapseStarted ? Colors.black : Theme.of(context).colorScheme.surface,

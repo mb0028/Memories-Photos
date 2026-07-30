@@ -1,6 +1,6 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:memories_photos/Pages/More/albums_page.dart';
 import 'package:memories_photos/Pages/More/trash_page.dart';
 import 'package:memories_photos/Pages/home_page_contents.dart';
@@ -8,6 +8,7 @@ import 'package:memories_photos/Pages/photos_page.dart';
 import 'package:memories_photos/Pages/settings_page.dart';
 import 'package:memories_photos/Popups/home_create_new_popup.dart';
 import 'package:memories_photos/Widgets/blur.dart';
+import 'package:memories_photos/Widgets/expressive_button.dart';
 import 'package:memories_photos/settings.dart';
 
 class MonoPHomePage extends StatefulWidget {
@@ -65,29 +66,51 @@ class MonoPHomePageState extends State<MonoPHomePage> {
                 ),
               ),
             ),
-            _DrawerItem(
-              title: "About",
-              icon: Icons.info_outline_rounded,
+            ExpressiveButton.top(
+              text: "About",
+              icon: Icon(Icons.code_rounded),
               onClick: () => showAboutDialog(
                 context: context,
                 applicationName: "Memories Photos",
-                applicationVersion: "By: mb28"
+                applicationVersion: "Developer: mb28",
+                applicationIcon: SizedBox(
+                  width: 60,
+                  height: 60,
+                  child: Image(
+                    image: AssetImage("Things/App Icon Base/AppRect.png")
+                  ),
+                ),
+                children: [
+                  ExpressiveButton.top(
+                    text: "Source code",
+                    icon: Icon(Icons.code_outlined),
+                    onClick: () {}
+                  ),
+                  ExpressiveButton(
+                    text: "Instagram (@mb_0028)",
+                    onClick: () {}
+                  ),
+                  ExpressiveButton.end(
+                    text: "Flutter version: ${FlutterVersion.version}",
+                    onClick: () {},
+                  ),
+                ]
               ),
             ),
-            _DrawerItem(
-              title: "Settings",
-              icon: Icons.settings,
+            ExpressiveButton(
+              text: "Settings",
+              icon: Icon(Icons.settings_rounded),
               onClick: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => SettingsPage())),
             ),
-            _DrawerItem(
-              title: "Trash",
-              icon: Icons.recycling_rounded,
+            ExpressiveButton(
+              text: "Trash",
+              icon: Icon(Icons.recycling_rounded),
               onClick: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => TrashPage())),
             ),
-            _DrawerItem(
-              title: "Favorites",
-              icon: Icons.favorite_rounded,
-              onClick: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => PhotosPage(folder: "[FAV]"))),
+            ExpressiveButton.end(
+              text: "Favorites",
+              icon: Icon(Icons.favorite_outline_rounded),
+              onClick: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => PhotosPage(folder: "[FAV]")))
             ),
           ],
         ),
@@ -132,28 +155,6 @@ class MonoPHomePageState extends State<MonoPHomePage> {
             label: "Albums"
           ),
         ]
-      ),
-    );
-  }
-}
-
-class _DrawerItem extends StatelessWidget {
-  final IconData icon;
-  final Function onClick;
-  final String title;
-  const _DrawerItem({required this.icon, required this.onClick, required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: .symmetric(horizontal: 5, vertical: 1),
-      padding: .all(5),
-      child: ListTile(
-        tileColor: Theme.of(context).colorScheme.surfaceContainerHigh,
-        shape: RoundedRectangleBorder(borderRadius: .circular(15 * Settings.rm)),
-        leading: Icon(icon),
-        title: Text(title, textAlign: .center),
-        onTap: () => onClick(),
       ),
     );
   }

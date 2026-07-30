@@ -109,6 +109,7 @@ class _SettingsPageState extends State<SettingsPage> {
               }, 
             ),
           ) : SizedBox(),
+          Divider(),
           ListTile(
             title: Text("Corner Roundness: ${(Settings.rm * 100).round()}%"),
             subtitle: Slider(
@@ -122,6 +123,7 @@ class _SettingsPageState extends State<SettingsPage> {
               },
             ),
           ),
+          Divider(),
           ListTile(
             title: Text("Blur Effect"),
             subtitle: Text("Not affacts performance that much. even on low-end devices", style: TextStyle(fontSize: 12)),
@@ -192,6 +194,7 @@ class _SettingsPageState extends State<SettingsPage> {
               },
             ),
           ),
+          Divider(),
           // ListTile(
           //   title: Text("Show hidden photos"),
           //   subtitle: Text("Not works as excepted. don't turn it on until next updates", style: TextStyle(fontSize: 12)),
@@ -296,8 +299,9 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
           ) : SizedBox(),
-          SizedBox(height: 15,),
+          Divider(),
           Text("Library exclude folders:"),
+          SizedBox(height: 5),
           ElevatedButton(
             onPressed: () async {
               var t = await showPathPickerDialog(context);

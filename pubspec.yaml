@@ -1,7 +1,7 @@
 name: memories_photos
-description: "A new Flutter project."
+description: ""
 publish_to: 'none'
-version: 2026.07.24+3
+version: 2026.08.01+4
 
 environment:
   sdk: ^3.12.0
@@ -13,7 +13,6 @@ dependencies:
   image: ^4.9.1
   camera: ^0.12.0+1
   image_picker: ^1.2.3
-  # ffmpeg_kit_flutter_new_video: ^2.2.2
 
   dynamic_color: ^1.8.1
   keep_screen_on: ^6.0.0
@@ -29,6 +28,24 @@ dependencies:
   
   share_plus: ^13.2.0
 
+  msix: ^3.18.0
+
+# dart run msix:create
+msix_config:
+  display_name: Memories Photos
+  publisher_display_name: mb28
+  identity_name: mb28.MonoP
+  msix_version: 1.3.0.6
+  languages: en-us
+  file_extension: .png, .jpeg, .jpg
+  logo_path: E:\_Flutter Apps\memories_photos\Things\App Icon Base\AppRect.png
+  capabilities: microphone, webcam
+  output_path: E:\_Flutter Apps\memories_photos\msix
+  output_name: MemoreisPhotos
+  # certificate_path: E:\_Flutter Apps\memories_photos\msix\MemoriesPhotos.pfx
+  # certificate_password: fake_password
+  # architecture: arm64
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -39,6 +56,7 @@ flutter:
 
   assets:
     - Assets/BG.png
+    - Things/App Icon Base/AppRect.png
 
   shaders:
     - Assets/Shaders/bg.frag

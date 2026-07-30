@@ -1,3 +1,4 @@
+// ignore_for_file: dead_code
 import 'dart:io';
 import 'dart:ui';
 import 'package:camera/camera.dart';
@@ -5,6 +6,7 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:memories_photos/Pages/More/permissions_page.dart';
+import 'package:memories_photos/windows_photo_only_view.dart';
 import 'package:memories_photos/Pages/home_page.dart';
 import 'package:memories_photos/Scripts/android_helper.dart';
 import 'package:memories_photos/settings.dart';
@@ -12,25 +14,34 @@ import 'package:memories_photos/settings.dart';
 late FragmentProgram colorfulBackgroundProgram;
 late List<CameraDescription> cameras;
 
-void main() async {
+void main(List<String> args) async {
+  bool testOpenWith = false;
   WidgetsFlutterBinding.ensureInitialized();
+  
+  await Settings.load();
 
-  if (await AndroidHelper.isExternalStorageManager()) {
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-        systemNavigationBarContrastEnforced: false,
-        systemNavigationBarIconBrightness: .dark
-      )
-    );
-
-    await Settings.load();
-    if (Platform.isAndroid)
-      cameras = await availableCameras();
-    colorfulBackgroundProgram = await FragmentProgram.fromAsset("Assets/Shaders/bg.frag");
-
-    runApp(const MainApp(hasFileAccess: true));
+  if (Platform.isWindows || testOpenWith) {
+    if (args.isNotEmpty || testOpenWith) {
+      runApp(WindowsPhotoOnlyViewApp(
+        opendImagePath: !testOpenWith ? args.first : "E:\\_Flutter Apps\\memories_photos\\Things\\demo (1).png"
+      ));
+      return;
+    }
   }
-  else runApp(const MainApp(hasFileAccess: false));
+
+  if (Platform.isAndroid) cameras = await availableCameras();
+
+  colorfulBackgroundProgram = await FragmentProgram.fromAsset("Assets/Shaders/bg.frag");
+  
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    systemNavigationBarContrastEnforced: false,
+    systemNavigationBarIconBrightness: .dark
+  ));
+
+  if (await AndroidHelper.isExternalStorageManager())
+    runApp(const MainApp(hasFileAccess: true));
+  else
+    runApp(const MainApp(hasFileAccess: false));
 }
 
 class MainApp extends StatefulWidget {

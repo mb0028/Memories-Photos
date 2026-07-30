@@ -28,10 +28,8 @@ void initCamera(int cam, Function(int camI) oninit) {
     });
 }
 
-
 class CameraPage extends StatefulWidget {
   const CameraPage({super.key});
-
   @override
   State<CameraPage> createState() => _CameraPageState();
 }
@@ -41,11 +39,12 @@ class _CameraPageState extends State<CameraPage> {
   double minZoom = 1.0;
   double maxZoom = 2.0;
   double zoom = 1.0;
+  int currentCam = 0;
 
   void onCamUpdates(int camI) async {
     minZoom = await controller.getMinZoomLevel();
     maxZoom = await controller.getMaxZoomLevel();
-    setState(() {});
+    setState(() => currentCam = camI);
   }
 
   @override
@@ -67,82 +66,77 @@ class _CameraPageState extends State<CameraPage> {
   @override
   Widget build(BuildContext context) {
     if (!controller.value.isInitialized) {
-      return Container();
+      return SizedBox();
     }
     return Scaffold(
-      body: Stack(
-        alignment: .center,
-        children: [
-          Container(
-            clipBehavior: .antiAlias,
-            decoration: BoxDecoration(
-              borderRadius: .circular(25 * Settings.rm)
+      backgroundColor: Theme.of(context).colorScheme.surfaceBright,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        toolbarHeight: 40,
+      ),
+      body: CameraPreview(controller),
+
+      bottomSheet: Container(
+        padding: .all(5),
+        height: 170 + MediaQuery.paddingOf(context).bottom,
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surfaceContainerLow,
+          borderRadius: .circular(25)
+        ),
+        child: Column(
+          spacing: 5,
+          children: [
+            _CameraModes(),
+            SliderTheme(
+              data: SliderThemeData(),
+              child: Slider(
+                value: zoom,
+                min: minZoom,
+                max: maxZoom,
+                onChanged: (value) {
+                  controller.setZoomLevel(value);
+                  setState(() => zoom = value);
+                },
+              ),
             ),
-            child: CameraPreview(controller)
-          ),
-          Padding(
-            padding: MediaQuery.paddingOf(context),
-            child: Column(
-              mainAxisAlignment: .spaceBetween,
-              children: [                
-                Container(),
-            
-                Column(
-                  spacing: 5,
-                  children: [
-                    SliderTheme(
-                      data: SliderThemeData(
-                        
-                      ),
-                      child: Slider(
-                        value: zoom,
-                        min: minZoom,
-                        max: maxZoom,
-                        onChanged: (value) {
-                          controller.setZoomLevel(value);
-                          setState(() => zoom = value);
-                        },
-                      ),
-                    ),
-                    _ShutterRow(controller: controller),
-                    _CameraModeRow(),
-                  ],
-                ),
-                
-              ],
-            ),
-          ),
-        ],
+            _ShutterRow(controller: controller, currentCam: currentCam),
+          ],
+        ),
       ),
     );
   }
 }
 
-class _CameraModeRow extends StatelessWidget {
+class _CameraModes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: .symmetric(horizontal: 10),
+    return SizedBox(
       height: 35,
       child: Row(
+        mainAxisAlignment: .center,
+        spacing: 5,
         children: [
-          OutlinedButton(
-            child: Text("Normal"),
+          FilledButton.icon(
+            icon: Icon(Icons.landscape_outlined),
+            label: Text("Normal"),
             onPressed: () => initCamera(0, (camI) => _CameraPageState.instance?.onCamUpdates(camI)),
           ),
-          OutlinedButton(
-            child: Text("wide"),
-            onPressed: () => initCamera(0, (camI) => _CameraPageState.instance?.onCamUpdates(camI)),
-          )
+          cameras.length >= 3 ? FilledButton.icon(
+            icon: Icon(Icons.width_wide_outlined),
+            label: Text("wide"),
+            onPressed: () => initCamera(3, (camI) => _CameraPageState.instance?.onCamUpdates(camI)),
+          ) : SizedBox()
         ],
       )
     );
   }
 }
 
+bool _camBack = false;
 class _ShutterRow extends StatelessWidget {
-  const _ShutterRow({required this.controller});
+  const _ShutterRow({required this.controller, required this.currentCam});
   final CameraController controller;
+  final int currentCam; 
 
   @override
   Widget build(BuildContext context) {
@@ -150,15 +144,11 @@ class _ShutterRow extends StatelessWidget {
       mainAxisAlignment: .spaceEvenly,
       children: [
         IconButton(
-          icon: Icon(Icons.camera_outlined, size: 60),
-          tooltip: "Capture",
-          onPressed: () async {
-            var photo = await controller.takePicture();
-            final t = DateTime.now();
-            var time = "Photo ${t.year}-${t.month}-${t.day} ${t.hour}-${t.minute}-${t.second}.jpg";
-            await photo.saveTo(Settings.appPath + Platform.pathSeparator + time);
-            await File(photo.path).delete();
-            showStyledToast("Saved: $time", context);
+          icon: Icon(Icons.cameraswitch_outlined, size: 40),
+          tooltip: "Change camera",
+          onPressed: () {
+            initCamera(currentCam + (_camBack ? -1 : 1), (camI) => _CameraPageState.instance?.onCamUpdates(camI));
+            _camBack = !_camBack;
           },
         ),
         IconButton(
@@ -174,16 +164,9 @@ class _ShutterRow extends StatelessWidget {
           },
         ),
         IconButton(
-          icon: Icon(Icons.camera_outlined, size: 60),
-          tooltip: "Capture",
-          onPressed: () async {
-            var photo = await controller.takePicture();
-            final t = DateTime.now();
-            var time = "Photo ${t.year}-${t.month}-${t.day} ${t.hour}-${t.minute}-${t.second}.jpg";
-            await photo.saveTo(Settings.appPath + Platform.pathSeparator + time);
-            await File(photo.path).delete();
-            showStyledToast("Saved: $time", context);
-          },
+          icon: Icon(Icons.photo_camera_front, size: 40),
+          tooltip: "Record",
+          onPressed: () => showStyledToast("Coming Soon!", context),
         ),
       ],
     );

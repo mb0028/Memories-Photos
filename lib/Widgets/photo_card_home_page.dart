@@ -32,9 +32,9 @@ class PhotoCardHomePage extends StatelessWidget {
               child: Image.file(
                 File(query[i].path),
                 fit: .cover,
-                width: 192,
-                height: 192,
-                cacheWidth: 192,
+                width: 190,
+                height: 190,
+                cacheWidth: 380,
               ),
             ),
           ),

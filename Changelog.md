@@ -1,3 +1,12 @@
+## Upcoming Version
+- Material 3 expressive styled buttons, tiles & popups
+- App icon is now darker
+- Improved in-app camera 
+
+Windows:
+- MSIX Packaging
+- Can open png - jpg - jpeg files with app
+
 ## v2026.07.24 (Beta)
 - Massive amount of ui changes
 - New homepage section: high quality images

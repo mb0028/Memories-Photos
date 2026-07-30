@@ -25,14 +25,14 @@ Future<bool> showMonoPDialog(
           mainAxisAlignment: .end,
           spacing: 5,
           children: [
-            cancel != null ? FilledButton.tonal(
+            cancel != null ? OutlinedButton(
               onPressed: () {
                 result = false;
                 Navigator.of(context).pop();
               },
               child: Text(cancel)
             ) : SizedBox(),
-            ok != null ? FilledButton.tonal(
+            ok != null ? FilledButton(
               onPressed: () {
                 result = true;
                 Navigator.of(context).pop();

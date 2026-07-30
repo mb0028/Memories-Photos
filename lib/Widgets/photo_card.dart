@@ -29,7 +29,7 @@ class PhotoCard extends StatelessWidget {
           tag: query[i],
           child: Image.file(
             File(query[i].path),
-            cacheWidth: 256,
+            cacheWidth: 380,
             fit: .cover,
           ),
         ),

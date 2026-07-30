@@ -170,7 +170,7 @@ class _SectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Tooltip(
+    return Platform.isAndroid ? Tooltip(
       message: tip,
       child: Text(
         text,
@@ -179,6 +179,13 @@ class _SectionHeader extends StatelessWidget {
           color: Theme.of(context).colorScheme.secondary,
           fontSize: 20
         ),
+      )
+    ) : Text(
+      text,
+      textAlign: .center,
+      style: TextStyle(
+        color: Theme.of(context).colorScheme.secondary,
+        fontSize: 20
       ),
     );
   }

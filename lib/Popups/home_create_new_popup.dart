@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:memories_photos/Editor/collage_maker_page.dart';
 import 'package:memories_photos/Pages/More/camera_timelapse_page.dart';
 import 'package:memories_photos/Popups/toast.dart';
 import 'package:memories_photos/Scripts/image_helper.dart';
+import 'package:memories_photos/Widgets/expressive_button.dart';
 import 'package:memories_photos/settings.dart';
 
 Future<bool> showHomeCreateNewPopup(BuildContext context) async {
@@ -70,22 +70,21 @@ Future<bool> showHomeCreateNewPopup(BuildContext context) async {
               fontFamily: Settings.CherryBombOne
             ),
           ),
-          ListTile(
-            title: Text("Collage"),
-            shape: RoundedRectangleBorder(borderRadius: .circular(25 * Settings.rm)),
-            leading: Icon(Icons.collections_outlined),
-            onTap: () {
+          ExpressiveButton.top(
+            text: "Collage",
+            icon: Icon(Icons.collections_outlined),
+            onClick: () {
+              showStyledToast("Coming Soon!", context); //TODO: collage
               returnTrue = true;
               Navigator.of(context).pop();
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => CollageMakerPage(),));
+              // Navigator.of(context).push(MaterialPageRoute(builder: (context) => CollageMakerPage(),));
             },
           ),
-          ListTile(
-            title: Text("GIF"),
-            shape: RoundedRectangleBorder(borderRadius: .circular(25 * Settings.rm)),
-            leading: Icon(Icons.gif_rounded),
-            onTap: () {
-              // TODO: create gif using png comparer 28
+          ExpressiveButton.end(
+            text: "GIF",
+            icon: Icon(Icons.gif_rounded),
+            onClick: () {
+              showStyledToast("Coming Soon!", context); // TODO: Gif
               returnTrue = true;
               Navigator.of(context).pop();
             },
