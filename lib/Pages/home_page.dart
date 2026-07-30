@@ -10,6 +10,7 @@ import 'package:memories_photos/Popups/home_create_new_popup.dart';
 import 'package:memories_photos/Widgets/blur.dart';
 import 'package:memories_photos/Widgets/expressive_button.dart';
 import 'package:memories_photos/settings.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MonoPHomePage extends StatefulWidget {
   const MonoPHomePage({super.key});
@@ -84,15 +85,15 @@ class MonoPHomePageState extends State<MonoPHomePage> {
                   ExpressiveButton.top(
                     text: "Source code",
                     icon: Icon(Icons.code_outlined),
-                    onClick: () {}
+                    onClick: () => launchUrl(Uri.parse("https://github.com/mb0028/Memories-Photos")),
                   ),
                   ExpressiveButton(
                     text: "Instagram (@mb_0028)",
-                    onClick: () {}
+                    onClick: () => launchUrl(Uri.parse("https://www.instagram.com/mb_0028/")),
                   ),
                   ExpressiveButton.end(
                     text: "Flutter version: ${FlutterVersion.version}",
-                    onClick: () {},
+                    onClick: () => launchUrl(Uri.parse(FlutterVersion.gitUrl ?? "https://github.com/flutter/flutter")),
                   ),
                 ]
               ),
