@@ -1,13 +1,12 @@
 import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:memories_photos/ExifInterface/exif_interface.dart';
-import 'package:memories_photos/ExifInterface/tags.dart';
+import 'package:memories_photos/Scripts/ExifInterface/exif_interface.dart';
+import 'package:memories_photos/Scripts/ExifInterface/tags.dart';
 import 'package:memories_photos/Popups/monop_dialog.dart';
 import 'package:memories_photos/Popups/photo_more_actions.dart';
 import 'package:memories_photos/Popups/toast.dart';
 import 'package:memories_photos/Widgets/monop_text_field.dart';
-import 'package:memories_photos/Widgets/photo_details.dart';
 import 'package:memories_photos/settings.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -15,14 +14,24 @@ class Photo {
   Photo({required this.path});
 
   static Future<Photo> fromPath(String path) async {
-    var p = Photo(path: path);
-    String ds = await ExifInterface.getAttribute(path, ExifTag.TAG_DATETIME_ORIGINAL);
+    final p = Photo(path: path);
+    String ds = await ExifInterfaceOLD.getAttribute(path, ExifTagOLD.TAG_DATETIME_ORIGINAL);
     if (ds.isNotEmpty) {
       DateTime? d = DateTime.tryParse(ds.replaceAll(":", "").replaceAll(" ", "T"));
       if (d != null) p.dateTaken = d;
     }
     else p.dateTaken = await File(path).lastModified();
     return p;
+  }
+
+  static Photo fromString(String s) {
+    final sd = s.split('|');
+    return Photo(path: sd[0])..dateTaken = DateTime.parse(sd[1]);
+  }
+
+  @override
+  String toString() {
+    return '$path|${dateTaken.toIso8601String()}';
   }
 
   // Fields
@@ -32,15 +41,15 @@ class Photo {
   String get name => path.substring(path.lastIndexOf(Platform.pathSeparator) + 1);
   
   Future<String> get commentOrName async {
-    String comment = await ExifInterface.getAttribute(path, ExifTag.TAG_USER_COMMENT);
+    String comment = await ExifInterfaceOLD.getAttribute(path, ExifTagOLD.TAG_USER_COMMENT);
     if (comment.isNotEmpty)
       return comment;
     return name;
   }
 
   Future<int> get megaPixels async {
-    int x = int.tryParse(await ExifInterface.getAttribute(path, ExifTag.TAG_PIXEL_X_DIMENSION)) ?? 1;
-    int y = int.tryParse(await ExifInterface.getAttribute(path, ExifTag.TAG_PIXEL_Y_DIMENSION)) ?? 1;
+    int x = int.tryParse(await ExifInterfaceOLD.getAttribute(path, ExifTagOLD.TAG_PIXEL_X_DIMENSION)) ?? 1;
+    int y = int.tryParse(await ExifInterfaceOLD.getAttribute(path, ExifTagOLD.TAG_PIXEL_Y_DIMENSION)) ?? 1;
     return ((x * y) / 1000000).round();
   }
 
@@ -68,10 +77,7 @@ class Photo {
   Future<bool> showMoreActionsPopup(BuildContext context, {bool evenMoreActions = false}) async =>
     await photosMoreActionPopup(context, this, evenMoreActions);
 
-  Future<Widget> getDetailsWidget(BuildContext context) async =>
-    await getPhotoDetailsWidget(this, context);
-
-  Future<bool> showDeletePopup(BuildContext context, Function onDelete) async {
+  Future<bool> showDeletePopup(BuildContext context) async {
     bool delete = await showMonoPDialog(
       context,
       title: "Delete?",
@@ -95,14 +101,13 @@ class Photo {
           Settings.favorites.remove(path);
         showStyledToast("Deleted!", context);
       }
-      onDelete();
     }
 
     return delete;
   }
 
-  Future<bool> showEditCommentPopup(BuildContext context, Function onEdit) async {
-    var ctrlr = TextEditingController(text: await ExifInterface.getAttribute(path, ExifTag.TAG_USER_COMMENT));
+  Future<bool> showEditCommentPopup(BuildContext context) async {
+    var ctrlr = TextEditingController(text: await ExifInterfaceOLD.getAttribute(path, ExifTagOLD.TAG_USER_COMMENT));
     List<String> randomPlaceholders = ["Beautiful skies", "Rainy ☔", "Son 😭😭😭😭", "Night", "Today is ____",
       "⛅", "☀️", "💀", "Landscape at", "Here we at 192.168.__.__", "Write comment", "Placeholder"];
       //TODO: add more more! more!!
@@ -119,10 +124,8 @@ class Photo {
       ),
     );
 
-    if (edited) {
-      await ExifInterface.setAttribute(path, ExifTag.TAG_USER_COMMENT, ctrlr.text);
-      onEdit();
-    }
+    if (edited)
+      await ExifInterfaceOLD.setAttribute(path, ExifTagOLD.TAG_USER_COMMENT, ctrlr.text);
       
     return edited;
   }

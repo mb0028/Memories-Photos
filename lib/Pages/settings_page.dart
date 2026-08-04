@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:memories_photos/Popups/change_accent_popup.dart';
 import 'package:memories_photos/Popups/path_picker_popup.dart';
@@ -17,6 +18,18 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   int a = 220;
+  FragmentProgram? colorfulBackgroundProgram;
+  
+  void loadBG() async {
+    colorfulBackgroundProgram = await FragmentProgram.fromAsset("Assets/Shaders/bg.frag");
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    loadBG();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +42,8 @@ class _SettingsPageState extends State<SettingsPage> {
         elevation: 0,
       ),
       extendBodyBehindAppBar: true,
-      body: ColorfulBackground(
+      body: colorfulBackgroundProgram == null ? SizedBox() : ColorfulBackground(
+        colorfulBackgroundProgram: colorfulBackgroundProgram!,
         child: Container(
           padding: .symmetric(horizontal: 15),
           child: SilkyListView(
@@ -168,17 +182,6 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
           ),
           ListTile(
-            title: Text("In-App Camera"),
-            subtitle: Text("Use in app camera instead of switching to phone's default camera app", style: TextStyle(fontSize: 12)),
-            leading: Switch(
-              value: Settings.inAppCamera,
-              onChanged: (value) {
-                setState(() => Settings.inAppCamera = value);
-                Settings.save();
-              },
-            ),
-          ),
-          ListTile(
             title: Text("Shuffle special sections"),
             subtitle: Text("Shuffle homepage special sections (like sunrise & night sections)", style: TextStyle(fontSize: 12)),
             leading: Switch(
@@ -200,18 +203,17 @@ class _SettingsPageState extends State<SettingsPage> {
               },
             ),
           ),
+          ListTile(
+            title: Text("Show hidden photos"),
+            leading: Switch(
+              value: Settings.showHidden,
+              onChanged: (value) {
+                setState(() => Settings.showHidden = value);
+                Settings.save();
+              },
+            ),
+          ),
           Divider(),
-          // ListTile(
-          //   title: Text("Show hidden photos"),
-          //   subtitle: Text("Not works as excepted. don't turn it on until next updates", style: TextStyle(fontSize: 12)),
-          //   leading: Switch(
-          //     value: Settings.showHidden,
-          //     onChanged: (value) {
-          //       setState(() => Settings.showHidden = value);
-          //       Settings.save();
-          //     },
-          //   ),
-          // ),
           ListTile(
             title: Text("Max home recent items: ${Settings.recentsCount}"),
             subtitle: Slider(
@@ -247,6 +249,18 @@ class _SettingsPageState extends State<SettingsPage> {
               value: Settings.maxUndoCount.toDouble(),
               onChanged: (value) {
                 setState(() => Settings.maxUndoCount = value.toInt());
+                Settings.save();
+              },
+            ),
+          ),
+          Divider(),
+          ListTile(
+            title: Text("In-App Camera"),
+            subtitle: Text("Use in app camera instead of switching to phone's default camera app", style: TextStyle(fontSize: 12)),
+            leading: Switch(
+              value: Settings.inAppCamera,
+              onChanged: (value) {
+                setState(() => Settings.inAppCamera = value);
                 Settings.save();
               },
             ),

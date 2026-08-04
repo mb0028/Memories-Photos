@@ -35,7 +35,7 @@
 
 import 'dart:typed_data';
 
-class ExifTag {
+class ExifTagOLD {
   ///  The number of columns of image data, equal to the number of pixels per row. In JPEG
   ///  compressed data, this tag shall not be used because a JPEG marker is used instead of it.
   static const String TAG_IMAGE_WIDTH = "ImageWidth";

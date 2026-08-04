@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:memories_photos/settings.dart';
 
-class BlurredContainerMonoP extends StatelessWidget {
-  const BlurredContainerMonoP({super.key, required this.child, this.color, this.padding, this.margin, this.roundneess, this.blur, this.border, this.width, this.height});
+class BlurredContainer extends StatelessWidget {
+  const BlurredContainer({super.key, required this.child, this.color, this.padding, this.margin, this.roundneess, this.blur, this.border, this.width, this.height});
   /// null = 15
   final double? roundneess;
   /// null = 5
@@ -25,7 +25,7 @@ class BlurredContainerMonoP extends StatelessWidget {
         padding: padding,
         clipBehavior: .antiAlias,
         decoration: BoxDecoration(
-          color: color?.withAlpha(200),
+          color: color?.withAlpha(220),
           borderRadius: .circular(roundneess ?? 15),
           border: border
         ),

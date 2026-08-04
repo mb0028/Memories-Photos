@@ -1,17 +1,15 @@
 // ignore_for_file: dead_code
 import 'dart:io';
-import 'dart:ui';
 import 'package:camera/camera.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:memories_photos/Pages/More/permissions_page.dart';
-import 'package:memories_photos/windows_photo_only_view.dart';
+import 'package:memories_photos/Pages/More/windows_photo_only_view.dart';
 import 'package:memories_photos/Pages/home_page.dart';
 import 'package:memories_photos/Scripts/android_helper.dart';
 import 'package:memories_photos/settings.dart';
 
-late FragmentProgram colorfulBackgroundProgram;
 late List<CameraDescription> cameras;
 
 void main(List<String> args) async {
@@ -30,12 +28,11 @@ void main(List<String> args) async {
   }
 
   if (Platform.isAndroid) cameras = await availableCameras();
-
-  colorfulBackgroundProgram = await FragmentProgram.fromAsset("Assets/Shaders/bg.frag");
   
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     systemNavigationBarContrastEnforced: false,
-    systemNavigationBarIconBrightness: .dark
+    systemNavigationBarIconBrightness: .dark,
+    statusBarBrightness: .dark
   ));
 
   if (await AndroidHelper.isExternalStorageManager())
@@ -43,6 +40,7 @@ void main(List<String> args) async {
   else
     runApp(const MainApp(hasFileAccess: false));
 }
+
 
 class MainApp extends StatefulWidget {
   const MainApp({super.key, required this.hasFileAccess});

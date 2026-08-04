@@ -1,10 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:memories_photos/Scripts/media_store.dart';
 import 'package:memories_photos/Structs/photo.dart';
-import 'package:memories_photos/Widgets/blur.dart';
 import 'package:memories_photos/Widgets/photo_card.dart';
-import 'package:memories_photos/main.dart';
-import 'package:memories_photos/Scripts/photo_indexer.dart';
 import 'package:memories_photos/settings.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:silky_scroll/silky_scroll.dart';
@@ -20,28 +19,20 @@ class PhotosPage extends StatefulWidget {
 }
 
 class _PhotosPageState extends State<PhotosPage> {
-  List<Photo>? photos;
-  ColorScheme appbarColorScheme = ColorScheme.fromSeed(seedColor: Settings.accent);
+  Set<Photo>? photos;
 
   void load() async {
     if (widget.folder != null) {
       if (widget.folder == "[FAV]") {
-        photos = [];
+        photos = {};
         for (var path in Settings.favorites)
           photos!.add(await Photo.fromPath(path));
       }
       else
-        photos = await PhotoIndexer.scanFolderFunky(widget.folder!);
+        photos = await MbMediaStore.scanFolderFunky(widget.folder!);
     }
     else
-      photos = PhotoIndexer.photos;
-
-    if (Settings.adaptiveColors && widget.folder != null && photos!.isNotEmpty)
-      appbarColorScheme = await ColorScheme.fromImageProvider(
-        provider: FileImage(File(photos!.first.path)),
-        dynamicSchemeVariant: .rainbow,
-        brightness: MainAppState.brightness,
-      );
+      photos = MbMediaStore.photos;
     setState(() {});
   }
 
@@ -53,118 +44,75 @@ class _PhotosPageState extends State<PhotosPage> {
 
   @override
   Widget build(BuildContext context) {
-    var screenWidth = MediaQuery.widthOf(context);
-    var padding = MediaQuery.paddingOf(context);
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      backgroundColor: widget.folder == null ? Colors.transparent : null,
-      
-      appBar: _appbar(context),
-      
-      body: photos != null && photos!.isNotEmpty ? Column(
-        crossAxisAlignment: .stretch,
-        children: [
-          widget.folder != null ? SizedBox(
-            height: padding.top + 60,
-            child: Image.file(
-              File(photos!.first.path),
-              fit: .cover,
-            )
-          ) : SizedBox() ,
-          Expanded(
-            child: SilkyGridView.builder(
-              scrollSpeed: 1.5,
-              padding: .only(bottom: 200, top: widget.folder == null ? padding.top + 60 : 10,
-                left: 5, right: 5),
-              physics: BouncingScrollPhysics(),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: (screenWidth / Settings.gridScale).toInt().clamp(1, 100)),
-              itemCount: photos!.length,
-              itemBuilder: (context, i) => PhotoCard(i: i, query: photos!),
-            ),
-          ),
-        ],
-      ) : Center(child: Text("Still loading or no photos 😵"))
-    );
-  }
-
-  AppBar _appbar(BuildContext context) {
-    return AppBar(
-      centerTitle: true,
-      backgroundColor: Colors.transparent,
-      surfaceTintColor: Colors.transparent,
-      title: BlurredContainerMonoP(
-        roundneess: 50 * Settings.rm,
-        padding: .symmetric(vertical: 10, horizontal: 20),
-        color: appbarColorScheme.secondaryContainer.withAlpha(120),
-        // border: .all(
-        //   width: 2,
-        //   color: appbarColorScheme.surface
-        // ),
-        child: Text(
-          widget.folder != null
-          ? widget.folder!.substring(widget.folder!.lastIndexOf(Platform.pathSeparator) + 1)
-          : "All Photos",
-          style: TextStyle(color: appbarColorScheme.onSecondaryContainer),
+    return ValueListenableBuilder<SystemUiOverlayStyle>(
+      valueListenable: AlwaysStoppedAnimation(
+        SystemUiOverlayStyle(
+          statusBarIconBrightness: .dark,
+          systemNavigationBarIconBrightness: .dark
         )
       ),
-
-      leading: widget.folder != null ? IconButton.filled(
-        style: ButtonStyle(
-          backgroundColor: WidgetStatePropertyAll(appbarColorScheme.primaryContainer)
+      builder: (context, value, child) => Scaffold(
+        extendBodyBehindAppBar: true,
+        backgroundColor: widget.folder == null ? Colors.transparent : null,
+        
+        appBar: AppBar(
+          backgroundColor: widget.folder != null ? Theme.of(context).colorScheme.surface.withAlpha(220) : Colors.transparent,
+          surfaceTintColor: Colors.transparent,
+          toolbarHeight: 45,
+          title: Text(
+            switch (widget.folder) {
+              "[FAV]" => "Favorites",
+              null => "All Photos",
+              _ => widget.folder!.substring(widget.folder!.lastIndexOf(Platform.pathSeparator) + 1)
+            },
+            style: TextStyle(color: Theme.of(context).colorScheme.onSecondaryContainer),
+          ),
+      
+          actionsPadding: .only(right: 8),
+          actions: [
+            widget.folder != null && photos != null && photos!.isNotEmpty ? IconButton(
+              icon: Icon(Icons.share),
+              tooltip: "Share album (limited to 50 recent images)",
+              onPressed: () async {
+                List<XFile> share = [];
+                for (var i = 0; i < photos!.length.clamp(1, 50); i++)
+                  share.add(XFile(photos!.elementAt(i).path));
+      
+                var params = ShareParams(
+                  title: "Share Album",
+                  files: share,
+                );
+                await SharePlus.instance.share(params);
+              }
+            ) : SizedBox(),
+      
+            SizedBox(width: 5),
+      
+            IconButton(
+              icon: Icon(Icons.grid_view_rounded),
+              tooltip: "Grid Settings",
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  showDragHandle: true,
+                  backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+                  builder: (context) => _GridScalePopup(onChanged: () => setState(() {}))
+                );
+              }
+            ),
+          ],
         ),
-        icon: Icon(
-          Icons.arrow_back_rounded,
-          color: appbarColorScheme.onPrimaryContainer
-        ),
-        tooltip: "Back",
-        onPressed: () => Navigator.of(context).pop(),
-      ) : null,
-
-      actionsPadding: .only(right: 8),
-      actions: [
-        widget.folder != null && photos != null && photos!.isNotEmpty ? IconButton.filled(
-          style: ButtonStyle(
-            backgroundColor: WidgetStatePropertyAll(appbarColorScheme.secondaryContainer)
-          ),
-          icon: Icon(
-            Icons.share,
-            color: appbarColorScheme.onSecondaryContainer,
-          ),
-          tooltip: "Share album (limited to 50 recent images)",
-          onPressed: () async {
-            List<XFile> share = [];
-            for (var i = 0; i < photos!.length.clamp(1, 50); i++)
-              share.add(XFile(photos![i].path));
-
-            var params = ShareParams(
-              title: "Share Album",
-              files: share,
-            );
-            await SharePlus.instance.share(params);
-          }
-        ) : SizedBox(),
-
-        SizedBox(width: 10),
-
-        IconButton.filled(
-          style: ButtonStyle(
-            backgroundColor: WidgetStatePropertyAll(appbarColorScheme.secondaryContainer)
-          ),
-          icon: Icon(
-            Icons.grid_view_rounded,
-            color: appbarColorScheme.onSecondaryContainer,
-          ),
-          tooltip: "Grid Settings",
-          onPressed: () {
-            showModalBottomSheet(
-              context: context,
-              showDragHandle: true,
-              backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
-              builder: (context) => _GridScalePopup(onChanged: () => setState(() {}))
-            );
-          }
-        ),
-      ],
+        
+        body: photos != null ? SilkyGridView.builder(
+          scrollSpeed: 1.5,
+          padding: .only(bottom: 200, top: MediaQuery.paddingOf(context).top + 50,
+            left: 2.5, right: 2.5),
+          physics: BouncingScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: (MediaQuery.widthOf(context) / Settings.gridScale).toInt().clamp(1, 100)),
+          itemCount: photos!.length,
+          itemBuilder: (context, i) => PhotoCard(i: i, query: photos!),
+        ) : Center(child: Text("Still loading or no photos 😵"))
+      )
     );
   }
 }

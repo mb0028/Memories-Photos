@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memories_photos/Editor/editor_page.dart';
+import 'package:memories_photos/Popups/photo_details.dart';
 import 'package:memories_photos/Structs/photo.dart';
 import 'package:memories_photos/Widgets/expressive_button.dart';
 import 'package:open_filex/open_filex.dart';
@@ -14,7 +15,7 @@ Future<bool> photosMoreActionPopup(BuildContext context, Photo photo, bool moreA
       insetPadding: .all(5),
       child: Container(
         width: 380,
-        height: moreActions ? 612 : 280,
+        height: moreActions ? 612 : 195,
         padding: .symmetric(vertical: 15),
         child: ListView(
           physics: BouncingScrollPhysics(),
@@ -30,10 +31,10 @@ Future<bool> photosMoreActionPopup(BuildContext context, Photo photo, bool moreA
             ),
             moreActions ? ExpressiveButton(
               text: "Change Comment",
-              icon: Icon(Icons.insert_comment_outlined),
+              icon: Icon(Icons.draw_rounded),
               onClick: () async {
                 needsRefresh = true;
-                await photo.showEditCommentPopup(context, () {});
+                await photo.showEditCommentPopup(context);
                 Navigator.of(context).pop();
               },
             ) : SizedBox(),
@@ -43,12 +44,7 @@ Future<bool> photosMoreActionPopup(BuildContext context, Photo photo, bool moreA
               onClick: () {
                 needsRefresh = true;
                 Navigator.of(context).pop();
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => Dialog.fullscreen(
-                  child: FutureBuilder(
-                    future: photo.getDetailsWidget(context),
-                    builder: (context, snapshot) => snapshot.data ?? SizedBox(),
-                  ),
-                )));
+                showPhotoDetails(photo, context);
               },
             ) : SizedBox(),
             moreActions ? ExpressiveButton(
@@ -65,19 +61,19 @@ Future<bool> photosMoreActionPopup(BuildContext context, Photo photo, bool moreA
               icon: Icon(Icons.delete_outline_rounded),
               onClick: () async {
                 needsRefresh = true;
-                await photo.showDeletePopup(context, () {});
+                await photo.showDeletePopup(context);
                 Navigator.of(context).pop();
               },
             ) : SizedBox(),
-            ExpressiveButton(
+            moreActions ? ExpressiveButton(
               text: "Edit",
-              icon: Icon(Icons.draw_rounded),
+              icon: Icon(Icons.crop_rounded),
               onClick: () {
                 needsRefresh = true;
                 Navigator.of(context).pop();
                 Navigator.of(context).push(MaterialPageRoute(builder: (context) => EditorPage(photo: photo)));
               },
-            ),
+            ) : SizedBox(),
             ExpressiveButton.end(
               text: "Share",
               icon: Icon(Icons.share_rounded),

@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:memories_photos/Scripts/media_store.dart';
 import 'package:memories_photos/Structs/photo.dart';
 import 'package:memories_photos/Widgets/photo_card_home_page.dart';
-import 'package:memories_photos/Scripts/photo_indexer.dart';
 import 'package:memories_photos/settings.dart';
 import 'package:silky_scroll/silky_scroll.dart';
 
@@ -17,13 +17,13 @@ class HomePageContents extends StatefulWidget {
 }
 
 class _HomePageContentsState extends State<HomePageContents> {
-  List<Photo> recents = [];
-  List<Photo> sunrise = [];
-  List<Photo> night = [];
-  List<Photo> highRes = [];
+  Set<Photo> recents = {};
+  Set<Photo> sunrise = {};
+  Set<Photo> night = {};
+  Set<Photo> highRes = {};
   Photo? header;
   bool noImages = false;
-  var scroll = ScrollController();
+  final scroll = ScrollController();
   double scrollOffset = 0;
   List<int> randomNums = [0, 0, 0];
 
@@ -34,18 +34,18 @@ class _HomePageContentsState extends State<HomePageContents> {
       Random.secure().nextInt(4)
     ];
 
-    recents = []; sunrise = []; night = []; highRes = [];
-    int sunriseCount = 0; int nightCount = 0; int hqCount = 0;
+    await MbMediaStore.rescanAllPhotos();
+    final temp = MbMediaStore.photos.toList();
 
-    await PhotoIndexer.rescanAllPhotos();
-    var temp = PhotoIndexer.photos.toList();
-
-    if(PhotoIndexer.photos.isEmpty) {
+    if (MbMediaStore.photos.isEmpty) {
       setState(() => noImages = true);
       return;
     }
 
     header = temp[Random.secure().nextInt(temp.length)];
+
+    recents = {}; sunrise = {}; night = {}; highRes = {};
+    int sunriseCount = 0; int nightCount = 0; int hqCount = 0;
 
     for (var i = 0; i < Settings.recentsCount; i++)
       recents.add(temp[i.clamp(0, temp.length - 1)]);
@@ -57,10 +57,10 @@ class _HomePageContentsState extends State<HomePageContents> {
       if ((sunriseCount + nightCount + hqCount) > (Settings.specialSectionsCount * 3))
         break;
 
-      if(p.isTakenAtMorning && sunriseCount < Settings.specialSectionsCount) {
+      if (p.isTakenAtMorning && sunriseCount < Settings.specialSectionsCount) {
         sunrise.add(p);
         sunriseCount++;
-      } else if(!p.isTakenAtDay && nightCount < Settings.specialSectionsCount) {
+      } else if (!p.isTakenAtDay && nightCount < Settings.specialSectionsCount) {
         night.add(p);
         nightCount++;
       }
@@ -195,7 +195,7 @@ class _Section extends StatelessWidget {
   const _Section({
     required this.photos, required this.flexWeights
   });
-  final List<Photo> photos;
+  final Set<Photo> photos;
   final List<int> flexWeights;
 
   @override

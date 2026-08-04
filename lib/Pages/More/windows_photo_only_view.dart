@@ -49,7 +49,7 @@ class _WindowsPhotoOnlyViewAppState extends State<WindowsPhotoOnlyViewApp> {
               : const Color.fromARGB(255, 31, 31, 32),
           ),
         ),
-        bottomNavigationBar: MediaQuery.heightOf(context) > 320 ? BlurredContainerMonoP(
+        bottomNavigationBar: MediaQuery.heightOf(context) > 320 ? BlurredContainer(
           color: Colors.white.withAlpha(200),
           height: 45,
           blur: 15,

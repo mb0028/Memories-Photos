@@ -15,7 +15,7 @@ class Filters {
   /// mimic MATLAB rgb2gray https://www.mathworks.com/help/matlab/ref/rgb2gray.html
   /// note this uses a weird convention of 0.2989 for the coefficient of red instead
   /// of the coefficient 0.299
-  static Future<void> grayscale(String path) async { //
+  static Future<void> grayscale(String path) async {
     final image = (await img.decodeImageFile(path))!;
     for (var pixel in image) {
       int gs = ((0.2989 * pixel.r) + (0.5870 * pixel.g) + (0.1140 * pixel.b)).toInt().clamp(0, 255);

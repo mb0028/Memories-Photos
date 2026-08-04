@@ -168,7 +168,7 @@ class _ShutterRow extends StatelessWidget {
             
             showStyledToast("Saved: $time", context);
             if (Settings.editCommentAfterCamPic)
-              (await Photo.fromPath(finalPath)).showEditCommentPopup(context, () {});
+              (await Photo.fromPath(finalPath)).showEditCommentPopup(context);
           },
         ),
         IconButton(

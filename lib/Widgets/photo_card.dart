@@ -5,7 +5,7 @@ import 'package:memories_photos/Structs/photo.dart';
 import 'package:memories_photos/settings.dart';
 
 class PhotoCard extends StatelessWidget {
-  final List<Photo> query;
+  final Set<Photo> query;
   final int i;
   const PhotoCard({super.key, required this.i, required this.query});
 
@@ -17,7 +17,7 @@ class PhotoCard extends StatelessWidget {
           builder: (context) => PhotoViewerPage(query: query, i: i),
         )
       ),
-      onLongPress: () => query[i].showMoreActionsPopup(context, evenMoreActions: true),
+      onLongPress: () => query.elementAt(i).showMoreActionsPopup(context, evenMoreActions: true),
       child: Container(
         clipBehavior: .antiAlias,
         margin: .all(2),
@@ -26,9 +26,9 @@ class PhotoCard extends StatelessWidget {
           borderRadius: .circular(25 * Settings.rm),
         ),
         child: Hero(
-          tag: query[i],
+          tag: query.elementAt(i),
           child: Image.file(
-            File(query[i].path),
+            File(query.elementAt(i).path),
             cacheWidth: 380,
             fit: .cover,
           ),

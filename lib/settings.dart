@@ -17,8 +17,8 @@ class Settings {
   static int recentsCount = 20;
   static int specialSectionsCount = 15;
   static int maxUndoCount = 10;
-  /// rm = Roundness multiple
-  static double rm = 1.0;
+  static int mediaScanRate = 60;
+  static double rm = 1.0; // rm = Roundness multiple
   static bool showHidden = false;
   static bool trashInstead = true;
   static bool onlyShowDCIM = false;
@@ -128,10 +128,10 @@ class Settings {
 
   static void log(String logText, {String? moreInfo, dynamic sender}) async {
     final text = "[${DateTime.now()}] $sender --| $logText | $moreInfo";
-    print(text);
+    // print(text);
 
     var lastLogs = await logFile.readAsLines();
-    if (lastLogs.length > 100)
+    if (lastLogs.length > 75)
       lastLogs.removeLast();
     lastLogs.insert(0, text);
     await logFile.writeAsString(lastLogs.join("\n"));

@@ -1,10 +1,10 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:memories_photos/main.dart';
 
 class ColorfulBackground extends StatelessWidget {
   final Widget? child;
-  const ColorfulBackground({super.key, this.child});
+  final FragmentProgram colorfulBackgroundProgram;
+  const ColorfulBackground({super.key, this.child, required this.colorfulBackgroundProgram});
 
   @override
   Widget build(BuildContext context) {

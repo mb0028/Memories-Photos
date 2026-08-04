@@ -7,7 +7,7 @@ void showStyledToast(String text, BuildContext context, {int duration = 3}) {
   showToastWidget(
     Container(
       margin: .only(top: 80),
-      child: BlurredContainerMonoP(
+      child: BlurredContainer(
         padding: .all(15),
         color: Theme.of(context).colorScheme.tertiaryContainer.withAlpha(90),
         roundneess: 25 * Settings.rm,

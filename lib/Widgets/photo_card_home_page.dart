@@ -6,7 +6,7 @@ import 'package:memories_photos/Widgets/blur.dart';
 import 'package:memories_photos/settings.dart';
 
 class PhotoCardHomePage extends StatelessWidget {
-  final List<Photo> query;
+  final Set<Photo> query;
   final int i;
   const PhotoCardHomePage({super.key, required this.query, required this.i});
 
@@ -28,9 +28,9 @@ class PhotoCardHomePage extends StatelessWidget {
               color: Theme.of(context).colorScheme.secondaryContainer
             ),
             child: Hero(
-              tag: query[i],
+              tag: query.elementAt(i),
               child: Image.file(
-                File(query[i].path),
+                File(query.elementAt(i).path),
                 fit: .cover,
                 width: 190,
                 height: 190,
@@ -41,16 +41,16 @@ class PhotoCardHomePage extends StatelessWidget {
         ),
         
         GestureDetector(
-          onTap: () => query[i].showMoreActionsPopup(context, evenMoreActions: true),
-          child: BlurredContainerMonoP(
+          onTap: () => query.elementAt(i).showMoreActionsPopup(context, evenMoreActions: true),
+          child: BlurredContainer(
             margin: .all(5),
             padding: .all(5),
             width: 180,
             roundneess: 15 * Settings.rm,
             blur: 3.5,
-            color: Theme.of(context).colorScheme.surfaceBright.withAlpha(120),
+            color: Theme.of(context).colorScheme.secondaryContainer.withAlpha(120),
             child: Text(
-              query[i].name,
+              query.elementAt(i).name,
               maxLines: 2,
               textAlign: .center,
               overflow: .fade,

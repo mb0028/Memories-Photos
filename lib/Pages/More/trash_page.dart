@@ -1,7 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:memories_photos/Popups/toast.dart';
-import 'package:memories_photos/Scripts/photo_indexer.dart';
+import 'package:memories_photos/Scripts/media_store.dart';
+import 'package:memories_photos/Widgets/expressive_button.dart';
 import 'package:memories_photos/settings.dart';
 import 'package:silky_scroll/silky_scroll.dart';
 
@@ -31,38 +32,38 @@ class _TrashPageState extends State<TrashPage> {
       ),
       body: Container(
         margin: .all(10),
-        child: PhotoIndexer.photosInTrash.isNotEmpty ? SilkyGridView.builder(
+        child: MbMediaStore.photosInTrash.isNotEmpty ? SilkyGridView.builder(
           scrollSpeed: 1.5,
           padding: .only(bottom: 200),
           physics: BouncingScrollPhysics(),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: (MediaQuery.widthOf(context) / (Settings.gridScale * 1.3)).toInt().clamp(1, 100)),
-          itemCount: PhotoIndexer.photosInTrash.length,
+          itemCount: MbMediaStore.photosInTrash.length,
           itemBuilder: (context, i) => GestureDetector(
             onTap: () async {
               await showDialog(context: context, builder: (context) => Dialog(
                 child: Container(
-                  padding: .all(15),
+                  padding: .symmetric(vertical: 15),
                   width: 300,
-                  height: 130,
+                  height: 198,
                   child: Column(
                     mainAxisAlignment: .spaceEvenly,
                     children: [
-                      ListTile(
-                        leading: Icon(Icons.delete_forever_rounded),
-                        title: Text("Delete Forever"),
-                        onTap: () async {
-                          await File(PhotoIndexer.photosInTrash[i].path).delete();
-                          setState(() => PhotoIndexer.photosInTrash.removeAt(i));
+                      ExpressiveButton.top(
+                        icon: Icon(Icons.delete_forever_rounded),
+                        text: "Delete Forever",
+                        onClick: () async {
+                          await File(MbMediaStore.photosInTrash.elementAt(i).path).delete();
+                          setState(() => MbMediaStore.photosInTrash.remove(MbMediaStore.photosInTrash.elementAt(i)));
                           showStyledToast("Deleted!", context);
                           Navigator.of(context).pop();
                         },
                       ),
-                      ListTile(
-                        leading: Icon(Icons.restore_rounded),
-                        title: Text("Restore"),
-                        onTap: () async {
-                          await PhotoIndexer.photosInTrash[i].restoreFromTrash();
-                          setState(() => PhotoIndexer.photosInTrash.removeAt(i));
+                      ExpressiveButton.end(
+                        icon: Icon(Icons.restore_rounded),
+                        text: "Restore",
+                        onClick: () async {
+                          await MbMediaStore.photosInTrash.elementAt(i).restoreFromTrash();
+                          setState(() => MbMediaStore.photosInTrash.remove(MbMediaStore.photosInTrash.elementAt(i)));
                           showStyledToast("Restored!", context);
                           Navigator.of(context).pop();
                         },
@@ -80,9 +81,9 @@ class _TrashPageState extends State<TrashPage> {
                 borderRadius: .circular(25 * Settings.rm),
               ),
               child: Hero(
-                tag: PhotoIndexer.photosInTrash[i],
+                tag: MbMediaStore.photosInTrash.elementAt(i),
                 child: Image.file(
-                  File(PhotoIndexer.photosInTrash[i].path),
+                  File(MbMediaStore.photosInTrash.elementAt(i).path),
                   cacheWidth: 320,
                   fit: .cover,
                 ),
