@@ -8,9 +8,9 @@ Download Beta (Android only) from release page
 
 ## Screenshots
 
-<img height="500" src="/Things/demo (1).png" /> <img height="500" src="/Things/demo (2).png" /> <img height="500" src="/Things/demo (3).png" />
+<img height="240" src="/Things/demo (1).png" /> <img height="240" src="/Things/demo (2).png" /> <img height="240" src="/Things/demo (3).png" />
 
-<img height="500" src="/Things/More SS (1).png" /> <img height="500" src="/Things/More SS (2).png" />
+<img height="240" src="/Things/More SS (1).png" /> <img height="240" src="/Things/More SS (2).png" />
 
 ## Fonts Used:
 
