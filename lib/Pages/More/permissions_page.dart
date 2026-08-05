@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:memories_photos/Scripts/android_helper.dart';
 import 'package:memories_photos/main.dart';
+import 'package:memories_photos/settings.dart';
 
 class PermissionsPage extends StatefulWidget {
   const PermissionsPage({super.key});
@@ -42,7 +43,10 @@ class _PermissionsPageState extends State<PermissionsPage> {
               child: Text("Refresh")
             ) : SizedBox(),
             hasFileAccess ? OutlinedButton(
-              onPressed: () => setState(() => MainAppState.instance!.setState(() => MainAppState.instance!.hasFileAccess = true)), 
+              onPressed: () async {
+                await Settings.load();
+                setState(() => MainAppState.instance!.setState(() => MainAppState.instance!.hasFileAccess = true));
+              }, 
               child: Text("Restart App")
             ) : SizedBox(),
           ],

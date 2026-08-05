@@ -2,7 +2,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:memories_photos/Scripts/android_helper.dart';
 
 class Settings {
   static const String LexendDeca = "LexendDeca";
@@ -37,8 +36,7 @@ class Settings {
   static Future<void> load() async {
     await logFile.create(recursive: true);
     await historyFile.create();
-    var access = await AndroidHelper.isExternalStorageManager();
-    if (access && await settingsFile.exists()) {
+    if (await settingsFile.exists()) {
       var splitter = LineSplitter();
       var data = splitter.convert(await settingsFile.readAsString());
 

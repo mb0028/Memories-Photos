@@ -15,6 +15,11 @@ late List<CameraDescription> cameras;
 void main(List<String> args) async {
   bool testOpenWith = false;
   WidgetsFlutterBinding.ensureInitialized();
+
+  if (!(await AndroidHelper.isExternalStorageManager())) {
+    runApp(const MainApp(hasFileAccess: false));
+    return;
+  }
   
   await Settings.load();
 
@@ -35,10 +40,7 @@ void main(List<String> args) async {
     statusBarBrightness: .dark
   ));
 
-  if (await AndroidHelper.isExternalStorageManager())
-    runApp(const MainApp(hasFileAccess: true));
-  else
-    runApp(const MainApp(hasFileAccess: false));
+  runApp(const MainApp(hasFileAccess: true));
 }
 
 
