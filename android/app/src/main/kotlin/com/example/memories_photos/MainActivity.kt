@@ -1,6 +1,7 @@
 package com.example.memories_photos
 
 import android.Manifest
+import android.content.ComponentName
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
@@ -78,7 +79,7 @@ class MainActivity : FlutterActivity() {
                 "openWithMaps" -> {
                     val lat = call.argument<String>("lat")!!
                     val long = call.argument<String>("long")!!
-                    val mapUri = "https://maps.google.com/maps/search/${lat.subSequence(0, 2)},${long.subSequence(0, 2)}".toUri()
+                    val mapUri = "https://maps.google.com/maps/search/${lat},${long}".toUri()
                     val intent = Intent(Intent.ACTION_VIEW, mapUri)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(intent)
