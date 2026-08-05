@@ -2,12 +2,11 @@
 - Material 3 expressive styled buttons, tiles & popups
 - App icon is now darker
 - Improved in-app camera
+- New editor features: Cropping image, Adjustments
 - Fix all refreshing bugs *
-- App now use build-in EXIF extractor *
-  - Resulted in x45 faster EXIF loading with less ram usage
 - Up to 15 times faster photo indexing *
 - Log file (in the same dir as Settings.txt)
-- Fix lot of bugs (MAP LAT LONG ACC) *
+- Fix lot of bugs *
 
 Windows:
 - MSIX Packaging

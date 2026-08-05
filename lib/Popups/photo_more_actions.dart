@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:memories_photos/Editor/editor_page.dart';
+import 'package:memories_photos/Pages/More/editor_page.dart';
 import 'package:memories_photos/Popups/photo_details.dart';
 import 'package:memories_photos/Structs/photo.dart';
 import 'package:memories_photos/Widgets/expressive_button.dart';

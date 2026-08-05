@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:memories_photos/Pages/More/editor_page.dart';
 import 'package:memories_photos/Structs/photo.dart';
 import 'package:memories_photos/Widgets/blur.dart';
 import 'package:memories_photos/Popups/photo_details.dart';
@@ -209,10 +210,7 @@ class _Footer extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.crop_rounded, size: size),
             tooltip: "Edit",
-            onPressed: () async {
-              await photo.showEditCommentPopup(context);
-              onUpdate();
-            },
+            onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => EditorPage(photo: photo))),
           ),
         ],
       )

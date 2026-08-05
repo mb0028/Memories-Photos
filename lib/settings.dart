@@ -16,7 +16,6 @@ class Settings {
   static int gridScale = 120;
   static int recentsCount = 20;
   static int specialSectionsCount = 15;
-  static int maxUndoCount = 10;
   static int mediaScanRate = 60;
   static double rm = 1.0; // rm = Roundness multiple
   static bool showHidden = false;
@@ -59,8 +58,6 @@ class Settings {
           recentsCount = int.parse(line.split("[RC]")[1]);
         else if (line.startsWith("[SSC]"))
           specialSectionsCount = int.parse(line.split("[SSC]")[1]);
-        else if (line.startsWith("[MUC]"))
-          maxUndoCount = int.parse(line.split("[MUC]")[1]);
 
         else if (line.startsWith("[RM]"))
           rm = double.parse(line.split("[RM]")[1]);
@@ -100,7 +97,6 @@ class Settings {
     data += "[GS]$gridScale\n";
     data += "[RC]$recentsCount\n";
     data += "[SSC]$specialSectionsCount\n";
-    data += "[MUC]$maxUndoCount\n";
     data += "[RM]$rm\n";
 
     data += "[SH]$showHidden\n";

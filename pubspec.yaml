@@ -11,6 +11,7 @@ dependencies:
     sdk: flutter
 
   image: ^4.9.1
+  crop_your_image: ^2.0.0
   camera: ^0.12.0+1
   image_picker: ^1.2.3
 
@@ -36,7 +37,7 @@ msix_config:
   display_name: Memories Photos
   publisher_display_name: mb28
   identity_name: mb28.MonoP
-  msix_version: 1.3.0.7
+  msix_version: 1.3.0.8
   languages: en-us
   file_extension: .png, .jpeg, .jpg
   logo_path: E:\_Flutter Apps\memories_photos\Things\App Icon Base\AppRect.png
@@ -65,7 +66,7 @@ flutter:
   fonts:
     - family: LexendDeca
       fonts:
-        - asset: Assets/LexendDeca-Thin.ttf
+        - asset: Assets/LexendDeca-Bold.ttf
           weight: 700
         - asset: Assets/LexendDeca-Regular.ttf
         - asset: Assets/LexendDeca-Thin.ttf

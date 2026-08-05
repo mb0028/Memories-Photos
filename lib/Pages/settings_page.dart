@@ -240,19 +240,6 @@ class _SettingsPageState extends State<SettingsPage> {
               },
             ),
           ),
-          ListTile(
-            title: Text("Max image editor undo count: ${Settings.maxUndoCount}"),
-            subtitle: Slider(
-              min: 1,
-              max: 25,
-              showValueIndicator: .alwaysVisible,
-              value: Settings.maxUndoCount.toDouble(),
-              onChanged: (value) {
-                setState(() => Settings.maxUndoCount = value.toInt());
-                Settings.save();
-              },
-            ),
-          ),
           Divider(),
           ListTile(
             title: Text("In-App Camera"),

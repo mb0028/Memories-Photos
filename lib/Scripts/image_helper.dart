@@ -1,7 +1,9 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:memories_photos/Pages/More/camera_page.dart';
+import 'package:memories_photos/Popups/toast.dart';
 import 'package:memories_photos/settings.dart';
 
 class ImageHelper {
@@ -21,5 +23,13 @@ class ImageHelper {
       await photo.saveTo(Settings.appPath + Platform.pathSeparator + time);
       await File(photo.path).delete();
     }
+  }
+
+  static Future<void> saveImage(Uint8List photo, BuildContext context, {String name = "Photo"}) async {
+    final t = DateTime.now();
+    final time = "$name ${t.year}-${t.month}-${t.day} ${t.hour}-${t.minute}-${t.second}.jpg";
+    final path = Settings.appPath + Platform.pathSeparator + time;
+    await File(path).writeAsBytes(photo);
+    showStyledToast("Saved in: ${path.replaceFirst("/sdcard/", '')}", context);
   }
 }
