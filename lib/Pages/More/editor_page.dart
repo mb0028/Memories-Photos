@@ -53,7 +53,7 @@ class _EditorPageState extends State<EditorPage> {
       ),
 
       bottomNavigationBar: Padding(
-        padding: .all(15),
+        padding: .all(15).add(.only(bottom: MediaQuery.paddingOf(context).bottom)),
         child: Row(
           mainAxisAlignment: .center,
           spacing: 5,

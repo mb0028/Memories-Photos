@@ -24,16 +24,6 @@ class Photo {
     return p;
   }
 
-  static Photo fromString(String s) {
-    final sd = s.split('|');
-    return Photo(path: sd[0])..dateTaken = DateTime.parse(sd[1]);
-  }
-
-  @override
-  String toString() {
-    return '$path|${dateTaken.toIso8601String()}';
-  }
-
   // Fields
   final String path;
   DateTime dateTaken = DateTime(0);
