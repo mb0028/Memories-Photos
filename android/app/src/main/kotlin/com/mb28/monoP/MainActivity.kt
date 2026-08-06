@@ -85,6 +85,16 @@ class MainActivity : FlutterActivity() {
                     startActivity(intent)
                     result.success(true)
                 }
+                "startActivityClass" -> {
+                    val intent = Intent().apply {
+                        component = ComponentName(
+                            call.argument<String>("package")!!,
+                            call.argument<String>("class")!!
+                        )
+                    }
+                    startActivity(intent)
+                    result.success(true)
+                }
 
                 else -> {
                     result.notImplemented()

@@ -1,5 +1,7 @@
 package com.example.memories_photos
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.graphics.PixelFormat
 import android.hardware.camera2.*
 import android.hardware.camera2.params.OutputConfiguration
@@ -27,7 +29,11 @@ class CameraActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        enableEdgeToEdge()
+        enableEdgeToEdge()
+
+        if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(arrayOf(Manifest.permission.CAMERA), 4)
+        }
 
         setContent {
             Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.surface) {
