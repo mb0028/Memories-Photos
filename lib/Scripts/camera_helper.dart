@@ -6,7 +6,7 @@ import 'package:memories_photos/Pages/More/camera_page.dart';
 import 'package:memories_photos/Popups/toast.dart';
 import 'package:memories_photos/settings.dart';
 
-class ImageHelper {
+class CameraHelper {
   static Future<void> takePicture(BuildContext context) async {
     if (Settings.inAppCamera && Platform.isAndroid) {
       Navigator.of(context).push(MaterialPageRoute(builder: (context) => CameraPage()));
@@ -26,10 +26,14 @@ class ImageHelper {
   }
 
   static Future<void> saveImage(Uint8List photo, BuildContext context, {String name = "Photo"}) async {
-    final t = DateTime.now();
-    final time = "$name ${t.year}-${t.month}-${t.day} ${t.hour}-${t.minute}-${t.second}.jpg";
-    final path = Settings.appPath + Platform.pathSeparator + time;
+    final path = nameWithDate(name);
     await File(path).writeAsBytes(photo);
     showStyledToast("Saved in: ${path.replaceFirst("/sdcard/", '')}", context);
+  }
+
+  static String nameWithDate(String name) {
+    final t = DateTime.now();
+    final time = "$name ${t.year}-${t.month}-${t.day} ${t.hour}-${t.minute}-${t.second}.jpg";
+    return Settings.appPath + Platform.pathSeparator + time;
   }
 }

@@ -1,12 +1,12 @@
 ## Upcoming Version
 - Material 3 expressive styled buttons, tiles & popups
 - App icon is now darker
-- Improved in-app camera
-- New editor features: Cropping image, Adjustments
+- Improved in-app camera so much
+- New editor features: Crop images
 - Fix all refreshing bugs *
 - Up to 15 times faster photo indexing *
 - Log file (in the same dir as Settings.txt)
-- Fix lot of bugs *
+- Fix lot of bugs
 
 Windows:
 - MSIX Packaging

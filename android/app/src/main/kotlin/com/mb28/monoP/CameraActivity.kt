@@ -1,20 +1,11 @@
-package com.example.memories_photos
+package com.mb28.monoP
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.graphics.PixelFormat
-import android.hardware.camera2.*
-import android.hardware.camera2.params.OutputConfiguration
-import android.hardware.camera2.params.SessionConfiguration
-import android.media.ImageReader
-import android.os.Build
 import android.os.Bundle
-import android.view.Surface
-import android.view.SurfaceView
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize

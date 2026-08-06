@@ -4,7 +4,7 @@ import 'package:memories_photos/Pages/More/albums_page.dart';
 import 'package:memories_photos/Pages/More/camera_timelapse_page.dart';
 import 'package:memories_photos/Pages/home_page_contents.dart';
 import 'package:memories_photos/Pages/photos_page.dart';
-import 'package:memories_photos/Scripts/image_helper.dart';
+import 'package:memories_photos/Scripts/camera_helper.dart';
 import 'package:memories_photos/Widgets/blur.dart';
 import 'package:memories_photos/Widgets/expressive_button.dart';
 import 'package:memories_photos/settings.dart';
@@ -167,7 +167,7 @@ class _FloatingBtn extends StatelessWidget {
       children: [
         SizedBox(height: 55),
         FloatingActionButton(
-          onPressed: () => ImageHelper.takePicture(context),
+          onPressed: () => CameraHelper.takePicture(context),
           tooltip: "Create",
           heroTag: "Create",
           elevation: 0,

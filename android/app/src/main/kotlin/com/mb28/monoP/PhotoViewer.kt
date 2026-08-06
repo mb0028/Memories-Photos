@@ -1,4 +1,4 @@
-package com.example.memories_photos
+package com.mb28.monoP
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

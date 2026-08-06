@@ -15,7 +15,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace = "com.example.memories_photos"
+    namespace = "com.mb28.monoP"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 

@@ -1,15 +1,12 @@
-package com.example.memories_photos
+package com.mb28.monoP
 
-import android.Manifest
+import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.Settings
-import android.widget.Toast
 import androidx.annotation.NonNull
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
@@ -86,13 +83,25 @@ class MainActivity : FlutterActivity() {
                     result.success(true)
                 }
                 "startActivityClass" -> {
-                    val intent = Intent().apply {
-                        component = ComponentName(
-                            call.argument<String>("package")!!,
-                            call.argument<String>("class")!!
-                        )
-                    }
+                    val intent = Intent()
+                    intent.setClassName(call.argument<String>("package")!!, call.argument<String>("class")!!)
                     startActivity(intent)
+                    result.success(true)
+                }
+                "startSamsungCameraWidget" -> {
+                    val intent = Intent()
+                    intent.setClassName("com.sec.android.app.camera", "com.sec.android.app.camera.WidgetActivity")
+                    intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, 2828)
+                    intent.putExtra("activity_name", call.argument<String>("mode"))
+                    startActivity(intent)
+                    result.success(true)
+                }
+                "startSamsungCameraWidgetSettings" -> {
+                    val intent = Intent()
+                    intent.setClassName("com.sec.android.app.camera", "com.sec.android.app.camera.WidgetActivity")
+                    intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, 2828)
+                    intent.putExtra(":settings:fragment_args_key", "widget_settings");
+                    startActivityForResult(intent, 28)
                     result.success(true)
                 }
 

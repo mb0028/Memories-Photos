@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:memories_photos/Popups/change_accent_popup.dart';
 import 'package:memories_photos/Popups/path_picker_popup.dart';
+import 'package:memories_photos/Scripts/android_helper.dart';
 import 'package:memories_photos/Widgets/colorful_bg.dart';
 import 'package:memories_photos/main.dart';
 import 'package:memories_photos/settings.dart';
@@ -10,7 +11,8 @@ import 'package:open_filex/open_filex.dart';
 import 'package:silky_scroll/silky_scroll.dart';
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({super.key});
+  const SettingsPage({super.key, this.onlyShowCamera = false});
+  final bool onlyShowCamera;
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
@@ -49,15 +51,12 @@ class _SettingsPageState extends State<SettingsPage> {
           child: SilkyListView(
             scrollSpeed: 1.5,
             physics: BouncingScrollPhysics(),
-            children: [
+            children: widget.onlyShowCamera ? [cameraSettings()] : [
               uiSettings(),
               SizedBox(height: 15),
 
               mainSettings(),
               SizedBox(height: 15),
-
-              Settings.inAppCamera ? cameraSettings() : SizedBox(),
-              SizedBox(height: Settings.inAppCamera ? 15 : 0),
               
               libSettings(),
               SizedBox(height: 8),
@@ -171,6 +170,17 @@ class _SettingsPageState extends State<SettingsPage> {
       child: Column(
         children: [
           ListTile(
+            title: Text("In-App Camera"),
+            subtitle: Text("Use in app camera instead of switching to phone's default camera app", style: TextStyle(fontSize: 12)),
+            leading: Switch(
+              value: Settings.inAppCamera,
+              onChanged: (value) {
+                setState(() => Settings.inAppCamera = value);
+                Settings.save();
+              },
+            ),
+          ),
+          ListTile(
             title: Text("Rotatable photos"),
             subtitle: Text("When on: allows to rotate photos when viewing it fullscreen", style: TextStyle(fontSize: 12)),
             leading: Switch(
@@ -236,18 +246,6 @@ class _SettingsPageState extends State<SettingsPage> {
               value: Settings.specialSectionsCount.toDouble(),
               onChanged: (value) {
                 setState(() => Settings.specialSectionsCount = value.toInt());
-                Settings.save();
-              },
-            ),
-          ),
-          Divider(),
-          ListTile(
-            title: Text("In-App Camera"),
-            subtitle: Text("Use in app camera instead of switching to phone's default camera app", style: TextStyle(fontSize: 12)),
-            leading: Switch(
-              value: Settings.inAppCamera,
-              onChanged: (value) {
-                setState(() => Settings.inAppCamera = value);
                 Settings.save();
               },
             ),
@@ -352,19 +350,50 @@ class _SettingsPageState extends State<SettingsPage> {
       child: Column(
         crossAxisAlignment: .stretch,
         children: [
-          Text("In-app camera settings"),
           ListTile(
             title: Text("Edit Comment Instantly"),
             subtitle: Text("Show edit comment panel right after taking picture", style: TextStyle(fontSize: 12)),
             leading: Switch(
-              value: Settings.editCommentAfterCamPic,
+              value: Settings.camEditCommentAfterPic,
               onChanged: (value) {
-                setState(() => Settings.editCommentAfterCamPic = value);
+                setState(() => Settings.camEditCommentAfterPic = value);
                 Settings.save();
               },
             ),
           ),
-        
+          ListTile(
+            title: Text("Lock Exposure With Shutter"),
+            subtitle: Text("Locks exposure when holding shutter button", style: TextStyle(fontSize: 12)),
+            leading: Switch(
+              value: Settings.camLockExpoOnHold,
+              onChanged: (value) {
+                setState(() => Settings.camLockExpoOnHold = value);
+                Settings.save();
+              },
+            ),
+          ),
+          ListTile(
+            title: Text("Lock Focus With Shutter"),
+            subtitle: Text("Locks focus when holding shutter button", style: TextStyle(fontSize: 12)),
+            leading: Switch(
+              value: Settings.camLockFocusOnHold,
+              onChanged: (value) {
+                setState(() => Settings.camLockFocusOnHold = value);
+                Settings.save();
+              },
+            ),
+          ),
+          FilledButton(
+            style: ButtonStyle(
+              padding: .all(.all(15)),
+            ),
+            onPressed: () => AndroidHelper.startSamsungCameraWidgetSettings(context),
+            child: Text(
+              "Open Samsung's Custom Camera\nsettings for MonoP",
+              textAlign: .center
+            ),
+          ),
+          Text(" \nQ. How it works?\n- This app will creates a new Custom Camera widget inside samsung's camera app and starts it. Its like clicking on a Custom Camera widget form home screen.")
         ],
       ),
     );

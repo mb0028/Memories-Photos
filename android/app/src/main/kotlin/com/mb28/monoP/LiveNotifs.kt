@@ -1,16 +1,13 @@
-package com.example.memories_photos
+package com.mb28.monoP
 
 import android.app.Notification
-import android.app.Notification.FLAG_ONGOING_EVENT
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.NotificationManager.*
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.provider.Settings
-import androidx.core.app.NotificationCompat
 
 class LiveNotifs {
     private val ChannelID = "MONOP_LIVE"

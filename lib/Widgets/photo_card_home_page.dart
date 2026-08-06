@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:memories_photos/Pages/photo_viewer_page.dart';
 import 'package:memories_photos/Structs/photo.dart';
-import 'package:memories_photos/Widgets/blur.dart';
 import 'package:memories_photos/settings.dart';
 
 class PhotoCardHomePage extends StatelessWidget {
@@ -42,13 +41,21 @@ class PhotoCardHomePage extends StatelessWidget {
         
         GestureDetector(
           onTap: () => query.elementAt(i).showMoreActionsPopup(context, evenMoreActions: true),
-          child: BlurredContainer(
+          child: Container(
             margin: .all(5),
             padding: .all(5),
             width: 180,
-            roundneess: 15 * Settings.rm,
-            blur: 3.5,
-            color: Theme.of(context).colorScheme.secondaryContainer.withAlpha(120),
+            decoration: BoxDecoration(
+              borderRadius: .circular(15 * Settings.rm),
+              gradient: LinearGradient(
+                colors: [
+                  Theme.of(context).colorScheme.secondaryContainer.withAlpha(220),
+                  Theme.of(context).colorScheme.primaryContainer.withAlpha(220)
+                ],
+                begin: .centerLeft,
+                end: .centerRight
+              ),
+            ),
             child: Text(
               query.elementAt(i).name,
               maxLines: 2,
@@ -56,7 +63,7 @@ class PhotoCardHomePage extends StatelessWidget {
               overflow: .fade,
               style: TextStyle(
                 fontSize: 12,
-                color: Theme.of(context).colorScheme.onSurface
+                color: Theme.of(context).colorScheme.onPrimaryContainer
               ),
             )
           ),

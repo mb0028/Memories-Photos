@@ -15,7 +15,6 @@ class Settings {
   static int gridScale = 120;
   static int recentsCount = 20;
   static int specialSectionsCount = 15;
-  static int mediaScanRate = 60;
   static double rm = 1.0; // rm = Roundness multiple
   static bool showHidden = false;
   static bool trashInstead = true;
@@ -25,8 +24,11 @@ class Settings {
   static bool adaptiveColors = false;
   static bool inAppCamera = true;
   static bool uiBlur = true;
-  static bool editCommentAfterCamPic = true;
   static Color accent = defaultColor;
+
+  static bool camEditCommentAfterPic = true;
+  static bool camLockExpoOnHold = true;
+  static bool camLockFocusOnHold = false;
 
   static List<String> libInclude = [];
   static List<String> libExclude = [];
@@ -74,8 +76,13 @@ class Settings {
           adaptiveColors = bool.parse(line.split("[ADAPT]")[1]);
         else if (line.startsWith("[BLUR]"))
           uiBlur = bool.parse(line.split("[BLUR]")[1]);
+
         else if (line.startsWith("[Cam Comment]"))
-          editCommentAfterCamPic = bool.parse(line.split("[Cam Comment]")[1]);
+          camEditCommentAfterPic = bool.parse(line.split("[Cam Comment]")[1]);
+        else if (line.startsWith("[Cam Expo]"))
+          camLockExpoOnHold = bool.parse(line.split("[Cam Expo]")[1]);
+        else if (line.startsWith("[Cam Focus]"))
+          camLockFocusOnHold = bool.parse(line.split("[Cam Focus]")[1]);
 
         else if (line.startsWith("[COLOR]")) {
           var rgb = line.split("[COLOR]")[1].split("|");
@@ -104,7 +111,10 @@ class Settings {
     data += "[ROTA]$allowRotateInPView\n";
     data += "[ADAPT]$adaptiveColors\n";
     data += "[BLUR]$uiBlur\n";
-    data += "[Cam Comment]$editCommentAfterCamPic\n";
+
+    data += "[Cam Comment]$camEditCommentAfterPic\n";
+    data += "[Cam Expo]$camLockExpoOnHold\n";
+    data += "[Cam Focus]$camLockFocusOnHold\n";
     
     data += "[COLOR]${accent.r}|${accent.g}|${accent.b}\n";
 
@@ -129,6 +139,15 @@ class Settings {
       lastLogs.removeLast();
     lastLogs.insert(0, text);
     await logFile.writeAsString(lastLogs.join("\n"));
+  }
+
+  static void rec(String text) async {
+    final t = "[${DateTime.now()}] $text";
+    final his = await historyFile.readAsLines();
+    if (his.length > 200)
+      his.removeLast();
+    his.insert(0, t);
+    await historyFile.writeAsString(his.join("\n"));
   }
 
   /////////////////////////////////// Paths //////////////////////////////////////////////

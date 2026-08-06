@@ -41,6 +41,7 @@ Future<void> showPhotoDetails(Photo photo, BuildContext context) async {
   var alt = await ExifInterfaceOLD.getAttribute(path, ExifTagOLD.TAG_GPS_ALTITUDE);
   var latRef = await ExifInterfaceOLD.getAttribute(path, ExifTagOLD.TAG_GPS_LATITUDE_REF);
   var longRef = await ExifInterfaceOLD.getAttribute(path, ExifTagOLD.TAG_GPS_LONGITUDE_REF);
+  var desc = await ExifInterfaceOLD.getAttribute(path, ExifTagOLD.TAG_IMAGE_DESCRIPTION);
 
   var flash = await ExifInterfaceOLD.getAttribute(path, ExifTagOLD.TAG_FLASH);
   var flashText = switch (flash) {
@@ -133,6 +134,13 @@ Future<void> showPhotoDetails(Photo photo, BuildContext context) async {
                 fontSize: 14,
               ) : SizedBox(),
           
+              lat.isNotEmpty ? ExpressiveButton(
+                text: "Lat: $lat ($latRef)\nLong: $long ($longRef)\nAlt: $alt\nClick to open with google maps", 
+                icon: Icon(Icons.location_searching_outlined, size: 28, color: Theme.of(context).colorScheme.onSecondaryContainer),
+                fontSize: 13.5,
+                onClick: () => AndroidHelper.openWithMaps(lat, long),
+              ) : SizedBox(),
+
               zoom.isNotEmpty || aper.isNotEmpty ? ExpressiveButton(
                 text: "Digital zoom ratio: $zoom\nAperture: $aper  •  Max $maxAper", 
                 icon: Icon(Icons.forest_outlined, size: 30, color: Theme.of(context).colorScheme.onSecondaryContainer),
@@ -144,11 +152,9 @@ Future<void> showPhotoDetails(Photo photo, BuildContext context) async {
                 fontSize: 14,
               ) : SizedBox(),
           
-              lat.isNotEmpty ? ExpressiveButton(
-                text: "Lat: $lat ($latRef)\nLong: $long ($longRef)\nAlt: $alt\nClick to open with google maps", 
-                icon: Icon(Icons.location_searching_outlined, size: 28, color: Theme.of(context).colorScheme.onSecondaryContainer),
-                fontSize: 13.5,
-                onClick: () => AndroidHelper.openWithMaps(lat, long),
+              desc.isNotEmpty && desc != "Taken With Memories Photos" ? ExpressiveButton(
+                text: "Image Description: $desc",
+                fontSize: 14,
               ) : SizedBox(),
           
               ExpressiveButton.end(
